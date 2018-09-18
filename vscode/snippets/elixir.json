@@ -1,0 +1,72 @@
+{
+    "TODO": {
+        "prefix": "todo",
+        "body": "# TODO: ",
+        "description": "TODO"
+    },
+    "doc": {
+        "prefix": "doc",
+        "body": [
+            "@doc \"\"\"",
+            "$0",
+            "\"\"\""
+        ],
+        "description": "Document a function"
+    },
+    "moduledoc": {
+        "prefix": "moduledoc",
+        "body": [
+            "@moduledoc \"\"\"",
+            "$0",
+            "\"\"\""
+        ],
+        "description": "Document a module"
+    },
+    "typedoc": {
+        "prefix": "typedoc",
+        "body": "@typedoc \"$1\"",
+        "description": "Document a type"
+    },
+    "doc false": {
+        "prefix": "fdoc",
+        "body": "@doc false",
+        "description": "Do not document a function"
+    },
+    "moduledoc false": {
+        "prefix": "fmoduledoc",
+        "body": "@moduledoc false",
+        "description": "Do not document a module"
+    },
+    "typedstruct": {
+        "prefix": "typedstruct",
+        "body": [
+            "typedstruct do",
+            "  $0",
+            "end"
+        ],
+        "description": "Define a typed struct"
+    },
+    "inspect": {
+        "prefix": "inspect",
+        "body": "IO.inspect($1)",
+        "description": "Inspect data"
+    },
+    "property": {
+        "prefix": "property",
+        "body": [
+            "property \"$1\" do",
+            "  $0",
+            "end"
+        ],
+        "description": "Write a property test"
+    },
+    "check": {
+        "prefix": "check",
+        "body": [
+            "check all $1 do",
+            "  $0",
+            "end"
+        ],
+        "description": "Property-testing check"
+    }
+}

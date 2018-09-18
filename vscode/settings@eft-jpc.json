@@ -1,0 +1,228 @@
+{
+    "C_Cpp.autoAddFileAssociations": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.fontFamily": "Menlo, Consolas, DejaVu Sans Mono, monospace",
+    "editor.fontSize": 13,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.minimap.showSlider": "always",
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.rulers": [
+        80
+    ],
+    "editor.scrollBeyondLastColumn": 2,
+    "editor.snippetSuggestions": "top",
+    "elixirLS.dialyzerWarnOpts": [
+        "unmatched_returns",
+        "error_handling"
+    ],
+    "explorer.confirmDragAndDrop": false,
+    "extensions.autoUpdate": false,
+    "extensions.showRecommendationsOnlyOnDemand": true,
+    "files.associations": {
+        "erlinit.config": "shellscript",
+        "vimrc": "viml",
+        "vm.args": "shellscript",
+        "vm.args.eex": "shellscript",
+        "zshrc": "shellscript",
+        ".envrc": "shellscript",
+        ".gitignore.eex": "gitignore",
+        "*.ex.eex": "elixir",
+        "*.exs.eex": "elixir",
+        "*.md.eex": "markdown",
+        "*.nix.eex": "nix"
+    },
+    "files.autoSave": "onFocusChange",
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": false,
+        "**/.hg": false,
+        "**/CVS": false,
+        "**/.DS_Store": false
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "flow.useNPMPackagedFlow": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "latex-workshop.chktex.args.active": [
+        "-wall",
+        "-n1",
+        "-n13",
+        "-n19",
+        "-n22",
+        "-n30",
+        "-n44",
+        "-e16",
+        "-q"
+    ],
+    "latex-workshop.chktex.args.root": [
+        "-wall",
+        "-n1",
+        "-n13",
+        "-n19",
+        "-n22",
+        "-n30",
+        "-n44",
+        "-e16",
+        "-q"
+    ],
+    "latex-workshop.chktex.enabled": true,
+    "latex-workshop.latex.autoBuild.onSave.enabled": false,
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.aux.bak",
+        "*.bbl",
+        "*.bcf",
+        "*.blg",
+        "*.brf",
+        "*.dvi",
+        "*.fdb_latexmk",
+        "*.fls",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.glsdefs",
+        "*.idx",
+        "*.idx.bak",
+        "*.ilg",
+        "*.ind",
+        "*.lof",
+        "*.log",
+        "*.lol",
+        "*.lot",
+        "*.nav",
+        "*.out",
+        "*.pdf",
+        "*.ps",
+        "*.snm",
+        "*.synctex.gz",
+        "*.toc",
+        "*.vrb",
+        "*.xdy",
+        "_minted-*/*",
+        "_minted-*/",
+        "sage-plots-for-*.tex",
+        "missfont.log",
+        "texput.log",
+        "texput.aux"
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.view.pdf.viewer": "tab",
+    "rust.clippy_preference": "on",
+    "rust-client.channel": "nightly",
+    "rust-client.updateOnStartup": true,
+    "search.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.history": true,
+        "**/node_modules": true,
+        "**/bower_components": true
+    },
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "trailing-spaces.highlightCurrentLine": false,
+    "vim.handleKeys": {
+        "<C-a>": false,
+        "<C-c>": false,
+        "<C-d>": false,
+        "<C-k>": false,
+        "<C-v>": false,
+        "<C-w>": false
+    },
+    "vim.useSystemClipboard": true,
+    "window.restoreWindows": "all",
+    "workbench.colorTheme": "Atom One Dark",
+    "workbench.iconTheme": "file-icons",
+    "workbench.settings.openDefaultSettings": false,
+    "workbench.startupEditor": "none",
+    "workbench.statusBar.feedback.visible": false,
+    "[latex]": {
+        "editor.formatOnSave": false
+    },
+    "[nix]": {
+        "editor.tabSize": 2
+    },
+    "macros": {
+        "commentLine": [
+            "editor.action.commentLine",
+            "cursorDown"
+        ]
+    },
+    "extensions.recommendations": [
+        "akamud.vscode-theme-onedark",
+        "akamud.vscode-theme-onelight",
+        "bbenoist.Nix",
+        "bungcip.better-toml",
+        "codezombiech.gitignore",
+        "donjayamanne.githistory",
+        "dunstontc.viml",
+        "EditorConfig.EditorConfig",
+        "file-icons.file-icons",
+        "flowtype.flow-for-vscode",
+        "freebroccolo.reasonml",
+        "geddski.macros",
+        "JakeBecker.elixir-ls",
+        "James-Yu.latex-workshop",
+        "mrorz.language-gettext",
+        "MS-CEINTL.vscode-language-pack-fr",
+        "ms-vscode.cpptools",
+        "patrys.vscode-code-outline",
+        "pgourlain.erlang",
+        "piotrpalarz.vscode-gitignore-generator",
+        "rid9.datetime",
+        "robinbentley.sass-indented",
+        "RReverser.llvm",
+        "Rubymaniac.vscode-direnv",
+        "rust-lang.rust",
+        "serayuzgur.crates",
+        "shardulm94.trailing-spaces",
+        "sidneys1.gitconfig",
+        "srfrnk.user-extensions",
+        "stkb.rewrap",
+        "Valentin.beamdasm",
+        "vector-of-bool.cmake-tools",
+        "vscodevim.vim",
+        "wayou.vscode-todo-highlight",
+        "wengerk.highlight-bad-chars",
+        "xyz.local-history"
+    ]
+}

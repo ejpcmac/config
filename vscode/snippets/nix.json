@@ -1,0 +1,21 @@
+{
+    "TODO": {
+        "prefix": "todo",
+        "body": "# TODO: ",
+        "description": "TODO"
+    },
+    "let": {
+        "prefix": "let",
+        "body": [
+            "let",
+            "  $1",
+            "in"
+        ],
+        "description": "Insert a `let ... in` block"
+    },
+    "inherit": {
+        "prefix": "inherit",
+        "body": "inherit ",
+        "description": "inherit"
+    }
+}

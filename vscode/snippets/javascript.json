@@ -1,0 +1,16 @@
+{
+    "TODO": {
+        "prefix": "todo",
+        "body": "// TODO: ",
+        "description": "TODO"
+    },
+    "doc": {
+        "prefix": "doc",
+        "body": [
+            "/**",
+            " * ${1: Brief description.}",
+            " */"
+        ],
+        "description": "Insert fonction header"
+    }
+}

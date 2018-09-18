@@ -1,0 +1,267 @@
+{
+    "allowframebreaks": {
+        "prefix": "allowframebreaks",
+        "body": "allowframebreaks",
+        "description": "Allow frame breaks"
+    },
+    "appendices": {
+        "prefix": "appendices",
+        "body": [
+            "\\begin{appendices}",
+            "",
+            "$0",
+            "",
+            "\\end{appendices}"
+        ],
+        "description": "Appendices"
+    },
+    "bigskip": {
+        "prefix": "bigskip",
+        "body": "\\bigskip",
+        "description": "Insert a bigskip"
+    },
+    "block": {
+        "prefix": "block",
+        "body": [
+            "\\begin{block}{${1:Title}}",
+            "  $0",
+            "\\end{block}"
+        ],
+        "description": "Insert a block"
+    },
+    "caption": {
+        "prefix": "caption",
+        "body": "\\caption{$1}",
+        "description": "Insert a caption"
+    },
+    "centering": {
+        "prefix": "centering",
+        "body": "\\centering",
+        "description": "Center the element"
+    },
+    "cite": {
+        "prefix": "cite",
+        "body": "\\cite{$1}",
+        "description": "Insert a citation"
+    },
+    "definecolor": {
+        "prefix": "definecolor",
+        "body": "\\definecolor{${1:name}}{rgb}{${2:1}, ${3:1}, ${4:1}}",
+        "description": "Define a color"
+    },
+    "emphase": {
+        "prefix": "emph",
+        "body": "\\emph{$1}",
+        "description": "Put in emphase"
+    },
+    "figure": {
+        "prefix": "figure",
+        "body": [
+            "\\begin{figure}[h]${5:",
+            "  \\centering}",
+            "  \\includegraphics[width=${2:0.85}\\textwidth]{${1:/path/to/figure}}",
+            "  \\caption{${3:Figure name}}\\label{fig:${4:figure_label}}",
+            "\\end{figure}"
+        ],
+        "description": "Insert a figure"
+    },
+    "footnote": {
+        "prefix": "footnote",
+        "body": "\\footnote{$1}",
+        "description": "Insert a footnote"
+    },
+    "frame": {
+        "prefix": "frame",
+        "body": [
+            "\\begin{frame}",
+            "  $0",
+            "\\end{frame}"
+        ],
+        "description": "Insert a new frame"
+    },
+    "fragile": {
+        "prefix": "frg",
+        "body": "fragile"
+    },
+    "frametitle": {
+        "prefix": "frametitle",
+        "body": "\\frametitle{$1}",
+        "description": "Set the frame title"
+    },
+    "framesubtitle": {
+        "prefix": "subtitle",
+        "body": "\\framesubtitle{$1}",
+        "description": "Set the frame subtitle"
+    },
+    "glossaire": {
+        "prefix": "glossary",
+        "body": [
+            "\\newglossaryentry{${1:tag}}{",
+            "  name={${2:Name}},",
+            "  text={${3:printed text}},",
+            "  description={$4}",
+            "}"
+        ],
+        "description": "New glossary entry"
+    },
+    "gls": {
+        "prefix": "gls",
+        "body": "\\gls{$1}",
+        "description": "Insert a word from glossary"
+    },
+    "glspl": {
+        "prefix": "glspl",
+        "body": "\\glspl{$1}",
+        "description": "Insert a plural world from glossary"
+    },
+    "includegraphics": {
+        "prefix": "includegraphics",
+        "body": "\\includegraphics[width=\\textwidth]{${1:/path/to/figure}}",
+        "description": "Insert an image"
+    },
+    "item": {
+        "prefix": "it",
+        "body": "\\item ",
+        "description": "Insert an item"
+    },
+    "label": {
+        "prefix": "label",
+        "body": "\\label{$1}",
+        "description": "Label"
+    },
+    "listing": {
+        "prefix": "listing",
+        "body": [
+            "\\begin{listing}[h]",
+            "  \\begin{minted}[autogobble, bgcolor=light_grey$2]{${1:language}}",
+            "    $0",
+            "  \\end{minted}",
+            "  \\caption{${3:Description}}\\label{lst:${4:label}}",
+            "\\end{listing}"
+        ],
+        "description": "Insert a code extract in a listing"
+    },
+    "medskip": {
+        "prefix": "medskip",
+        "body": "\\medskip",
+        "description": "Insert a medskip"
+    },
+    "mintline": {
+        "prefix": "mintline",
+        "body": "\\mintline{${1:language}}{$2}",
+        "description": "Insert inline code"
+    },
+    "minted": {
+        "prefix": "minted",
+        "body": [
+            "\\begin{minted}[autogobble, bgcolor=light_grey$2]{${1:language}}",
+            "  $3",
+            "\\end{minted}"
+        ],
+        "description": "Insert a code extract"
+    },
+    "newcommand": {
+        "prefix": "newcommand",
+        "body": "\\newcommand{\\${1:command}}{$2}",
+        "description": "Define a new command"
+    },
+    "note": {
+        "prefix": "note",
+        "body": "\\note[item]{$1}",
+        "description": "Add a note"
+    },
+    "pause": {
+        "prefix": "pause",
+        "body": "\\pause",
+        "description": "Pause the display"
+    },
+    "rightarrow": {
+        "prefix": "ra",
+        "body": "$\\rightarrow$ ",
+        "description": "Insert a thin right arrow"
+    },
+    "Rightarrow": {
+        "prefix": "Ra",
+        "body": "$\\\\Rightarrow$ ",
+        "description": "Insert a double right arrow"
+    },
+    "Longrghtarrow": {
+        "prefix": "Lra",
+        "body": "$\\\\Longrightarrow$ ",
+        "description": "Insert a long double right arrow"
+    },
+    "renewcommand": {
+        "prefix": "renewcommand",
+        "body": "\\renewcommand{\\${1:command}}{$2}",
+        "description": "Redefine a command"
+    },
+    "ref": {
+        "prefix": "ref",
+        "body": "\\ref{$1}",
+        "description": "Insert a reference"
+    },
+    "pageref": {
+        "prefix": "pageref",
+        "body": "\\pageref{$1}",
+        "description": "Insert a reference to a page"
+    },
+    "newpage": {
+        "prefix": "newpage",
+        "body": "\\newpage",
+        "description": "Insert a page break"
+    },
+    "setbeamertemplate": {
+        "prefix": "setbeamertemplate",
+        "body": [
+            "\\setbeamertemplate{${1:template}}{",
+            "  $2",
+            "}"
+        ],
+        "description": "Set the beamer template"
+    },
+    "setbeamercolor": {
+        "prefix": "setbeamercolor",
+        "body": "\\setbeamercolor{${1:color}}{fg=${2:black},bg=${3:white}}",
+        "description": "Define a beamer color"
+    },
+    "setbeameroption": {
+        "prefix": "setbeameroption",
+        "body": "\\setbeameroption{$1}",
+        "description": "Add a beamer option"
+    },
+    "teletype": {
+        "prefix": "tt",
+        "body": "\\texttt{$1}",
+        "description": "Insert monospace text"
+    },
+    "time": {
+        "prefix": "time",
+        "body": "\\note{\\emph{$1}}",
+        "description": "Insert the time for the current frame (italic note)"
+    },
+    "TODO": {
+        "prefix": "todo",
+        "body": "% TODO: $1",
+        "description": "TODO"
+    },
+    "floating size": {
+        "prefix": "width",
+        "body": "width=${1:0.85}\\textwidth$2",
+        "description": "Set the floating size"
+    },
+    "usebeamercolor": {
+        "prefix": "usebeamercolor",
+        "body": "\\usebeamercolor[${1:fg}]{$2}",
+        "description": "Use a beamer color"
+    },
+    "usebeamerfont": {
+        "prefix": "usebeamerfont",
+        "body": "\\usebeamerfont{$1}",
+        "description": "Use a beamer font"
+    },
+    "usepackage": {
+        "prefix": "usepackage",
+        "body": "\\usepackage{$1}",
+        "description": "Add a package"
+    }
+}

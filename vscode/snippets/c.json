@@ -1,0 +1,26 @@
+{
+    "TODO": {
+        "prefix": "todo",
+        "body": "/* TODO: $1 */",
+        "description": "TODO"
+    },
+    "REVIEW": {
+        "prefix": "review",
+        "body": "/* REVIEW: $1 */",
+        "description": "REVIEW"
+    },
+    "comment": {
+        "prefix": "/",
+        "body": "/* $1 */",
+        "description": "Insert a comment"
+    },
+    "doc": {
+        "prefix": "doc",
+        "body": [
+            "/**",
+            " * ${1:Brief description.}",
+            " */"
+        ],
+        "description": "Insert fonction header"
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "TODO": {
+        "prefix": "TODO",
+        "body": "(* TODO: $1 *)",
+        "description": "TODO"
+    },
+    "doc": {
+        "prefix": "doc",
+        "body": "(** $1 *)",
+        "description": "Insert a function documentation"
+    }
+}
