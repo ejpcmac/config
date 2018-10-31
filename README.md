@@ -19,6 +19,8 @@ various customisations I use for my everyday comfort. Enjoy! :)
     * `zshrc` - system-wide Zsh configuration file. *This one is not used by Nix
         but is present for outside-of-Nix configuration on FreeBSD and computers
         where Nix is installed in single-user mode.*
+* `karabiner` - some configuration for Karabiner Elements, mainly to handle my
+    TypeMatrix keyboard and make my Yubikey usable while my layout is in BÉPO.
 * `Nix`
     * Root - main modules for the global environment, Nix, tmux, vim, XServer
         and Zsh.

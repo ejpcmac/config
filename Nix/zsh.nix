@@ -2,6 +2,7 @@
 
 let
   inherit (pkgs) stdenv;
+  shellInit = builtins.readFile ./zsh/config.zsh;
 in
 
 {
@@ -11,10 +12,11 @@ in
     enable = true;
     enableCompletion = true;
 
-    interactiveShellInit = builtins.readFile ./zsh/config.zsh;
+    interactiveShellInit = shellInit;
     promptInit = builtins.readFile ./zsh/prompt.zsh;
   }; in
   if stdenv.isDarwin then zsh-common // {
+    interactiveShellInit = shellInit + builtins.readFile ./zsh/macos.zsh;
     enableBashCompletion = true;
 
     variables = {

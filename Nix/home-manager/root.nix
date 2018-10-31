@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 
+let
+  environment = (import ../environment.nix { inherit config pkgs; }).environment;
+in
+
 {
   home.file = {
     # Zsh aliases and environments
@@ -32,5 +36,7 @@
       theme = "bazik";
       plugins = [ "git" "zsh-syntax-highlighting" ];
     };
+
+    inherit (environment) shellAliases;
   };
 }

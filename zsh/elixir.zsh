@@ -23,14 +23,11 @@ alias RPI3='MIX_TARGET=rpi3'
 
 # Archives installation
 alias mlr='mix local.rebar'
-alias mlg='mix archive.install github ejpcmac/ex_gen'
 alias mlp='mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez'
-alias mlnerves='mix archive.install hex nerves_bootstrap'
-alias mla='mlh; mlr; mlg; mlp; mlnerves'
+alias mln='mix archive.install hex nerves_bootstrap'
+alias mla='mlh; mlr; mlp; mlnerves'
 
 # Generators
-alias mgs='mix xgen.std --contrib --package --license MIT'
-alias mgn='mix xgen.nerves'
 alias mnn='mix nerves.new'
 
 # Dependencies
@@ -59,10 +56,12 @@ alias ms='elixir --sname app@localhost -S mix setup'
 alias mrs='elixir --sname app@localhost -S mix reset'
 
 # Distillery
-alias mrlv='mix release --verbose'
-alias mrln='mix release --no-tar'
-alias mrlp='mix release --env=preprod --no-tar'
-alias mrls='mix release --env=server --no-tar'
+alias mrl='mix release --verbose'
+alias mrln='mix release --verbose --no-tar'
+alias mrlp='mix release --verbose --env=preprod --no-tar'
+alias mrls='mix release --verbose --env=freebsd'
+alias mrlc='mix release.clean'
+alias mrlca='mix release.clean --implode'
 
 # Nerves
 alias mfw='mix firmware'

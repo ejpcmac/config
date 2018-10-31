@@ -2,24 +2,39 @@
 
 with lib;
 
+let
+  # Patch Signal-Desktop to use the system tray.
+  signal-desktop = pkgs.signal-desktop.overrideAttrs (attrs : rec {
+    installPhase = attrs.installPhase + ''
+      substituteInPlace $out/share/applications/signal-desktop.desktop \
+        --replace $out/bin/signal-desktop "$out/bin/signal-desktop --use-system-tray"
+    '';
+  });
+in
+
 {
   imports = [ ./common.nix ];
 
   # This is a single-user installation, so there is no system environment. Thus
   # I install here a little bit more than just user packages.
   home.packages = with pkgs; [
+    curl
+    dcfldd
     docker
     docker_compose
     emv
     git-lfs
     gnupg
     htop
+    imagemagick
     nix-prefetch-github
     nox
     openssh
     rsync
     wget
     xz
+
+    signal-desktop
   ];
 
   home.file = {

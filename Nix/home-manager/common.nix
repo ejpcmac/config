@@ -1,14 +1,11 @@
 { config, pkgs, ... }:
 
 let
-  inherit (pkgs) stdenv lib beam;
+  inherit (pkgs) callPackage stdenv lib beam;
 
-  erlang = beam.interpreters.erlangR21.override {
-    # Temporary fix to enable use on OS X El Capitan.
-    enableKernelPoll = if stdenv.isDarwin then false else true;
-  };
-
-  elixir = (beam.packages.erlangR21.override { inherit erlang; }).elixir_1_7;
+  ceedling = callPackage ./pkgs/ceedling.nix {};
+  elixir = beam.packages.erlangR21.elixir_1_7;
+  erlang = beam.interpreters.erlangR21;
   ruby = pkgs.ruby_2_5;
 in
 
@@ -17,6 +14,7 @@ in
     aspcud
     aspell
     bashInteractive
+    ceedling
     cloc
     direnv
     iftop
@@ -34,6 +32,7 @@ in
   home.file = {
     # Zsh aliases and environments
     ".zsh/aliases.zsh".source = ../../zsh/aliases.zsh;
+    ".zsh/ceedling.zsh".source = ../../zsh/ceedling.zsh;
     ".zsh/direnv.zsh".source = ../../zsh/direnv.zsh;
     ".zsh/docker.zsh".source = ../../zsh/docker.zsh;
     ".zsh/elixir.zsh".source = ../../zsh/elixir.zsh;

@@ -31,5 +31,19 @@
     {
         "key": "ctrl+alt+c",
         "command": "latex-workshop.clean"
+    },
+    {
+        "key": "ctrl+t",
+        "command": "-workbench.action.showAllSymbols"
+    },
+    {
+        "key": "ctrl+t",
+        "command": "test-explorer.run-file",
+        "when": "editorLangId == 'c'"
+    },
+    {
+        "key": "ctrl+alt+t",
+        "command": "test-explorer.run-all",
+        "when": "editorLangId == 'c'"
     }
 ]
