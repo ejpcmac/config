@@ -10,30 +10,18 @@ various customisations I use for my everyday comfort. Enjoy! :)
 
 ## Organisation
 
-* Root
-    * `gpg.conf` - GnuPG configuration. *This file is not read by Nix.*
-    * `screenrc` - tiny screen configuration. I use it only for doing UART over
-        USB on macOS.
-    * `tmux-*.conf` - tmux configuration.
-    * `vimrc` - vim configuration.
-    * `zshrc` - system-wide Zsh configuration file. *This one is not used by Nix
-        but is present for outside-of-Nix configuration on FreeBSD and computers
-        where Nix is installed in single-user mode.*
+* `confkit` - my public configuration framework (see History).
+* `desktop` - some desktop environment related configuration. Some more
+    configuration (`bspwn`, …) can be found under `Nix/`.
 * `karabiner` - some configuration for Karabiner Elements, mainly to handle my
     TypeMatrix keyboard and make my Yubikey usable while my layout is in BÉPO.
 * `Nix`
-    * Root - main modules for the global environment, Nix, tmux, vim, XServer
-        and Zsh.
-    * `home-manager` - user environment configuration on several machines. The
-        common part is in `common.nix`.
-    * `MacBook-JP` - system environment on my Mac.
+    * `common` - configuration, packages and modules shared accross machines.
+    * `MacBook-JP` - configuration for my Mac.
     * `nixos-test` - some tests for configuring NixOS.
-    * `zsh` - some Zsh files as resources, namely general configuration and a
-        custom prompt.
-* `vim` - some vim configuration.
+    * `eft-jpc` - work Fedora Linux.
+* `spacemacs` - Spacemacs configuration.
 * `vscode` - VSCode settings, keybindings and snippets.
-* `zsh` - my little Zsh framework, with environment configuration, aliases and
-    functions sorted by modules.
 
 ## History
 
@@ -55,3 +43,9 @@ submodules are still linked in `~/.zsh` and my main `~/.zshrc` imports them. It
 may change in the future to Nix building a `~/.zshrc` concatenating these files.
 I will however always keep pure Zsh files as source to maintain the
 compatibility with my FreeBSD server environment.
+
+In December 2018 I exctacted many files in a public configuration framework I
+have named `confkit`. It is refered as a submodule here and you can use it
+yourself if you want: while I am using the `develop` branch of it, I publish
+tagged versions with a changelog. Some features that are currently only in this
+repository may be extracted to confkit at some point.

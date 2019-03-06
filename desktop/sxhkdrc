@@ -1,0 +1,156 @@
+# sxhkd configuration (optimised for BÉPO)
+
+################################################################################
+#                               General hotkeys                                #
+################################################################################
+
+# Open a terminal emulator.
+super + Return
+    termite
+
+# Open the program launcher.
+super + @space
+    rofi -modi combi -show combi -combi-modi window,drun
+
+# Reload sxhkd and bspwm.
+super + Escape
+    pkill -USR1 -x sxhkd && $HOME/.config/bspwm/bspwmrc && pkill -USR1 termite
+
+# Shutdown the computer.
+super + ctrl + shift + Escape
+    poweroff
+
+# TODO: Update when using i3 / on NixOS.
+# Locks the screen and goes to sleep.
+XF86Sleep
+    xscreensaver-command -lock && systemctl suspend
+
+# Lock the screen.
+super + shift + v
+    xscreensaver-command -lock
+
+# Open emacs.
+super + e
+    emacsclient -c
+
+# Open the configuration.
+super + o
+    emacsclient -c ~/.config_files
+
+# Open KeePassX.
+super + k
+    keepassx
+
+# Open a Web browser.
+super + i
+    firefox
+
+################################################################################
+#                            Music-related hotkeys                             #
+################################################################################
+
+# Open a music browser (pms / Cantata).
+super + {_,shift + }m
+    {termite -e pms,cantata}
+
+# Playback management.
+XF86Audio{Play,Prev,Next}
+    mpc {toggle,prev,next}
+
+# Fine-grained volume management for the first external sound card.
+XF86Audio{Raise,Lower}Volume
+    amixer -c 1 set PCM 1dB{+,-}
+
+# Clear the MPD playlist.
+super + control + m
+    mpc clear
+
+################################################################################
+#                                bspwm hotkeys                                 #
+################################################################################
+
+################################### General ####################################
+
+# Quit bspwm normally.
+super + alt + Escape
+    bspc quit
+
+# Close / kill the current pane.
+super + {_,shift + }w
+    bspc node -{c,k}
+
+# Alternate between the tiled and monocle layout.
+super + n
+    bspc desktop -l next
+
+################################ State & Flags #################################
+
+# Set the window state.
+super + {l,shift + l,v,f}
+    bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# Set the node flags.
+super + ctrl + {l,x,z}
+    bspc node -g {locked,sticky,private}
+
+############################ Focus / Swap / Rotate #############################
+
+# Focus / swap with the node in the given direction.
+super + {_,shift + }{c,t,s,r}
+    bspc node -{f,s} {west,south,north,east}
+
+# Focus the next/previous node in the current desktop.
+super + {_,shift + }e
+    bspc node -f {next,prev}.local
+
+# Send the newest marked node to the newest preselected node.
+super + y
+    bspc node newest.marked.local -n newest.!automatic.local
+
+# Swap the current node and the biggest node.
+super + g
+    bspc node -s biggest
+
+# Rotate the current node with other nodes in the current desktop.
+super + shift + o
+    bspc node @focused:/ --rotate 90
+
+# Focus the given desktop.
+super + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,dollar,equal,percent}
+    bspc desktop -f '^{1-9,10,11,12,13}'
+
+# Send to the given desktop and follow.
+super + shift + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,dollar,equal,percent}
+    bspc node -d '^{1-9,10,11,12,13}' --follow
+
+################################## Preselect ###################################
+
+# Preselect the direction.
+super + ctrl + {c,t,s,r}
+    bspc node -p {west,south,north,east}
+
+# Preselect the ratio.
+super + ctrl + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash}
+    bspc node -o 0.{1-9}
+
+# Cancel the preselection for the focused node.
+super + ctrl + space
+    bspc node -p cancel
+
+# Cancel the preselection for the focused desktop.
+super + ctrl + shift + space
+    bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+################################ Move & Resize #################################
+
+# Expand a window by moving one of its side outward.
+super + alt + {c,t,s,r}
+    bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# Contract a window by moving one of its side inward.
+super + alt + shift + {c,t,s,r}
+    bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# Move a floating window.
+super + {Left,Down,Up,Right}
+    bspc node -v {-20 0,0 20,0 -20,20 0}

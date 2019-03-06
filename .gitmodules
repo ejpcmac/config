@@ -1,0 +1,3 @@
+[submodule "confkit"]
+	path = confkit
+	url = https://github.com/ejpcmac/confkit.git

@@ -12,5 +12,14 @@
             "///"
         ],
         "description": "Insert function header"
+    },
+    "cdoc": {
+        "prefix": "cdoc",
+        "body": [
+            "/**",
+            " * ${1:Brief description.}",
+            " */"
+        ],
+        "description": "Insert a C-style function header"
     }
 }

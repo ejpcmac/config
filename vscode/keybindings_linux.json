@@ -29,6 +29,10 @@
         "when": "editorTextFocus && !editorReadonly"
     },
     {
+        "key": "alt+e",
+        "command": "workbench.action.tasks.runTask"
+    },
+    {
         "key": "ctrl+alt+c",
         "command": "latex-workshop.clean"
     },

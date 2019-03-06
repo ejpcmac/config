@@ -68,5 +68,23 @@
             "end"
         ],
         "description": "Property-testing check"
+    },
+    "defoption": {
+        "prefix": "defoption",
+        "body": [
+            "defoption $1 do",
+            "  key $2",
+            "  type $3",
+            "  default $4",
+            "  options $5",
+            "  name \"$6\"",
+            "  prompt \"$7\"",
+            "",
+            "  documentation \"\"\"",
+            "  $0",
+            "  \"\"\"",
+            "end"
+        ],
+        "description": "Define a generator option"
     }
 }
