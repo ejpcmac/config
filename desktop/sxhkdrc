@@ -21,13 +21,21 @@ super + ctrl + shift + Escape
     poweroff
 
 # TODO: Update when using i3 / on NixOS.
-# Locks the screen and goes to sleep.
+# Lock the screen and go to sleep.
 XF86Sleep
     xscreensaver-command -lock && systemctl suspend
 
 # Lock the screen.
 super + shift + v
     xscreensaver-command -lock
+
+# Take a screenshot.
+Print
+    maim $HOME/Images/Captures/$(date +%Y-%m-%d_%H-%M-%S).png
+
+################################################################################
+#                             Application hotkeys                              #
+################################################################################
 
 # Open emacs.
 super + e
@@ -95,9 +103,9 @@ super + ctrl + {l,x,z}
 
 ############################ Focus / Swap / Rotate #############################
 
-# Focus / swap with the node in the given direction.
-super + {_,shift + }{c,t,s,r}
-    bspc node -{f,s} {west,south,north,east}
+# Focus / swap with / send to the node in the given direction.
+super + {_,shift + ,shift + control + }{c,t,s,r}
+    bspc node -{f,s,n} {west,south,north,east}
 
 # Focus the next/previous node in the current desktop.
 super + {_,shift + }e

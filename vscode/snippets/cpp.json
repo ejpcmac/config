@@ -4,6 +4,11 @@
         "body": "// TODO: ",
         "description": "TODO"
     },
+    "bkpt": {
+        "prefix": "bkpt",
+        "body": "__asm(\"bkpt #0\\n\");",
+        "description": "Insert a breakpoint"
+    },
     "doc": {
         "prefix": "doc",
         "body": [

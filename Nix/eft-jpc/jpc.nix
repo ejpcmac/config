@@ -28,6 +28,7 @@ in
   ##                             User packages                              ##
   ############################################################################
 
+  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     conky
     curl
@@ -41,22 +42,25 @@ in
     htop
     iftop
     imagemagick
+    maim
     mosh
     mpc_cli
     nix-prefetch-github
     openssh
     pandoc
     pms
+    pqiv
     glibcLocales
     ranger
     rsync
+    saleae-logic
     sxhkd
     trash-cli
     tokei
     wget
     xz
+    zathura
 
-    android-studio
     signal-desktop
     texlive.combined.scheme-medium
   ];
@@ -77,6 +81,7 @@ in
     "conky/conky_functions.lua".source = ../../desktop/conky_functions.lua;
     "pms/pms.conf".source = confkit.file "misc/pms_bepo.conf";
     "ranger/rc.conf".source = confkit.file "ranger/rc.conf";
+    "zathura/zathurarc".source = confkit.file "misc/zathurarc_bepo";
   };
 
   home.sessionVariables = {
@@ -99,23 +104,6 @@ in
       bspc wm --reorder-monitors HDMI-1 VGA-1
       bspc monitor HDMI-1 -d 1 2 3 4 5 6 7 8 9 0
       bspc monitor VGA-1 -d $ = %
-    '';
-
-    initScript = ''
-      # Avoid spawning sxhkd twice.
-      if [ $(ps x | grep sxhkd | grep -v grep | wc -l) -eq 0 ]; then
-          sxhkd &
-      fi
-
-      feh --bg-fill "$HOME/Images/wallpaper.jpg"
-
-      pkill -x conky
-      conky
-    '';
-
-    extraRules = ''
-      bspc rule -a Keepassx locked=on
-      bspc rule -a Gimp desktop='^8' state=floating follow=on
     '';
   };
 

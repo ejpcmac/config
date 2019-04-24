@@ -46,7 +46,11 @@ in
     '';
 
     extraRules = mkDefault ''
+      bspc rule -a Firefox:Places split_dir=south split_ratio=0.8
+      bspc rule -a Nightly:Places split_dir=south split_ratio=0.8
+      bspc rule -a Gimp desktop='^0' state=floating follow=on
       bspc rule -a Keepassx locked=on
+      bspc rule -a Zathura state=tiled
     '';
   };
 }

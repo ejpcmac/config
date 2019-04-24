@@ -10,7 +10,6 @@ let
   confkit = import ../../confkit;
 
   pms = callPackage ../common/pkgs/pms.nix {};
-  riot-desktop = callPackage ../common/pkgs/riot-electron-nix {};
   rocketchat-desktop = callPackage ../common/pkgs/rocketchat-desktop.nix {};
 
   # Patch Signal-Desktop to use the system tray.
@@ -49,6 +48,7 @@ in
     # android-studio
     # riot-desktop
     rocketchat-desktop
+    # saleae-logic
     signal-desktop
     vscode
     yubioath-desktop
@@ -63,6 +63,7 @@ in
     "conky/conky.conf".source = ../../desktop/conky.conf;
     "conky/conky_functions.lua".source = ../../desktop/conky_functions.lua;
     "pms/pms.conf".source = confkit.file "misc/pms_bepo.conf";
+    "zathura/zathurarc".source = confkit.file "misc/zathurarc_bepo";
   };
 
   ############################################################################

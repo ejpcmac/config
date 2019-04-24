@@ -1,0 +1,16 @@
+xkb_keymap {
+  xkb_keycodes { include "evdev+aliases(azerty)" };
+  xkb_types { include "complete" };
+  xkb_compat { include "complete" };
+  xkb_geometry { include "pc(pc104)" };
+
+  xkb_symbols {
+    include "pc+fr(bepo)+inet(evdev)+terminate(ctrl_alt_bksp)"
+
+    key <AC05> { [ comma, semicolon, apostrophe, dead_horn ] }; // , ; ' ̛
+    key <AB06> { [ rightsinglequotemark, question, questiondown, dead_hook ] }; // ’ ? ¿ ̉
+    key <FK11> { [ Control_R ] };
+    replace key <LALT> { [ Super_L ] };
+    replace key <LWIN> { [ Alt_L] };
+  };
+};

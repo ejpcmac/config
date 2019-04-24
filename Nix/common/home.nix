@@ -31,6 +31,7 @@ in
 
   home.packages = with pkgs; [
     bashInteractive
+    bat
     ceedling
     cloc
     direnv

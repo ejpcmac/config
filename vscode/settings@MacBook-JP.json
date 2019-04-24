@@ -148,6 +148,7 @@
     "latex-workshop.synctex.afterBuild.enabled": true,
     "latex-workshop.view.pdf.viewer": "tab",
     "rust.clippy_preference": "on",
+    "rust-client.channel": "stable",
     "search.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -296,6 +297,7 @@
         "hbenl.vscode-test-explorer",
         "JakeBecker.elixir-ls",
         "James-Yu.latex-workshop",
+        "marus25.cortex-debug",
         "mrorz.language-gettext",
         "MS-CEINTL.vscode-language-pack-fr",
         "ms-vscode.cpptools",

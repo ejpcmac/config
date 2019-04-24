@@ -147,6 +147,7 @@
     "latex-workshop.synctex.afterBuild.enabled": true,
     "latex-workshop.view.pdf.viewer": "tab",
     "rust.clippy_preference": "on",
+    "rust-client.channel": "stable",
     "search.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -273,7 +274,7 @@
     ],
     "window.restoreWindows": "all",
     "window.titleBarStyle": "native",
-    "workbench.colorTheme": "Atom One Dark",
+    "workbench.colorTheme": "Atom One Light",
     "workbench.iconTheme": "file-icons",
     "workbench.settings.openDefaultSettings": false,
     "workbench.startupEditor": "none",
