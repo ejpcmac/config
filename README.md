@@ -17,10 +17,10 @@ various customisations I use for my everyday comfort. Enjoy! :)
     TypeMatrix keyboard and make my Yubikey usable while my layout is in BÉPO.
 * `Nix`
     * `common` - configuration, packages and modules shared accross machines.
-    * `MacBook-JP` - configuration for my Mac.
-    * `nixos-test` - some tests for configuring NixOS.
-    * `eft-jpc` - work Fedora Linux.
-* `spacemacs` - Spacemacs configuration.
+    * `saturne` - configuration for my personal PC.
+    * `helios` – user-only configuration on my home NAS (the system
+        configuration is in another repository).
+* `spacemacs` – Spacemacs configuration.
 * `vscode` - VSCode settings, keybindings and snippets.
 
 ## History
