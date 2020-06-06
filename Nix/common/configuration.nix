@@ -1,12 +1,15 @@
-##
-## Common system configuration
-##
+################################################################################
+##                                                                            ##
+##                        Common system configuration                         ##
+##                                                                            ##
+################################################################################
 
 { config, pkgs, ... }:
 
 let
-  inherit (pkgs) callPackage runCommand;
+  inherit (pkgs) runCommand;
   confkit = import ../../confkit;
+  jpc_overlay = import ./overlays/jpc_overlay.nix;
 
   keyboardLayout = runCommand "keyboard-layout" {} ''
     ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${./layout.xkb} $out
@@ -15,22 +18,24 @@ in
 
 {
   imports = with confkit.modules; [
+    # Confkit modules
     environment
     nix
     tmux
+    utilities
     zsh
   ];
 
+  nixpkgs.overlays = [ jpc_overlay ];
+
   ############################################################################
-  ##                         General configuration                          ##
+  ##                                Hardware                                ##
   ############################################################################
 
-  time.timeZone = "Europe/Paris";
-
-  i18n = {
-    consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "fr-bepo";
-    defaultLocale = "fr_FR.UTF-8";
+  hardware = {
+    brightnessctl.enable = true;
+    pulseaudio.enable = true;
+    u2f.enable = true;
   };
 
   sound = {
@@ -39,7 +44,22 @@ in
     mediaKeys.enable = true;
   };
 
-  hardware.u2f.enable = true;
+  ############################################################################
+  ##                         General configuration                          ##
+  ############################################################################
+
+  time.timeZone = "Indian/Kerguelen";
+
+  location = {
+    latitude = -49.35;
+    longitude = 70.22;
+  };
+
+  i18n = {
+    consoleFont = "Lat2-Terminus16";
+    consoleKeyMap = "fr-bepo";
+    defaultLocale = "fr_FR.UTF-8";
+  };
 
   ############################################################################
   ##                              Environment                               ##
@@ -47,7 +67,7 @@ in
 
   environment.variables = {
     # Set $TMDIR so that it is the same inside and outside Nix shells.
-    TMPDIR = "/var/run/user/$UID";
+    TMPDIR = "/run/user/$UID";
 
     # Only use /etc/ranger/rc.conf and ~/.config/ranger/rc.conf
     RANGER_LOAD_DEFAULT_RC = "FALSE";
@@ -61,9 +81,12 @@ in
     enableDefaultFonts = true;
 
     fonts = with pkgs; [
+      inconsolata
+      lato
       meslo-lg
       (nerdfonts.override { withFont = "DejaVuSansMono Noto"; })
       opensans-ttf
+      symbola
     ];
 
     fontconfig = {
@@ -83,45 +106,47 @@ in
 
   environment.systemPackages = with pkgs; [
     # Utilities
-    curl
-    dcfldd
-    emv
-    git
-    git-lfs
-    gnupg
-    htop
-    iftop
-    imagemagick
-    killall
-    lsof
+    betterlockscreen
+    dmg2img
+    lm_sensors
     maim
-    mkpasswd
-    mosh
     mpc_cli
     nix-prefetch-github
-    nox
-    openssh
-    ranger
-    rename
-    rsync
-    sshfs
-    testdisk
-    trash-cli
-    tree
-    unzip
-    watch
-    wget
+    ntfs3g
+    openssl
+    pandoc
+    pdfpc
+    pv
+    pythonPackages.glances
+    wakelan
     xorg.xev
-    xz
-    zip
 
     # TeXLive can be useful for tools like Pandoc or Org.
-    # texlive.combined.scheme-medium
+    texlive.combined.scheme-full
 
     # Desktop environment
-    feh
     sxhkd
+
+    # Applications
+    keepassx2
+    libreoffice
+    mpv
+    pcmanfm
+    pqiv
+    riot-desktop
+    veracrypt
+    zathura
   ];
+
+  ############################################################################
+  ##                                 Programs                               ##
+  ############################################################################
+
+  programs = {
+    ssh.startAgent = false;
+    gnupg.agent = { enable = true; enableSSHSupport = true; };
+    wireshark = { enable = true; package = pkgs.wireshark-qt; };
+  };
 
   ############################################################################
   ##                                Services                                ##
@@ -129,9 +154,27 @@ in
 
   services = {
     emacs = { enable = true; defaultEditor = true; };
-    ntp.enable = true;
     pcscd.enable = true;
     printing.enable = true;
+
+    ntp = {
+      enable = true;
+      servers = [ "time2.kerguelen.ipev.fr" "time.kerguene.ipev.fr" ];
+    };
+
+    redshift = {
+      enable = true;
+      temperature = { day = 5500; night = 2800; };
+      brightness = { day = "1.0"; night = "1.0"; };
+    };
+
+    udev = {
+      packages = [ pkgs.openocd ];
+      extraRules = ''
+        # Enable TRIM support on JMS583-based enclosures with an incorrect firmware.
+        ACTION=="add|change", ATTRS{idVendor}=="152d", ATTRS{idProduct}=="0583", SUBSYSTEM=="scsi_disk", ATTR{provisioning_mode}="unmap"
+      '';
+    };
 
     xserver = {
       enable = true;
@@ -147,9 +190,21 @@ in
         naturalScrolling = true;
       };
 
+      # Use LightDM with the Enso greeter as login screen.
+      displayManager.lightdm = {
+        enable = true;
+        greeters.enso.enable = true;
+      };
+
       # Use bspwm.
       windowManager.bspwm.enable = true;
-      desktopManager.xterm.enable = false;
+
+      # Automatically lock the screen after 10 minutes.
+      xautolock = {
+        enable = true;
+        locker = "${pkgs.betterlockscreen}/bin/betterlockscreen --lock";
+        time = 10;
+      };
     };
   };
 
@@ -167,7 +222,7 @@ in
   ############################################################################
 
   environment.etc = {
-    "ranger/rc.conf".source = confkit.file "ranger/rc.conf";
+    "ranger/rc.conf".source = confkit.file "ranger/bepo_rc.conf";
     "ranger/scope.sh".source = "${pkgs.ranger}/share/doc/ranger/config/scope.sh";
   };
 }

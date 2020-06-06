@@ -2,7 +2,6 @@
 ##                                                                            ##
 ## * Use sxhkd for keyboard shortcuts                                         ##
 ## * Load the wallpaper from $HOME/Images/wallpaper.jpg using feh             ##
-## * Start conky                                                              ##
 ## * 50/50 splits                                                             ##
 ##                                                                            ##
 ################################################################################
@@ -21,7 +20,7 @@ in
     enable = true;
 
     monitors = mkDefault ''
-      bspc monitor -d 1 2 3 4 5 6 7 8 9 0
+      bspc monitor -d $ 1 2 3 4 5 6 7 8 9 0 = %
     '';
 
     initScript = mkDefault ''
@@ -30,10 +29,7 @@ in
           sxhkd &
       fi
 
-      feh --bg-fill "$HOME/Images/wallpaper.jpg"
-
-      pkill -x conky
-      conky
+      betterlockscreen --wall
     '';
 
     extraConfig = mkDefault ''
@@ -46,10 +42,12 @@ in
     '';
 
     extraRules = mkDefault ''
+      bspc rule -a Emacs state=tiled
       bspc rule -a Firefox:Places split_dir=south split_ratio=0.8
-      bspc rule -a Nightly:Places split_dir=south split_ratio=0.8
       bspc rule -a Gimp desktop='^0' state=floating follow=on
       bspc rule -a Keepassx locked=on
+      bspc rule -a mpv state=fullscreen
+      bspc rule -a Veracrypt state=tiled
       bspc rule -a Zathura state=tiled
     '';
   };

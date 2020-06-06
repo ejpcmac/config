@@ -1,0 +1,237 @@
+# sxhkd configuration (optimised for BÉPO)
+
+################################################################################
+#                               General hotkeys                                #
+################################################################################
+
+# Open a terminal emulator.
+super + Return
+    termite -c $HOME/.config/termite/themed-config
+
+# Open the program launcher.
+super + @space
+    rofi -modi combi -show combi -combi-modi window,drun,run
+
+# Reload sxhkd and bspwm.
+super + Escape
+    pkill -USR1 -x sxhkd && $HOME/.config/bspwm/bspwmrc && pkill -USR1 termite
+
+# Switch to docked mode
+super + F6
+    $HOME/.local/bin/docked
+
+# Shutdown the computer.
+super + ctrl + shift + Escape
+    poweroff
+
+# Lock the screen.
+super + l
+    betterlockscreen --lock
+
+# Take a screenshot.
+Print
+    maim $HOME/Images/Captures/$HOSTNAME/$(date +%Y-%m-%d_%H-%M-%S).png
+
+################################################################################
+#                             Application hotkeys                              #
+################################################################################
+
+# Open emacs.
+super + e
+    emacsclient -c
+
+# Open the configuration.
+super + o
+    emacsclient -c ~/config
+
+# Open the Org Notes.
+super + b
+    emacsclient -c ~/Org/Notes.org
+
+# Open the Org directory.
+super + shift + b
+    emacsclient -c ~/Org
+
+# Open mu4e.
+super + m
+    emacsclient -ce '(mu4e)'
+
+# Open KeePassX.
+super + k
+    keepassx
+
+# Open a Web browser.
+super + i
+    firefox
+
+# Open Darktable.
+super + shift + p
+    darktable
+
+# Open the photo inventories.
+super + p
+    emacsclient -c ~/Photo/_Documents/Inventaires
+
+# Open Zeal.
+super + z
+      zeal
+
+################################################################################
+##                               Theme hotkeys                                ##
+################################################################################
+
+# Switch between dark and light themes.
+super + {_,shift +}g
+    $HOME/.config/termite/switch-theme && {echo,emacsclient --eval "(spacemacs/cycle-spacemacs-theme)"}
+
+# Switch between hard and soft variants.
+super + h
+    $HOME/.config/termite/switch-theme hardsoft
+
+################################################################################
+#                            Music-related hotkeys                             #
+################################################################################
+
+# Open a music browser (pms / Cantata).
+super + shift + m
+    cantata
+
+# Playback management.
+XF86Audio{Play,Prev,Next}
+    mpc {toggle,prev,next}
+
+# Additional shortcut for when there is no media keys.
+super + alt + m
+    mpc toggle
+
+# Mute / unmute the internal sound card.
+XF86AudioMute
+    amixer -qc 0 set Master toggle
+
+# Fine-grained volume management for the internal sound card.
+XF86Audio{Raise,Lower}Volume
+    amixer -qc 0 set Master 1dB{+,-}
+
+# Clear the MPD playlist.
+super + control + m
+    mpc clear
+
+################################################################################
+#                         Hardware management hotkeys                          #
+################################################################################
+
+# Toggle the touchpad
+super + q
+    $HOME/.local/bin/toggle-touchpad
+
+##
+## Brightness management
+##
+
+XF86MonBrightnessDown
+    brightnessctl set 5-
+
+XF86MonBrightnessUp
+    brightnessctl set 5+
+
+super + F1
+    brightnessctl set 5-
+
+super + F2
+    brightnessctl set 5+
+
+################################################################################
+#                                bspwm hotkeys                                 #
+################################################################################
+
+################################### General ####################################
+
+# Quit bspwm normally.
+super + alt + Escape
+    bspc quit
+
+# Close / kill the current pane.
+super + {_,shift + }w
+    bspc node -{c,k}
+
+# TODO: Call a script instead, and just define the same key to switch between
+# modes, as the state would be stored in a file.
+# Switch to monoscreen mode
+super + shift + b
+    bspc monitor VGA-1 -d 1 2 3 4 5 6 7 8 9 0 $ = % && bspc monitor VGA-2 -r && bspc monitor VGA-3 -r && bspc wm -o
+
+# Switch to multiscreen mode
+super + shift + eacute
+    bspc monitor VGA-2 -d 1 2 3 4 5 && bspc monitor VGA-3 -d 6 7 8 9 0 && bspc monitor VGA-1 -d $ = %
+
+# Alternate between the tiled and monocle layout.
+super + n
+    bspc desktop -l next
+
+################################ State & Flags #################################
+
+# Set the window state.
+super + {d,shift + d,v,f}
+    bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# Set the node flags.
+super + ctrl + {l,x,z}
+    bspc node -g {locked,sticky,private}
+
+############################ Focus / Swap / Rotate #############################
+
+# Focus / swap with / send to the node in the given direction.
+super + {_,shift + ,shift + control + }{c,t,s,r}
+    bspc node -{f,s,n} {west,south,north,east}
+
+# Focus the next/previous node in the current desktop.
+super + {_,shift + }e
+    bspc node -f {next,prev}.local
+
+# Send the newest marked node to the newest preselected node.
+super + y
+    bspc node newest.marked.local -n newest.!automatic.local
+
+# Rotate the current node with other nodes in the current desktop.
+super + shift + o
+    bspc node @focused:/ --rotate 90
+
+# Focus the given desktop.
+super + {dollar,quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,equal,percent}
+    bspc desktop -f '^{1-9,10,11,12,13}'
+
+# Send to the given desktop and follow.
+super + shift + {dollar,quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,equal,percent}
+    bspc node -d '^{1-9,10,11,12,13}' --follow
+
+################################## Preselect ###################################
+
+# Preselect the direction.
+super + ctrl + {c,t,s,r}
+    bspc node -p {west,south,north,east}
+
+# Preselect the ratio.
+super + ctrl + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash}
+    bspc node -o 0.{1-9}
+
+# Cancel the preselection for the focused node.
+super + ctrl + space
+    bspc node -p cancel
+
+# Cancel the preselection for the focused desktop.
+super + ctrl + shift + space
+    bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+################################ Move & Resize #################################
+
+# Expand a window by moving one of its side outward.
+super + alt + {c,t,s,r}
+    bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# Contract a window by moving one of its side inward.
+super + alt + shift + {c,t,s,r}
+    bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# Move a floating window.
+super + {Left,Down,Up,Right}
+    bspc node -v {-20 0,0 20,0 -20,20 0}

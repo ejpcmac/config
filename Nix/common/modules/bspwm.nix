@@ -10,7 +10,7 @@ in
     enable = mkEnableOption "bspwm";
 
     monitors = mkOption {
-      type = types.string;
+      type = types.str;
       description = "A list a commands to configure the monitors.";
       default = ''
         bspc monitor -d I II III IV V VI VII VIII IX X
@@ -18,7 +18,7 @@ in
     };
 
     initScript = mkOption {
-      type = types.string;
+      type = types.str;
       description = "Init script for other desktop-related services.";
       default = ''
         if [ $(ps x | grep sxhkd | grep -v grep | wc -l) -eq 0 ]; then
@@ -28,7 +28,7 @@ in
     };
 
     extraConfig = mkOption {
-      type = types.string;
+      type = types.str;
       description = "Extra bspwm configuration options.";
       default = "";
       example = ''
@@ -39,7 +39,7 @@ in
     };
 
     extraRules = mkOption {
-      type = types.string;
+      type = types.str;
       description = "Extra rules for bspwm.";
       default = "";
       example = ''

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+file=$HOME/.touchpad-disabled
+id=$(xinput list --id-only "SYNA307B:00 06CB:CD46 Touchpad")
+
+if [ -L $file ]; then
+    rm $file
+    xinput enable $id
+else
+    ln -s $file $file
+    xinput disable $id
+fi

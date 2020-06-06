@@ -1,0 +1,61 @@
+#!/bin/sh
+
+usage() {
+    echo "usage: format-ssd <exfat|ext4> <device>"
+    exit 1
+}
+
+format_exfat() {
+    local device=$1
+
+    parted $device -- mkpart primary ntfs 1 100%
+    nix run nixpkgs.exfat -c mkfs.exfat -n SSD ${device}1
+}
+
+format_ext4() {
+    local device=$1
+
+    parted $device -- mkpart primary 1 100%
+    mkfs.ext4 -L SSD -E nodiscard,root_owner=1000:100 ${device}1
+}
+
+format_zfs() {
+    local device=$1
+
+    zpool create ssd \
+        -o autotrim=on \
+        -O acltype=posixacl \
+        -O atime=off \
+        -O checksum=sha512 \
+        -O compression=lz4 \
+        -O dnodesize=auto \
+        -O normalization=formD \
+        -O reservation=1G \
+        -O xattr=sa \
+        $device
+
+    chown 1000:users /ssd
+}
+
+if [ $UID -ne 0 ]; then
+    echo "You must execute this command as root."
+    exit 1
+fi
+
+if [ $# -ne 2 ]; then
+    usage
+fi
+
+fs=$1
+device=$2
+
+if [ "$fs" != "exfat" ] && [ "$fs" != "ext4" ] && [ "$fs" != "zfs" ]; then
+    usage
+fi
+
+set -e
+set -x
+
+blkdiscard -v $device
+parted $device -- mklabel msdos
+format_$fs $device

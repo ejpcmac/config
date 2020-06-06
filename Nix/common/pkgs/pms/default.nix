@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, buildGoPackage }:
+{ fetchFromGitHub, buildGoPackage }:
 
 buildGoPackage rec {
   name = "pms-${version}";
@@ -12,5 +12,5 @@ buildGoPackage rec {
     sha256 = "1rad133j0ib4lbg8xxkm7hcs0h8b4djix75i92hvjcdqc004m8wp";
   };
 
-  goDeps = ./pms_deps.nix;
+  goDeps = ./deps.nix;
 }

@@ -41,7 +41,7 @@ in
         fixed-center = false;
 
         width = "100%";
-        height = 27;
+        height = 36;
 
         background = "\${colors.background}";
         foreground = "\${colors.foreground}";
@@ -55,7 +55,7 @@ in
         module-margin-left = 1;
         module-margin-right = 2;
 
-        font-0 = "NotoSansMono Nerd Font:size=7.5:weight=bold;0";
+        font-0 = "NotoSansMono Nerd Font:size=10:weight=bold;0";
 
         modules-left = "bspwm";
         modules-center = "mpd";
@@ -114,7 +114,7 @@ in
 
       "module/eth" = mkDefault {
         type = "internal/network";
-        interface = "enp0s3";
+        interface = "enp10s0u1u3u3";
         interval = 3;
 
         format-connected-underline = "#55aa55";
@@ -131,7 +131,7 @@ in
 
       "module/wlan" = mkDefault {
         type = "internal/network";
-        interface = "net1";
+        interface = "wlp0s20f3";
         interval = 3;
 
         format-connected = "<ramp-signal> <label-connected>";
@@ -208,7 +208,10 @@ in
 
       "module/temperature" = mkDefault {
         type = "internal/temperature";
+
         thermal-zone = 0;
+        hwmon-path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input";
+
         warn-temperature = 60;
 
         format-underline = "#f50a4d";

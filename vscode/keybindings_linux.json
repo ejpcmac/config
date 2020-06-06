@@ -1,15 +1,5 @@
 [
     {
-        "key": "ctrl+shift+q",
-        "command": "rewrap.rewrapComment",
-        "when": "editorTextFocus"
-    },
-    {
-        "key": "alt+q",
-        "command": "-rewrap.rewrapComment",
-        "when": "editorTextFocus"
-    },
-    {
         "key": "ctrl+9",
         "command": "macros.commentLine",
         "when": "editorTextFocus && !editorReadonly"

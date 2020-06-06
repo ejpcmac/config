@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+rm $HOME/.local/share/is_docked
+ln -sf sxhkdrc_undocked $HOME/.config/sxhkd/sxhkdrc
+$HOME/.config/bspwm/bspwmrc
+
+bspc monitor %DP-1.2 -r
+bspc monitor %DP-1.1 -r
+bspc wm -o
+
+xrandr --output DP-1.2 --off
+xrandr --output DP-1.1 --off
+xrandr --output DP-0 --panning 1920x1080
+xrandr --dpi 141
+
+pkill -USR1 -x sxhkd
+pkill -USR1 termite
+systemctl --user restart polybar

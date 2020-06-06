@@ -47,7 +47,6 @@
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
     "flow.useNPMPackagedFlow": true,
-    "git.autofetch": true,
     "git.confirmSync": false,
     "latex-workshop.chktex.args.active": [
         "-wall",
@@ -72,7 +71,7 @@
         "-q"
     ],
     "latex-workshop.chktex.enabled": true,
-    "latex-workshop.latex.autoBuild.onSave.enabled": false,
+    "latex-workshop.latex.autoBuild.run": "never",
     "latex-workshop.latex.clean.fileTypes": [
         "*.aux",
         "*.aux.bak",
@@ -295,6 +294,8 @@
         "akamud.vscode-theme-onedark",
         "akamud.vscode-theme-onelight",
         "bbenoist.Nix",
+        "bibhasdn.django-html",
+        "bigonesystems.django",
         "bungcip.better-toml",
         "codezombiech.gitignore",
         "donjayamanne.githistory",
@@ -310,10 +311,9 @@
         "metalcode-eu.gnu-debugger",
         "mrorz.language-gettext",
         "MS-CEINTL.vscode-language-pack-fr",
-        "ms-vscode.cpptools",
+        "ms-python.python",
         "ms-vscode.wordcount",
         "numaru.vscode-ceedling-test-adapter",
-        "patrys.vscode-code-outline",
         "pgourlain.erlang",
         "piotrpalarz.vscode-gitignore-generator",
         "rid9.datetime",

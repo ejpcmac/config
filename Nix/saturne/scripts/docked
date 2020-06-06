@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+xrandr --output DP-1.1 --auto --right-of DP-0
+xrandr --output DP-1.2 --auto --right-of DP-1.1
+xrandr --dpi 112
+
+bspc wm --reorder-monitors DP-1.1 DP-1.2 DP-0
+bspc monitor %DP-1.1 -d 1 2 3 4 5
+bspc monitor %DP-1.2 -d 6 7 8 9 0
+bspc monitor DP-0 -d $ = %
+
+touch $HOME/.local/share/is_docked
+ln -sf sxhkdrc_docked $HOME/.config/sxhkd/sxhkdrc
+
+pkill -USR1 -x sxhkd
+pkill -USR1 termite
+systemctl --user restart polybar

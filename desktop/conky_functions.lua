@@ -9,7 +9,7 @@ function conky_interfaces()
   if tonumber(conky_parse("$updates")) % 2 == 0 then
     local interfaces = ''
 
-    local result = io.popen("ifconfig -a -s | awk '$1 !~ /Iface/ {print $1}' | grep e")
+    local result = io.popen("ifconfig -a -s | awk '$1 !~ /Iface/ {print $1}' | grep en")
     for line in result:lines() do
       local interface = trim(line)
       interfaces = interfaces .. format_interface(interface)
@@ -36,7 +36,7 @@ function conky_media()
     local media = ''
 
     -- Internal drives
-    local devices = {"/", "/boot"}
+    local devices = {"/", "/boot/efi"}
     for i, path in pairs(devices) do
       media = media .. format_media(path, path)
     end
@@ -73,6 +73,15 @@ function conky_processor()
   end
 
   return processor
+end
+
+-- Shows CPU frequency.
+function conky_cpu_frequency()
+  local result = io.popen("lscpu | grep -Po '(?<=Vitesse du processeur en MHz :)(.*)'")
+  cpu_freq = trim(result:read("*a"))
+  result:close()
+
+  return cpu_freq
 end
 
 -- Shows CPU usage.

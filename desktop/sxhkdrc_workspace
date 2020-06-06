@@ -6,7 +6,7 @@
 
 # Open a terminal emulator.
 super + Return
-    termite
+    termite -c $HOME/.config/termite/themed-config
 
 # Open the program launcher.
 super + @space
@@ -20,18 +20,29 @@ super + Escape
 super + ctrl + shift + Escape
     poweroff
 
-# TODO: Update when using i3 / on NixOS.
+# Lock the screen.
+super + l
+    betterlockscreen --lock
+
 # Lock the screen and go to sleep.
 XF86Sleep
-    xscreensaver-command -lock && systemctl suspend
-
-# Lock the screen.
-super + shift + v
-    xscreensaver-command -lock
+    betterlockscreen --suspend
 
 # Take a screenshot.
 Print
-    maim $HOME/Images/Captures/$(date +%Y-%m-%d_%H-%M-%S).png
+    maim $HOME/Images/Captures/$HOSTNAME/$(date +%Y-%m-%d_%H-%M-%S).png
+
+################################################################################
+##                               Theme hotkeys                                ##
+################################################################################
+
+# Switch between dark and light themes.
+super + {_,shift +}g
+    $HOME/.config/termite/switch-theme && {echo,emacsclient --eval "(spacemacs/cycle-spacemacs-theme)"}
+
+# Switch between hard and soft variants.
+super + h
+    $HOME/.config/termite/switch-theme hardsoft
 
 ################################################################################
 #                             Application hotkeys                              #
@@ -43,7 +54,7 @@ super + e
 
 # Open the configuration.
 super + o
-    emacsclient -c ~/.config_files
+    emacsclient -c ~/config
 
 # Open KeePassX.
 super + k
@@ -53,13 +64,17 @@ super + k
 super + i
     firefox
 
+# Open Zeal.
+super + z
+      zeal
+
 ################################################################################
 #                            Music-related hotkeys                             #
 ################################################################################
 
 # Open a music browser (pms / Cantata).
 super + {_,shift + }m
-    {termite -e pms,cantata}
+    {termite -c $HOME/.config/termite/themed-config -e pms,cantata}
 
 # Playback management.
 XF86Audio{Play,Prev,Next}
@@ -87,6 +102,16 @@ super + alt + Escape
 super + {_,shift + }w
     bspc node -{c,k}
 
+# TODO: Call a script instead, and just define the same key to switch between
+# modes, as the state would be stored in a file.
+# Switch to monoscreen mode
+super + shift + b
+    bspc monitor VGA-1 -d 1 2 3 4 5 6 7 8 9 0 $ = % && bspc monitor VGA-2 -r && bspc monitor VGA-3 -r && bspc wm -o
+
+# Switch to multiscreen mode
+super + shift + eacute
+    bspc monitor VGA-2 -d 1 2 3 4 5 && bspc monitor VGA-3 -d 6 7 8 9 0 && bspc monitor VGA-1 -d $ = %
+
 # Alternate between the tiled and monocle layout.
 super + n
     bspc desktop -l next
@@ -94,7 +119,7 @@ super + n
 ################################ State & Flags #################################
 
 # Set the window state.
-super + {l,shift + l,v,f}
+super + {d,shift + d,v,f}
     bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # Set the node flags.
@@ -114,10 +139,6 @@ super + {_,shift + }e
 # Send the newest marked node to the newest preselected node.
 super + y
     bspc node newest.marked.local -n newest.!automatic.local
-
-# Swap the current node and the biggest node.
-super + g
-    bspc node -s biggest
 
 # Rotate the current node with other nodes in the current desktop.
 super + shift + o

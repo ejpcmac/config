@@ -6,7 +6,6 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-    "editor.minimap.enabled": false,
     "editor.minimap.showSlider": "always",
     "editor.renderControlCharacters": true,
     "editor.renderWhitespace": "boundary",
@@ -18,6 +17,7 @@
         "error_handling"
     ],
     "explorer.confirmDragAndDrop": false,
+    "extensions.autoCheckUpdates": false,
     "extensions.autoUpdate": false,
     "extensions.showRecommendationsOnlyOnDemand": true,
     "files.associations": {
@@ -148,6 +148,7 @@
     "latex-workshop.view.pdf.viewer": "tab",
     "rust.clippy_preference": "on",
     "rust-client.channel": "stable",
+    "rust-client.disableRustup": true,
     "search.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -183,6 +184,15 @@
         }
     ],
     "trailing-spaces.highlightCurrentLine": false,
+    "vim.handleKeys": {
+        "<C-a>": false,
+        "<C-c>": false,
+        "<C-k>": false,
+        "<C-n>": false,
+        "<C-t>": false,
+        "<C-v>": false,
+        "<C-w>": false
+    },
     "vim.useSystemClipboard": true,
     "vim.normalModeKeyBindingsNonRecursive": [
         { "before": ["é"], "after": ["w"] },
@@ -264,6 +274,8 @@
         { "before": ["<C-l>"], "after": ["z", "."]}
     ],
     "window.restoreWindows": "all",
+    "window.titleBarStyle": "native",
+    "window.zoomLevel": -1,
     "workbench.colorTheme": "Atom One Light",
     "workbench.iconTheme": "file-icons",
     "workbench.settings.openDefaultSettings": false,
@@ -285,6 +297,8 @@
         "akamud.vscode-theme-onedark",
         "akamud.vscode-theme-onelight",
         "bbenoist.Nix",
+        "bibhasdn.django-html",
+        "bigonesystems.django",
         "bungcip.better-toml",
         "codezombiech.gitignore",
         "donjayamanne.githistory",
@@ -297,16 +311,17 @@
         "JakeBecker.elixir-ls",
         "James-Yu.latex-workshop",
         "marus25.cortex-debug",
+        "metalcode-eu.gnu-debugger",
         "mrorz.language-gettext",
         "MS-CEINTL.vscode-language-pack-fr",
-        "ms-vscode.cpptools",
+        "ms-python.python",
         "ms-vscode.wordcount",
         "numaru.vscode-ceedling-test-adapter",
-        "patrys.vscode-code-outline",
         "pgourlain.erlang",
         "piotrpalarz.vscode-gitignore-generator",
         "rid9.datetime",
         "robinbentley.sass-indented",
+        "RomanPeshkov.vscode-text-tables",
         "RReverser.llvm",
         "Rubymaniac.vscode-direnv",
         "rust-lang.rust",

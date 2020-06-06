@@ -190,6 +190,9 @@
   ;; Keyboard options
   ;;
 
+  ;; Use C-s to save.
+  (global-set-key (kbd "C-s") 'save-buffer)
+
   ;; Use T and S to scroll up and down
   (define-key evil-normal-state-map (kbd "T") 'evil-scroll-down)
   (define-key evil-normal-state-map (kbd "S") 'evil-scroll-up)
