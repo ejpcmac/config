@@ -66,9 +66,6 @@ in
   ############################################################################
 
   environment.variables = {
-    # Set $TMDIR so that it is the same inside and outside Nix shells.
-    TMPDIR = "/run/user/$UID";
-
     # Only use /etc/ranger/rc.conf and ~/.config/ranger/rc.conf
     RANGER_LOAD_DEFAULT_RC = "FALSE";
   };
@@ -81,6 +78,8 @@ in
     enableDefaultFonts = true;
 
     fonts = with pkgs; [
+      carlito # Compatible with Calibri.
+      fira-code
       inconsolata
       lato
       meslo-lg
@@ -143,8 +142,9 @@ in
   ############################################################################
 
   programs = {
-    ssh.startAgent = false;
     gnupg.agent = { enable = true; enableSSHSupport = true; };
+    ssh.startAgent = false;
+    tmux.useBepoKeybindings = true;
     wireshark = { enable = true; package = pkgs.wireshark-qt; };
   };
 

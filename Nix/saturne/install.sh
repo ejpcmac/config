@@ -14,10 +14,15 @@ set -x
 ################################################################################
 
 name=saturne
+user=jpc
 config_repo=https://gitlab.ejpcmac.net/jpc/config.git
+config_dir=/mnt/home/$user/config
 zpool=$name
-root=$zpool/os
-boot_partition=/dev/nvme0n1p1
+disk1=/dev/nvme0n1
+disk2=/dev/nvme1n1
+boot_partition=${disk1}p1
+mirror1=${disk1}p2
+mirror2=${disk2}p2
 
 luks_options="--cipher aes-xts-plain64 \
               --key-size 512 \
@@ -30,7 +35,6 @@ luks_options="--cipher aes-xts-plain64 \
 ##                                   Script                                   ##
 ################################################################################
 
-# Configure Nix.
 printf "\n\e[32m=> Configuring Nix...\e[0m\n\n"
 (
     set -x
@@ -38,59 +42,53 @@ printf "\n\e[32m=> Configuring Nix...\e[0m\n\n"
     echo "max-jobs = auto\nauto-optimise-store = true" > ~/.config/nix/nix.conf
 )
 
-# Install the dependencies for the script.
 printf "\n\e[32m=> Installing the dependencies for the script...\e[0m\n\n"
 (
     set -x
     nix-env -Ai nixos.git
 )
 
-# Partition the SSDs.
 printf "\n\e[32m=> Partitioning the SSDs...\e[0m\n\n"
 (
     set -x
-    parted /dev/nvme0n1 -- mklabel gpt
-    parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 1GiB
-    parted /dev/nvme0n1 -- mkpart primary 1GiB 100%
-    parted /dev/nvme0n1 -- set 1 boot on
+    parted $disk1 -- mklabel gpt
+    parted $disk1 -- mkpart ESP fat32 1MiB 1GiB
+    parted $disk1 -- mkpart primary 1GiB 100%
+    parted $disk1 -- set 1 boot on
 
-    parted /dev/nvme1n1 -- mklabel gpt
-    parted /dev/nvme1n1 -- mkpart ESP fat32 1MiB 1GiB
-    parted /dev/nvme1n1 -- mkpart primary 1GiB 100%
+    parted $disk2 -- mklabel gpt
+    parted $disk2 -- mkpart ESP fat32 1MiB 1GiB
+    parted $disk2 -- mkpart primary 1GiB 100%
 )
 
-# Format the ESP.
 printf "\n\e[32m=> Formatting the ESP...\e[0m\n\n"
 (
     set -x
     mkfs.fat -F 32 -n boot $boot_partition
 )
 
-# Format the LUKS devices.
 printf "\n\e[32m=> Formatting the LUKS devices...\e[0m\n\n"
 (
     set -x
 
-    cryptsetup $luks_options luksFormat /dev/nvme0n1p2
+    cryptsetup $luks_options luksFormat $mirror1
     while [ $? -ne 0 ]; do
-        cryptsetup $luks_options luksFormat /dev/nvme0n1p2
+        cryptsetup $luks_options luksFormat $mirror1
     done
 
-    cryptsetup $luks_options luksFormat /dev/nvme1n1p2
+    cryptsetup $luks_options luksFormat $mirror2
     while [ $? -ne 0 ]; do
-        cryptsetup $luks_options luksFormat /dev/nvme1n1p2
+        cryptsetup $luks_options luksFormat $mirror2
     done
 )
 
-# Mount the LUKS devices.
 printf "\n\e[32m=> Mounting the LUKS devices...\e[0m\n\n"
 (
     set -x
-    cryptsetup luksOpen /dev/nvme0n1p2 ssd1
-    cryptsetup luksOpen /dev/nvme1n1p2 ssd2
+    cryptsetup luksOpen $mirror1 ssd1
+    cryptsetup luksOpen $mirror2 ssd2
 )
 
-# Create the ZFS pool.
 printf "\n\e[32m=> Creating the ZFS pool...\e[0m\n\n"
 (
     set -x
@@ -110,10 +108,10 @@ printf "\n\e[32m=> Creating the ZFS pool...\e[0m\n\n"
         /dev/mapper/ssd2
 )
 
-# Create the OS filesystems.
 printf "\n\e[32m=> Creating the OS filesystems...\e[0m\n\n"
 (
     set -x
+    root=$zpool/os
     zfs create -o mountpoint=legacy                                $root
     zfs create                      -o com.sun:auto-snapshot=false $root/nix
     zfs create                                                     $root/nix/store
@@ -131,14 +129,15 @@ printf "\n\e[32m=> Creating the OS filesystems...\e[0m\n\n"
     zfs create                                                     $zpool/home/jpc/.cache
 )
 
-# Unmount the automatically mounted filesystems.
+# Unmount the automatically mounted filesystems like $zpool/home so that the
+# NixOS installer does not handle them.
 printf "\n\e[32m=> Unmounting the automatically mounted filesystems...\e[0m\n\n"
 (
     set -x
     zfs unmount -a
 )
 
-# Mount the filesystems.
+# Then mount manually the “legacy” filesystems.
 printf "\n\e[32m=> Mounting the filesystems...\e[0m\n\n"
 (
     set -x
@@ -158,43 +157,56 @@ printf "\n\e[32m=> Mounting the filesystems...\e[0m\n\n"
     mount -t zfs $root/var/tmp /mnt/var/tmp
 )
 
-# Generate the hardware configuration.
 printf "\n\e[32m=> Generating the hardware configuration...\e[0m\n\n"
 (
     set -x
     nixos-generate-config --root /mnt
 )
 
-# Mount the non-OS filesystems.
+# Only after generating the hardware-configuration.nix, we can mount the other
+# ZFS filesystems.
 printf "\n\e[32m=> Mounting the non-OS filesystems...\e[0m\n\n"
 (
     set -x
     zfs mount -a
 )
 
-# Install the configuration.
+function mkhome() {
+    local user=$1
+    local uid=$2
+
+    local user_home=/mnt/home/$user
+    local user_nix_profile=/mnt/nix/var/nix/profiles/per-user/$user
+
+    mkdir -p $user_home $user_nix_profile
+    chown -R $uid:users $user_home
+    chmod 700 $user_home
+}
+
+printf "\n\e[32m=> Configuring the user homes...\e[0m\n\n"
+(
+    set -x
+    mkhome $user 1000
+)
+
 printf "\n\e[32m=> Installing the configuration...\e[0m\n\n"
 (
     set -x
-    user_home=/mnt/home/jpc
-    git clone --recurse-submodules $config_repo $user_home/config
-    mv /mnt/etc/nixos/hardware-configuration.nix $user_home/config/Nix/$name
-    chown -R 1000:users $user_home
-    chmod 700 $user_home
-    chmod 700 $user_home/config
+    git clone --recurse-submodules $config_repo $config_dir
+    mv /mnt/etc/nixos/hardware-configuration.nix $config_dir/Nix/$name
+    chown -R 1000:users $config_dir
+    chmod 700 $config_dir
     rm /mnt/etc/nixos/configuration.nix
-    ln -s ../../home/jpc/config/Nix/$name/configuration.nix /mnt/etc/nixos/
-    ln -s ../../home/jpc/config/Nix/$name/hardware-configuration.nix /mnt/etc/nixos/
+    ln -s ../../home/$user/config/Nix/$name/configuration.nix /mnt/etc/nixos/
+    ln -s ../../home/$user/config/Nix/$name/hardware-configuration.nix /mnt/etc/nixos/
 )
 
-# Install NixOS.
 printf "\n\e[32m=> Installing NixOS...\e[0m\n\n"
 (
     set -x
-    nix-channel --add https://nixos.org/channels/nixos-unstable nixos
     nix-channel --add https://github.com/ejpcmac/jpc-nix/archive/master.tar.gz jpc-nix
     nix-channel --update
-    nixos-install
+    nixos-install --no-root-passwd
 )
 
 printf "\n\e[32m\e[1mInstallation complete!\e[0m\n\n"

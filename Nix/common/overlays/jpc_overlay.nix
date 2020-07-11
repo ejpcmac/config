@@ -92,4 +92,27 @@ rec {
         --replace $out/bin/signal-desktop $out/bin/signal-desktop\ --use-tray-icon
     '';
   });
+
+  # Update Mixxx and install the udev rule for HID controllers.
+  mixxx = super.mixxx.overrideAttrs (attrs: rec {
+    version = "2.2.4";
+
+    src = self.fetchFromGitHub {
+      owner = "mixxxdj";
+      repo = "mixxx";
+      rev = "release-${version}";
+      sha256 = "1dj9li8av9b2kbm76jvvbdmihy1pyrw0s4xd7dd524wfhwr1llxr";
+    };
+
+    postInstall = self.lib.optionalString self.stdenv.isLinux ''
+      rules="$src/res/linux/mixxx.usb.rules"
+      if [ ! -f "$rules" ]; then
+          echo "$rules is missing, must update the Nix file."
+          exit 1
+      fi
+
+      mkdir -p "$out/lib/udev/rules.d"
+      cp "$rules" "$out/lib/udev/rules.d/69-mixxx-usb-uaccess.rules"
+    '';
+  });
 }

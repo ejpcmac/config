@@ -106,6 +106,9 @@ in
       # Base tmux session.
       tmb = "tmuxinator base";
 
+      # Get the property of files.
+      own = "sudo chown jpc:users";
+
       # Generate quickly clean documents with pandoc.
       pd = "pandoc --number-sections --toc -V geometry:margin=25mm -V fontsize=11pt";
     };

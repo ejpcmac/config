@@ -37,4 +37,13 @@
 
     groups.plugdev = {};
   };
+
+  # Import the home-manager NixOS module.
+  imports = [ ../../home-manager/nixos ];
+
+  # Configure home-manager for each user.
+  home-manager.users = {
+    root = import ../../confkit/Nix/root.nix;
+    jpc = import ./jpc.nix;
+  };
 }

@@ -203,7 +203,7 @@ in
 
       # iPhone management
       mount-iphone = "ifuse ~/iPhone";
-      unmount-iphone = "sudo umount ~/iPhone";
+      unmount-iphone = "fusermount -u ~/iPhone";
       backup-iphone-photos = "rsync -a --progress ~/iPhone/DCIM/*/* ~/Photo/iPhone";
 
       # Performance
@@ -292,6 +292,7 @@ in
         font-0 = "NotoSansMono Nerd Font:size=8.5:weight=bold;0";
 
         modules-left = "bspwm";
+        modules-center = "mpd";
         modules-right = "alsa temperature memory cpu battery wlan eth date";
 
         locale = "fr_FR.UTF-8";
@@ -324,6 +325,7 @@ in
         font-0 = "NotoSansMono Nerd Font:size=8.5:weight=bold;0";
 
         modules-left = "bspwm";
+        modules-center = "mpd";
         modules-right = "alsa temperature memory cpu battery wlan eth date";
 
         locale = "fr_FR.UTF-8";

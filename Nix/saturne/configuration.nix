@@ -179,10 +179,12 @@ in
     k3b
     kicad
     liferea
+    mixxx
     scribus
     signal-desktop
     stellarium
     thunderbird
+    tigervnc
     tor-browser-bundle-bin
     unrar
   ];
@@ -199,6 +201,7 @@ in
     usbmuxd.enable = true;
 
     printing.drivers = [ pkgs.epson-escpr ];
+    udev.packages = [ pkgs.mixxx ];
 
     httpd = {
       enable = true;
