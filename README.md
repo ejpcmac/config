@@ -13,8 +13,6 @@ various customisations I use for my everyday comfort. Enjoy! :)
 * `confkit` - my public configuration framework (see History).
 * `desktop` - some desktop environment related configuration. Some more
     configuration (`bspwn`, …) can be found under `Nix/`.
-* `karabiner` - some configuration for Karabiner Elements, mainly to handle my
-    TypeMatrix keyboard and make my Yubikey usable while my layout is in BÉPO.
 * `Nix`
     * `common` - configuration, packages and modules shared accross machines.
     * `saturne` - configuration for my personal PC.
