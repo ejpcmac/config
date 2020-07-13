@@ -13,7 +13,7 @@
 
     users.root = {
       # Use `mkpasswd -m SHA-512` to generate a new password hash.
-      hashedPassword = "***";
+      hashedPassword = "***[ REDACTED ]***";
     };
 
     users.jpc = {
@@ -21,7 +21,7 @@
       createHome = false;
       uid = 1000;
       description = "Jean-Philippe Cugnet";
-      hashedPassword = "***";
+      hashedPassword = "***[ REDACTED ]***";
       extraGroups = [
         "wheel"
         "cdrom"
@@ -39,11 +39,11 @@
   };
 
   # Import the home-manager NixOS module.
-  imports = [ ../../home-manager/nixos ];
+  imports = [ ../../../home-manager/nixos ];
 
   # Configure home-manager for each user.
   home-manager.users = {
-    root = import ../../confkit/Nix/root.nix;
-    jpc = import ./jpc.nix;
+    root = import ../../../confkit/Nix/user/root.nix;
+    jpc = import ./jpc;
   };
 }

@@ -43,19 +43,19 @@ in
   xdg.configFile = {
     "termite/config-dark-hard".text = mkDefault (
       config.xdg.configFile."termite/config".text
-      + readFile ./termite/jpc-dark.config);
+      + readFile ./res/termite/jpc-dark.config);
 
     "termite/config-dark-soft".text = mkDefault (
       config.xdg.configFile."termite/config".text
-      + readFile ./termite/base16-snazzy-noextra.config);
+      + readFile ./res/termite/base16-snazzy-noextra.config);
 
     "termite/config-light-soft".text = mkDefault (
       config.xdg.configFile."termite/config".text
-      + readFile ./termite/base16-atelier-dune-light-noextra.config);
+      + readFile ./res/termite/base16-atelier-dune-light-noextra.config);
 
     "termite/config-light-hard".text = mkDefault (
       config.xdg.configFile."termite/config".text
-      + readFile ./termite/jpc-light.config);
+      + readFile ./res/termite/jpc-light.config);
 
     "termite/switch-theme" = {
       executable = true;

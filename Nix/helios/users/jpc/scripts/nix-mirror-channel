@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+if [ $# -ne 3 ]; then
+    echo "usage: $0 <channel> <local_path> <local_binary_cache>"
+    exit 1
+fi
+
+channel=https://nixos.org/channels/$1
+mirror=$2
+mirror_cache=$3
+
+printf "\n\e[32m=> Create a local channel in $mirror...\e[0m\n\n"
+
+# Build the local channel.
+mkdir -p "$mirror"
+curl -L $channel/git-revision > "$mirror/git-revision"
+curl -L $channel/nixexprs.tar.xz > "$mirror/nixexprs.tar.xz"
+curl -L $channel/store-paths.xz > "$mirror/store-paths.xz"
+printf "file://$mirror_cache" > "$mirror/binary-cache-url"
+
+printf "\n\e[32m\e[1mThe mirror is up to date!\e[0m\n\n"

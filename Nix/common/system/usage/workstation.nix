@@ -1,39 +1,32 @@
 ################################################################################
 ##                                                                            ##
-##                        Common system configuration                         ##
+##                       Configuration for workstations                       ##
 ##                                                                            ##
 ################################################################################
 
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-  inherit (pkgs) runCommand;
-  confkit = import ../../confkit;
-  jpc_overlay = import ./overlays/jpc_overlay.nix;
-
-  keyboardLayout = runCommand "keyboard-layout" {} ''
-    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${./layout.xkb} $out
+  keyboardLayout = pkgs.runCommand "keyboard-layout" {} ''
+    ${pkgs.xorg.xkbcomp}/bin/xkbcomp ${../../res/layout.xkb} $out
   '';
 in
 
 {
-  imports = with confkit.modules; [
-    # Confkit modules
-    environment
-    nix
-    tmux
-    utilities
-    zsh
-  ];
+  ############################################################################
+  ##                             Kernel modules                             ##
+  ############################################################################
 
-  nixpkgs.overlays = [ jpc_overlay ];
+  boot = {
+    extraModulePackages = with config.boot.kernelPackages; [ exfat-nofuse ];
+    kernelModules = [ "exfat" ];
+  };
 
   ############################################################################
   ##                                Hardware                                ##
   ############################################################################
 
   hardware = {
-    brightnessctl.enable = true;
     pulseaudio.enable = true;
     u2f.enable = true;
   };
@@ -45,30 +38,42 @@ in
   };
 
   ############################################################################
-  ##                         General configuration                          ##
+  ##                               Networking                               ##
   ############################################################################
 
-  time.timeZone = "Indian/Kerguelen";
-
-  location = {
-    latitude = -49.35;
-    longitude = 70.22;
-  };
-
-  i18n = {
-    consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "fr-bepo";
-    defaultLocale = "fr_FR.UTF-8";
+  networking = {
+    networkmanager = {
+      enable = true;
+      packages = with pkgs; [
+        networkmanager-openvpn
+      ];
+    };
   };
 
   ############################################################################
-  ##                              Environment                               ##
+  ##                            System packages                             ##
   ############################################################################
 
-  environment.variables = {
-    # Only use /etc/ranger/rc.conf and ~/.config/ranger/rc.conf
-    RANGER_LOAD_DEFAULT_RC = "FALSE";
-  };
+  environment.systemPackages = with pkgs; [
+    # Utilities
+    betterlockscreen
+    pandoc
+    pdfpc
+    xorg.xev
+
+    # TeXLive can be useful for tools like Pandoc or Org.
+    texlive.combined.scheme-full
+
+    # Applications
+    firefox
+    keepassx2
+    libreoffice
+    mpv
+    pcmanfm
+    pqiv
+    veracrypt
+    zathura
+  ];
 
   ############################################################################
   ##                                 Fonts                                  ##
@@ -100,51 +105,12 @@ in
   };
 
   ############################################################################
-  ##                            System packages                             ##
-  ############################################################################
-
-  environment.systemPackages = with pkgs; [
-    # Utilities
-    betterlockscreen
-    dmg2img
-    lm_sensors
-    maim
-    mpc_cli
-    nix-prefetch-github
-    ntfs3g
-    openssl
-    pandoc
-    pdfpc
-    pv
-    pythonPackages.glances
-    wakelan
-    xorg.xev
-
-    # TeXLive can be useful for tools like Pandoc or Org.
-    texlive.combined.scheme-full
-
-    # Desktop environment
-    sxhkd
-
-    # Applications
-    keepassx2
-    libreoffice
-    mpv
-    pcmanfm
-    pqiv
-    riot-desktop
-    veracrypt
-    zathura
-  ];
-
-  ############################################################################
   ##                                 Programs                               ##
   ############################################################################
 
   programs = {
     gnupg.agent = { enable = true; enableSSHSupport = true; };
     ssh.startAgent = false;
-    tmux.useBepoKeybindings = true;
     wireshark = { enable = true; package = pkgs.wireshark-qt; };
   };
 
@@ -156,11 +122,6 @@ in
     emacs = { enable = true; defaultEditor = true; };
     pcscd.enable = true;
     printing.enable = true;
-
-    ntp = {
-      enable = true;
-      servers = [ "time2.kerguelen.ipev.fr" "time.kerguene.ipev.fr" ];
-    };
 
     redshift = {
       enable = true;
@@ -215,14 +176,5 @@ in
     # Currently, we also need to disable this service to avoid ModemManager to
     # be respawn after rebooting.
     "dbus-org.freedesktop.ModemManager1".enable = false;
-  };
-
-  ############################################################################
-  ##                          Custom configuration                          ##
-  ############################################################################
-
-  environment.etc = {
-    "ranger/rc.conf".source = confkit.file "ranger/bepo_rc.conf";
-    "ranger/scope.sh".source = "${pkgs.ranger}/share/doc/ranger/config/scope.sh";
   };
 }

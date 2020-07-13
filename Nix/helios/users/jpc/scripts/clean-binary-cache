@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+set -e
+
+if [ $# -ne 2 ]; then
+    echo "usage: $0 <channel> <binary_cache>"
+    exit 1
+fi
+
+channel=$1
+cache=$2
+
+paths=$(xzcat "$channel/store-paths.xz")
+
+for f in $cache/*.narinfo; do
+    hash_part=$(basename "$f" | awk -F. '{ print $1 }')
+    if [[ "$(echo $paths | grep $hash_part)" == "" ]]; then
+        head -n 1 "$f"
+        nar=$(head -n 2 "$f" | tail -n 1 | awk '{ print $2 }')
+        rm "$cache/$nar"
+        rm "$f"
+    fi
+done
+
+#printf "\n\e[32m=> Create a local channel in $mirror...\e[0m\n\n"
+
+
+#printf "\n\e[32m\e[1mThe mirror is up to date!\e[0m\n\n"

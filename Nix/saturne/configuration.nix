@@ -6,10 +6,6 @@
 
 { config, lib, pkgs, ... }:
 
-let
-  jpc = import <nixpkgs-jpc> { inherit pkgs; };
-in
-
 {
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
@@ -20,19 +16,35 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./users.nix
 
     # Configuration shared between hosts.
-    ../common/configuration.nix
+    ../common/system/general.nix
+    ../common/system/type/physical.nix
+    ../common/system/type/laptop.nix
+    ../common/system/usage/workstation.nix
+    ../common/system/usage/home.nix
+    ../common/system/features/zfs.nix
+    ../common/system/location/kerguelen.nix
+
+    # Configuration for the users.
+    ./users
 
     # Configuration to make a Pi-Gateway
     # ./pi-gateway.nix
   ];
 
-  # Nix configuration for offline mode.
+  ############################################################################
+  ##                     Configuration for offline mode                     ##
+  ############################################################################
+
   nix = {
     binaryCaches = lib.mkForce [ "file:///data/Mirroirs/nixpkgs/cache" ];
     gc.automatic = false;
+  };
+
+  environment.variables = {
+    # Use the local mirrors.
+    HEX_MIRROR_URL = "http://hex.saturne/repos/hexpm_mirror";
   };
 
   ############################################################################
@@ -40,8 +52,7 @@ in
   ############################################################################
 
   boot = {
-    extraModulePackages = with config.boot.kernelPackages; [ exfat-nofuse ];
-    kernelModules = [ "exfat" ];
+    # TODO: Remove in NixOS 20.03.
     supportedFilesystems = [ "zfs" ];
     tmpOnTmpfs = true;
 
@@ -81,9 +92,11 @@ in
   ##                                Hardware                                ##
   ############################################################################
 
-  hardware = {
-    cpu.intel.updateMicrocode = true;
-  };
+  # Tweak to get the touchpad working when waking up from sleep.
+  powerManagement.resumeCommands = ''
+    ${pkgs.kmod}/bin/rmmod i2c_hid
+    ${pkgs.kmod}/bin/modprobe i2c_hid
+  '';
 
   ############################################################################
   ##                         General configuration                          ##
@@ -92,7 +105,6 @@ in
   networking = {
     hostName = "saturne";
     hostId = "66f21a93";
-    search = [ "kerguelen.ipev.fr" ];
 
     firewall = {
       # Share websites and mirrors.
@@ -111,44 +123,6 @@ in
         "dev.bark-artwork.com"
       ];
     };
-
-    networkmanager = {
-      enable = true;
-      packages = with pkgs; [
-        networkmanager-openvpn
-      ];
-
-      # dispatcherScripts = [
-      #   {
-      #     # Automatically connect to the VPN.
-      #     type = "basic";
-      #     source = pkgs.writeText "vpn-up" ''
-      #       conns=$(${pkgs.networkmanager}/bin/nmcli connection show --active \
-      #                   | grep -e ethernet -e wifi \
-      #                   | wc -l)
-
-      #       if [ $conns -ge 1 ];
-      #       then
-      #         ${pkgs.networkmanager}/bin/nmcli connection up ejpcmac.net
-      #       fi
-      #     '';
-      #   }
-      # ];
-    };
-  };
-
-  powerManagement.resumeCommands = ''
-    ${pkgs.kmod}/bin/rmmod i2c_hid
-    ${pkgs.kmod}/bin/modprobe i2c_hid
-  '';
-
-  ############################################################################
-  ##                              Environment                               ##
-  ############################################################################
-
-  environment.variables = {
-    # Use the local mirrors.
-    HEX_MIRROR_URL = "http://hex.saturne/repos/hexpm_mirror";
   };
 
   ############################################################################
@@ -156,37 +130,9 @@ in
   ############################################################################
 
   nixpkgs.config.allowUnfree = true;
-  environment.systemPackages = with pkgs; with jpc; [
+  environment.systemPackages = with pkgs; [
     # Utilities
-    cifs-utils
-    linuxPackages.cpupower
-    powertop
     thunderbolt
-    syncoid
-    wine
-
-    # Applications
-    asunder
-    bitcoin
-    cantata
-    dashpay
-    darktable
-    easytag
-    firefox
-    gimp
-    ifuse
-    inkscape
-    k3b
-    kicad
-    liferea
-    mixxx
-    scribus
-    signal-desktop
-    stellarium
-    thunderbird
-    tigervnc
-    tor-browser-bundle-bin
-    unrar
   ];
 
   ############################################################################
@@ -194,11 +140,8 @@ in
   ############################################################################
 
   services = {
-    avahi = { enable = true; nssmdns = true; };
     hardware.bolt.enable = true;
     throttled.enable = true;
-    tlp.enable = true;
-    usbmuxd.enable = true;
 
     printing.drivers = [ pkgs.epson-escpr ];
     udev.packages = [ pkgs.mixxx ];
@@ -256,7 +199,7 @@ in
     mpd = {
       enable = true;
       musicDirectory = "/data/Musique";
-      extraConfig = builtins.readFile ./mpd/mpd.conf;
+      extraConfig = builtins.readFile ./res/mpd.conf;
     };
 
     nix-serve = {
@@ -265,30 +208,10 @@ in
       secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
     };
 
-    smartd = {
-      enable = true;
-    };
-
     xserver = {
       dpi = 141;
       videoDrivers = [ "nvidia" ];
       xrandrHeads = [ { output = "DP-0"; primary = true; } ];
-    };
-
-    zfs = {
-      autoSnapshot = {
-        enable = true;
-        frequent = 4;
-        hourly = 24;
-        daily = 7;
-        weekly = 4;
-        monthly = 24;
-      };
-
-      autoScrub = {
-        enable = true;
-        interval = "Sun, 13:00";
-      };
     };
   };
 

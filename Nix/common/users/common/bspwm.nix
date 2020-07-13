@@ -14,7 +14,7 @@ in
 
 {
   # TODO: Remove when it is merged in home-manager.
-  imports = [ ./modules/bspwm.nix ];
+  imports = [ ../../modules/bspwm.nix ];
 
   programs.bspwm = {
     enable = true;

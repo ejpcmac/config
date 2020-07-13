@@ -1,6 +1,6 @@
 ################################################################################
 ##                                                                            ##
-##                   Common workstation home configuration                    ##
+##                 Home configuration for jpc on workstations                 ##
 ##                                                                            ##
 ################################################################################
 
@@ -8,7 +8,7 @@
 
 let
   inherit (builtins) readFile;
-  confkit = import ../../confkit;
+  confkit = import ../../../../../confkit;
 
   # vscode = pkgs.vscode-with-extensions.override {
   #   vscodeExtensions = with pkgs.vscode-extensions; [
@@ -25,13 +25,10 @@ in
 
 {
   imports = [
-    # Common configuration between all hosts.
-    ./jpc_common.nix
-
     # Yet-to-be-published modules.
-    ../common/bspwm.nix
-    ../common/polybar.nix
-    ../common/termite.nix
+    ../../common/bspwm.nix
+    ../../common/polybar.nix
+    ../../common/termite.nix
   ];
 
   ############################################################################
@@ -45,9 +42,13 @@ in
     ceedling
     cloc
     direnv
+    dmg2img
     gitAndTools.hub
     gitAndTools.git-sync
+    maim
     mixnix
+    mpc_cli
+    nix-prefetch-github
     nixops
     pass
     pms
@@ -64,9 +65,12 @@ in
 
     # Desktop environment
     conky
+    sxhkd
 
     # Applications
     meld
+    riot-desktop
+    tigervnc
     vscode
     yubioath-desktop
     zeal
@@ -90,6 +94,12 @@ in
   };
 
   xdg.configFile = {
+    # TODO: Factorise sxhkd configurations and auto-create the link.
+    "sxhkd/sxhkdrc_undocked".source = ../../../../../desktop/sxhkdrc_undocked;
+    "sxhkd/sxhkdrc_docked".source = ../../../../../desktop/sxhkdrc_docked;
+    "conky/conky.conf".source = ../../../../../desktop/conky.conf;
+    "conky/conky_functions.lua".source = ../../../../../desktop/conky_functions.lua;
+    "pms/pms.conf".source = confkit.file "misc/pms_bepo.conf";
     "zathura/zathurarc".source = confkit.file "misc/zathurarc_bepo";
     "tridactyl/tridactylrc".text =
       readFile (confkit.file "misc/tridactylrc_bepo")
@@ -122,10 +132,6 @@ in
       # Commandes fréquentes.
       op = "xdg-open";
 
-      # WiFi toggle.
-      won = "nmcli radio wifi on";
-      woff = "nmcli radio wifi off";
-
       # Emacs
       eds = "systemctl --user start emacs";
       edp = "systemctl --user stop emacs";
@@ -136,7 +142,7 @@ in
       rp = "systemctl --user restart polybar";
 
       # Reload the custom keyoard configuration.
-      reload-xkb = "nix-shell -p xorg.xkbcomp --run 'xkbcomp ~/config/Nix/common/layout.xkb $DISPLAY'";
+      reload-xkb = "nix-shell -p xorg.xkbcomp --run 'xkbcomp ~/config/Nix/common/res/layout.xkb $DISPLAY'";
 
       # Make SSH work with termite.
       ssh = "TERM=xterm-256color ssh";

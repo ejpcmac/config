@@ -1,6 +1,6 @@
 ################################################################################
 ##                                                                            ##
-##                         Common home configuration                          ##
+##                     General home configuration for jpc                     ##
 ##                                                                            ##
 ################################################################################
 
@@ -8,9 +8,9 @@
 
 let
   inherit (builtins) readFile;
-  confkit = import ../../confkit;
-  jpc_overlay = import ./overlays/jpc_overlay.nix;
-  mixnix_overlay = import ./overlays/mixnix_overlay;
+  confkit = import ../../../../confkit;
+  jpc_overlay = import ../../overlays/jpc_overlay.nix;
+  mixnix_overlay = import ../../overlays/mixnix_overlay;
 in
 
 {
@@ -20,7 +20,7 @@ in
   # should.
   home.stateVersion = "19.09";  # Did you read the comment?
 
-  imports = with confkit.modules; [ git ];
+  imports = with confkit.modules.user; [ git ];
 
   nixpkgs.overlays = [
     mixnix_overlay
@@ -39,11 +39,6 @@ in
     diceware
     mu
     nmap
-
-    # Repositories mirroring tools
-    apt-mirror
-    mini_repo
-    rustup-mirror
   ];
 
   ############################################################################
@@ -61,7 +56,7 @@ in
     ".zsh-custom/themes/bazik.zsh-theme".source = confkit.file "zsh/themes/bazik.zsh-theme";
 
     # Non-natively handled configuration files
-    ".spacemacs".source = ../../spacemacs/init.el;
+    ".spacemacs".source = ../../../../spacemacs/init.el;
 
     ".gnupg/gpg.conf".text = ''
         default-key C350CCB299D730FDAF8C5B7AE847B871DADD49DF
@@ -78,7 +73,7 @@ in
 
   programs.git = {
     userName = "Jean-Philippe Cugnet";
-    userEmail = "***";
+    userEmail = "***[ REDACTED ]***";
     signing.key = "C350CCB299D730FDAF8C5B7AE847B871DADD49DF";
   };
 

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+usage() {
+    echo "usage: prepare-op-mirror <OP1> <OP2>"
+}
+
+if [ $UID -ne 0 ]; then
+    echo "You must execute this command as root."
+    exit 1
+fi
+
+if [ $# -ne 2 ]; then
+    usage
+    exit 1
+fi
+
+prev_op=$1
+next_op=$2
+
+zfs snapshot -r helios/data/Mirroirs@$next_op
+zfs send -cRI @$prev_op helios/data/Mirroirs@$next_op > /zfs/Mirroirs@$prev_op-$next_op.zfs

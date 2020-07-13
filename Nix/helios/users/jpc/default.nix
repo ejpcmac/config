@@ -8,17 +8,20 @@
 
 let
   inherit (lib) mkForce;
-  confkit = import ../../confkit;
+  confkit = import ../../../../confkit;
 in
 
 {
-  imports = [ ../common/jpc_common.nix ];
+  imports = [
+    ../../../common/users/jpc/general.nix
+    ../../../common/users/jpc/features/repo-mirroring.nix
+    ../../../common/users/jpc/features/zfs.nix
+  ];
 
   ############################################################################
   ##                             User packages                              ##
   ############################################################################
 
-  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     browsh
     firefox
@@ -33,8 +36,12 @@ in
   ############################################################################
 
   home.file = {
-    # Zsh aliases and environments
-    ".zsh/zfs.zsh".source = confkit.file "zsh/zfs.zsh";
+    # Scripts
+    ".local/bin/clean-binary-cache".source = ./scripts/clean-binary-cache;
+    ".local/bin/nix-add-store-paths".source = ./scripts/nix-add-store-paths;
+    ".local/bin/nix-build-cache".source = ./scripts/nix-build-cache;
+    ".local/bin/nix-mirror-channel".source = ./scripts/nix-mirror-channel;
+    ".local/bin/prepare-op-mirror".source = ./scripts/prepare-op-mirror;
   };
 
   xdg.configFile = {
@@ -53,10 +60,6 @@ in
 
   programs.zsh = {
     shellAliases = {
-      # Specific ZFS aliases
-      zly = "zfs list -o name,jpc:manager,readonly,compression,compressratio,used,usedbysnapshots,com.sun:auto-snapshot";
-      wzly = "watch -n 1 zfs list -o name,jpc:manager,readonly,compression,compressratio,used,usedbysnapshots,com.sun:auto-snapshot";
-
       # Emacs
       eds = "systemctl --user start emacs";
       edp = "systemctl --user stop emacs";

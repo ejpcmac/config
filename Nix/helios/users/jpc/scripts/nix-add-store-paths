@@ -1,0 +1,39 @@
+#!/bin/sh
+
+if [ $# -ne 4 ]; then
+    echo "usage: $0 <store-paths.xz> <paths_to_add> <binary_cache> <updated-store-paths.xz>"
+    exit 1
+fi
+
+store_paths=$1
+paths_to_add=$2
+binary_cache=$3
+updated_paths=$4
+tmp_dir=/tmp/nix-add-store-paths
+
+
+printf "\n\e[32m=> Querying $binary_cache for new paths...\e[0m\n\n"
+
+mkdir -p "$tmp_dir"
+rm $tmp_dir/*
+xzcat "$store_paths" > "$tmp_dir/store-paths"
+
+while read path; do
+    if [ $(grep $path "$tmp_dir/store-paths" | wc -l) -eq 0 ]; then
+        nix path-info $path --store $binary_cache
+
+        if [ $? -eq 0 ]; then
+            echo $path >> "$tmp_dir/to_add"
+        else
+            # TODO: Remove when debugging is done.
+            echo $path >> "$tmp_dir/missing"
+        fi
+    fi
+done < "$paths_to_add"
+
+sort "$tmp_dir/store-paths" "$tmp_dir/to_add" | xz > "$updated_paths"
+
+# TODO: Remove when debugging is done.
+# rm -r "$tmp_dir"
+
+printf "\n\e[32m\e[1mPaths have been merged!\e[0m\n\n"
