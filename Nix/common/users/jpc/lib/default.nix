@@ -1,6 +1,8 @@
-{ pkgs }:
+{ config, pkgs }:
 
 let
+  identity = config.confkit.identity;
+
   defaultImap = {
     host = "***[ REDACTED ]***";
     port = 143;
@@ -21,10 +23,10 @@ in
                      , imap ? defaultImap
                      , smtp ? defaultSmtp
                      , smtpAuth ? "login" }: {
-    realName = "Jean-Philippe Cugnet";
-    passwordCommand = "${pkgs.pass}/bin/pass courriel/${address}";
-
+    realName = identity.name;
     inherit address userName primary imap smtp;
+
+    passwordCommand = "${pkgs.pass}/bin/pass courriel/${address}";
 
     mbsync = {
       enable = true;
@@ -33,13 +35,15 @@ in
       remove = "both";
     };
 
-    msmtp.enable = true;
-    msmtp.extraConfig.auth = smtpAuth;
+    msmtp = {
+      enable = true;
+      extraConfig.auth = smtpAuth;
+    };
 
     gpg = {
       encryptByDefault = true;
       signByDefault = true;
-      key = "C350CCB299D730FDAF8C5B7AE847B871DADD49DF";
+      key = identity.gpgKey;
     };
   };
 }

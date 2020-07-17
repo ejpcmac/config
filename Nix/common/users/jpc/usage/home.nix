@@ -9,7 +9,7 @@
 let
   inherit (pkgs) writeShellScript;
   inherit (libjpc) mkEmail;
-  libjpc = import ../lib { inherit pkgs; };
+  libjpc = import ../lib { inherit config pkgs; };
 
   # Index the mailbox and update mu4e after running mbsync.
   mbsyncPostExec = writeShellScript "mbsync-post-exec" ''

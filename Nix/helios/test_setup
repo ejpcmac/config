@@ -1,0 +1,14 @@
+nix-env -Ai nixos.mosh nixos.git nixos.tmux nixos.watch nixos.hddtemp nixos.lm_sensors nixos.python37Packages.glances
+modprobe nct6775
+git clone https://github.com/ejpcmac/confkit
+
+# hdd.sh
+hddtemp /dev/sda 2> /dev/null
+hddtemp /dev/sdb 2> /dev/null
+hddtemp /dev/sdc 2> /dev/null
+hddtemp /dev/sdd 2> /dev/null
+hddtemp /dev/sde 2> /dev/null
+hddtemp /dev/sdf 2> /dev/null
+hddtemp /dev/sdg 2> /dev/null
+
+badblocks -b 65536 -wsv -t random -p 3 /dev/sdb

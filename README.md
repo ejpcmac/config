@@ -1,25 +1,39 @@
-# Config files
+# Config
 
 This repository contains an extract from my personal configuration framework
-from which I have removed some sensitive information. This extraction being
-currently a manual operation, it will not always be up to date to my last
-tweakings, but you can get the general idea.
+from which I have removed some sensitive information. This extraction being a
+manual operation, it will not always be up to date to my last tweakings, but you
+can get the general idea.
 
 Sharing this here is a way to spread some ideas, some good aliases and other
 various customisations I use for my everyday comfort. Enjoy! :)
 
 ## Organisation
 
-* `confkit` - my public configuration framework (see History).
-* `desktop` - some desktop environment related configuration. Some more
-    configuration (`bspwn`, …) can be found under `Nix/`.
 * `Nix`
-    * `common` - configuration, packages and modules shared accross machines.
-    * `saturne` - configuration for my personal PC.
-    * `helios` – user-only configuration on my home NAS (the system
-        configuration is in another repository).
+    * `common` - configuration shared between hosts.
+        * `modules` – NixOS or `home-manager` modules that are not ready enough
+          or too much specific to be `confkit` or proposed in NixOS or
+            `home-manager`.
+        * `overlays` – `nixpkgs` overlays.
+        * `pkgs` – packages (maybe should I setup a proper
+            [NUR](https://github.com/nix-community/NUR) at some point).
+        * `res` – resource files for the configuration.
+        * `system` – common system configuration, modularised to be flexible.
+        * `users` – common `home-manager` configuration.
+    * `saturne` – configuration for my personal PC.
+    * `helios` – configuration for my home NAS.
+* [`confkit`](https://github.com/ejpcmac/confkit) – my public opinionated
+    configuration framework. You can also use it if you want, and even
+    contribute :)
+* `home-manager` – I now refer to
+    [`home-manager`](https://github.com/rycee/home-manager) as a submodule
+    instead of a channel. It gives me more control about the exact version I am
+    using and eases the deployment or re-deployment of my configuration.
+* `desktop` – some desktop environment related configuration. Some more
+    configuration (`bspwn`, …) can be found under `Nix/`.
 * `spacemacs` – Spacemacs configuration.
-* `vscode` - VSCode settings, keybindings and snippets.
+* `vscode` – VSCode settings, keybindings and snippets.
 
 ## History
 

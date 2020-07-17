@@ -23,6 +23,7 @@
     ../common/system/type/laptop.nix
     ../common/system/usage/workstation.nix
     ../common/system/usage/home.nix
+    ../common/system/features/systemd-boot.nix
     ../common/system/features/zfs.nix
     ../common/system/location/kerguelen.nix
 
@@ -56,14 +57,6 @@
     supportedFilesystems = [ "zfs" ];
     tmpOnTmpfs = true;
 
-    loader = {
-      # Use the systemd-boot EFI boot loader.
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-      efi.efiSysMountPoint = "/boot";
-      timeout = 1;
-    };
-
     initrd = {
       luks.devices = {
         ssd1 = { device = "/dev/nvme0n1p2"; allowDiscards = true; };
@@ -77,6 +70,7 @@
   fileSystems = {
     # Set options for the legacy mountpoints.
     "/".options = [ "noatime" ];
+    "/config".options = [ "nosuid" "nodev" "noexec" "noatime" ];
     "/boot".options = [ "nosuid" "nodev" "noexec" "noatime" ];
     "/etc".options = [ "nosuid" "nodev" "noatime" ];
     "/root".options = [ "nosuid" "nodev" "noatime" ];
@@ -142,6 +136,8 @@
   services = {
     hardware.bolt.enable = true;
     throttled.enable = true;
+    # TODO: Switch to the default or 6 when going back from Kerguelen.
+    zfs.autoSnapshot.monthly = 24;
 
     printing.drivers = [ pkgs.epson-escpr ];
     udev.packages = [ pkgs.mixxx ];

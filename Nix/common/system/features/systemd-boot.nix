@@ -1,6 +1,6 @@
 ################################################################################
 ##                                                                            ##
-##              Home configuration for jpc with the ZFS feature               ##
+##             Configuration for hosts booting with systemd-boot              ##
 ##                                                                            ##
 ################################################################################
 
@@ -8,13 +8,13 @@
 
 {
   ############################################################################
-  ##                                Aliases                                 ##
+  ##                          Boot & File systems                           ##
   ############################################################################
 
-  confkit.zsh.plugins = [ "zfs" ];
-
-  programs.zsh.shellAliases = {
-    zly = "zfs list -o name,jpc:manager,readonly,compression,compressratio,used,usedbysnapshots,com.sun:auto-snapshot";
-    wzly = "watch -n 1 zfs list -o name,jpc:manager,readonly,compression,compressratio,used,usedbysnapshots,com.sun:auto-snapshot";
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+    efi.efiSysMountPoint = "/boot";
+    timeout = 1;
   };
 }

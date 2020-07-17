@@ -7,31 +7,46 @@
 { config, lib, pkgs, ... }:
 
 let
-  confkit = import ../../../confkit;
+  inherit (lib.trivial) release;
   jpc_overlay = import ../overlays/jpc_overlay.nix;
 in
 
 {
-  imports = with confkit.modules.system; [
-    # Confkit modules
-    environment
-    nix
-    tmux
-    utilities
-    zsh
+  imports = [
+    # Import the confkit NixOS module to get ready-to-use configurations for
+    # several tools.
+    ../../../confkit/nixos
   ];
 
   nixpkgs.overlays = [ jpc_overlay ];
 
   ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+  confkit = {
+    nix.enable = true;
+    ranger.enable = true;
+    shell.enable = true;
+    tmux.enable = true;
+    utilities.enable = true;
+    zsh.enable = true;
+
+    # Use BÉPO-optimised keybindings.
+    keyboard.bepo = true;
+  };
+
+  ############################################################################
   ##                         General configuration                          ##
   ############################################################################
 
+  # TODO: Remove NixOS 19.09 support once all machines are on NixOS 20.03.
   i18n = {
+    defaultLocale = "fr_FR.UTF-8";
+  } // (if release == "19.09" then {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "fr-bepo";
-    defaultLocale = "fr_FR.UTF-8";
-  };
+  } else {});
 
   ############################################################################
   ##                            System packages                             ##
@@ -40,20 +55,10 @@ in
   environment.systemPackages = with pkgs; [
     # Utilities
     lm_sensors
-    ntfs3g
     openssl
     pv
     pythonPackages.glances
-    wakelan
   ];
-
-  ############################################################################
-  ##                                 Programs                               ##
-  ############################################################################
-
-  programs = {
-    tmux.useBepoKeybindings = true;
-  };
 
   ############################################################################
   ##                                Services                                ##
@@ -62,20 +67,11 @@ in
   services = {
     ntp.enable = true;
   };
-
-  ############################################################################
-  ##                          Custom configuration                          ##
-  ############################################################################
-
-  environment = {
-    etc = {
-      "ranger/rc.conf".source = confkit.file "ranger/bepo_rc.conf";
-      "ranger/scope.sh".source = "${pkgs.ranger}/share/doc/ranger/config/scope.sh";
-    };
-
-    variables = {
-      # Only use /etc/ranger/rc.conf and ~/.config/ranger/rc.conf
-      RANGER_LOAD_DEFAULT_RC = "FALSE";
-    };
-  };
 }
+// (if release == "20.03" then {
+  # TODO: Remove NixOS 19.09 support once all machines are on NixOS 20.03.
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "fr-bepo";
+  };
+} else {})

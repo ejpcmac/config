@@ -6,12 +6,9 @@
 
 { config, lib, pkgs, ... }:
 
-let
-  confkit = import ../../../../confkit;
-in
-
 {
   imports = [
+    # Configuration shared between hosts.
     ../../../common/users/jpc/general.nix
     ../../../common/users/jpc/type/laptop.nix
     ../../../common/users/jpc/usage/workstation.nix

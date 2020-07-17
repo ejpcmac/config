@@ -1,6 +1,6 @@
 ################################################################################
 ##                                                                            ##
-##                               Saturne users                                ##
+##                                Helios users                                ##
 ##                                                                            ##
 ################################################################################
 
@@ -22,23 +22,18 @@
         createHome = false;
         uid = 1000;
         description = "Jean-Philippe Cugnet";
+        extraGroups = [ "wheel" "data" "musique" "videos" "docs" "transmission" ];
         hashedPassword = "***[ REDACTED ]***";
-        extraGroups = [
-          "wheel"
-          "cdrom"
-          "dialout"
-          "docker"
-          "networkmanager"
-          "plugdev"
-          "vboxusers"
-          "video"
-          "wireshark"
-        ];
       };
+
+      # Other users…
     };
 
     groups = {
-      plugdev = {};
+      data.gid = 2000;
+      musique.gid = 2001;
+      videos.gid = 2002;
+      docs.gid = 2003;
     };
   };
 
@@ -47,7 +42,7 @@
 
   # Configure home-manager for each user.
   home-manager.users = {
-    root = import ../../../confkit/home-manager/configs/root.nix;
+    root = import ./root;
     jpc = import ./jpc;
   };
 }

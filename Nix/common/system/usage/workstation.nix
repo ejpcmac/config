@@ -57,8 +57,10 @@ in
   environment.systemPackages = with pkgs; [
     # Utilities
     betterlockscreen
+    ntfs3g
     pandoc
     pdfpc
+    wakelan
     xorg.xev
 
     # TeXLive can be useful for tools like Pandoc or Org.
@@ -72,7 +74,6 @@ in
     pcmanfm
     pqiv
     veracrypt
-    zathura
   ];
 
   ############################################################################

@@ -1,38 +1,47 @@
 ################################################################################
 ##                                                                            ##
-##                     Configuration for the ZFS feature                      ##
+##                         Configuration for servers                          ##
 ##                                                                            ##
 ################################################################################
 
 { config, lib, pkgs, ... }:
 
-let
-  inherit (lib) mkDefault;
-  jpc = import <nixpkgs-jpc> { inherit pkgs; };
-in
-
 {
+  ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+  confkit = {
+    # Use Vim as a lightweight backup for Emacs TRAMP.
+    vim = { enable = true; bepo = true; };
+  };
+
   ############################################################################
   ##                            System packages                             ##
   ############################################################################
 
   environment.systemPackages = with pkgs; [
-    # Utilities
-    jpc.syncoid
+    # Syncoid expect these tools to be in PATH for remote accesses.
+    lzop
+    mbuffer
   ];
+
+  ############################################################################
+  ##                                 Programs                               ##
+  ############################################################################
+
+  programs = {
+    mosh.enable = true;
+  };
 
   ############################################################################
   ##                                Services                                ##
   ############################################################################
 
   services = {
-    zfs = {
-      autoSnapshot.enable = true;
-
-      autoScrub = {
-        enable = true;
-        interval = mkDefault "Sun, 13:00";
-      };
+    openssh = {
+      enable = true;
+      passwordAuthentication = false;
     };
   };
 }

@@ -8,7 +8,6 @@
 
 let
   inherit (builtins) readFile;
-  confkit = import ../../../../../confkit;
 
   # vscode = pkgs.vscode-with-extensions.override {
   #   vscodeExtensions = with pkgs.vscode-extensions; [
@@ -32,6 +31,31 @@ in
   ];
 
   ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+  confkit = {
+    gpg.enable = true;
+    pms.enable = true;
+    screen.enable = true;
+    zathura.enable = true;
+
+    tridactyl = {
+      enable = true;
+      editor = "${pkgs.emacs}/bin/emacsclient --create-frame";
+    };
+
+    zsh.plugins = [
+      "ceedling"
+      "dev"
+      "direnv"
+      "docker"
+      "elixir"
+      "rust"
+    ];
+  };
+
+  ############################################################################
   ##                             User packages                              ##
   ############################################################################
 
@@ -51,7 +75,6 @@ in
     nix-prefetch-github
     nixops
     pass
-    pms
     qrencode
     screen
     tokei
@@ -80,30 +103,12 @@ in
   ##                          Custom configuration                          ##
   ############################################################################
 
-  home.file = {
-    # Zsh aliases and environments
-    ".zsh/ceedling.zsh".source = confkit.file "zsh/ceedling.zsh";
-    ".zsh/dev.zsh".source = confkit.file "zsh/dev.zsh";
-    ".zsh/direnv.zsh".source = confkit.file "zsh/direnv.zsh";
-    ".zsh/docker.zsh".source = confkit.file "zsh/docker.zsh";
-    ".zsh/elixir.zsh".source = confkit.file "zsh/elixir.zsh";
-    ".zsh/rust.zsh".source = confkit.file "zsh/rust.zsh";
-
-    # Non-natively handled configuration files
-    ".screenrc".source = confkit.file "misc/screenrc";
-  };
-
   xdg.configFile = {
     # TODO: Factorise sxhkd configurations and auto-create the link.
     "sxhkd/sxhkdrc_undocked".source = ../../../../../desktop/sxhkdrc_undocked;
     "sxhkd/sxhkdrc_docked".source = ../../../../../desktop/sxhkdrc_docked;
     "conky/conky.conf".source = ../../../../../desktop/conky.conf;
     "conky/conky_functions.lua".source = ../../../../../desktop/conky_functions.lua;
-    "pms/pms.conf".source = confkit.file "misc/pms_bepo.conf";
-    "zathura/zathurarc".source = confkit.file "misc/zathurarc_bepo";
-    "tridactyl/tridactylrc".text =
-      readFile (confkit.file "misc/tridactylrc_bepo")
-      + "\nset editorcmd ${pkgs.emacs}/bin/emacsclient --create-frame";
   };
 
   ############################################################################

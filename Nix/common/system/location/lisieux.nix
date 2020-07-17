@@ -1,38 +1,28 @@
 ################################################################################
 ##                                                                            ##
-##                     Configuration for the ZFS feature                      ##
+##                         Configuration for Lisieux                          ##
 ##                                                                            ##
 ################################################################################
 
 { config, lib, pkgs, ... }:
 
-let
-  inherit (lib) mkDefault;
-  jpc = import <nixpkgs-jpc> { inherit pkgs; };
-in
-
 {
   ############################################################################
-  ##                            System packages                             ##
+  ##                          Location & Time Zone                          ##
   ############################################################################
 
-  environment.systemPackages = with pkgs; [
-    # Utilities
-    jpc.syncoid
-  ];
+  location = {
+    latitude = 49.15;
+    longitude = 0.23;
+  };
+
+  time.timeZone = "Europe/Paris";
 
   ############################################################################
-  ##                                Services                                ##
+  ##                     Network-specific configuration                     ##
   ############################################################################
 
-  services = {
-    zfs = {
-      autoSnapshot.enable = true;
-
-      autoScrub = {
-        enable = true;
-        interval = mkDefault "Sun, 13:00";
-      };
-    };
+  networking.hosts = {
+    # Local machines (REDACTED)
   };
 }

@@ -8,78 +8,77 @@
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "uas" "sd_mod" "rtsx_pci_sdmmc" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "uas" "sd_mod" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "saturne/os";
+    { device = "helios/os";
       fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/A2B3-E01F";
+    { device = "/dev/disk/by-uuid/E0F4-CB73";
       fsType = "vfat";
     };
 
-  fileSystems."/config" =
-    { device = "saturne/local/config";
+  fileSystems."/nix" =
+    { device = "helios/os/nix";
       fsType = "zfs";
     };
 
-  fileSystems."/nix" =
-    { device = "saturne/os/nix";
+  fileSystems."/config" =
+    { device = "helios/os/config";
       fsType = "zfs";
     };
 
   fileSystems."/etc" =
-    { device = "saturne/os/etc";
+    { device = "helios/os/etc";
       fsType = "zfs";
     };
 
   fileSystems."/root" =
-    { device = "saturne/os/root";
+    { device = "helios/os/root";
       fsType = "zfs";
     };
 
   fileSystems."/var" =
-    { device = "saturne/os/var";
+    { device = "helios/os/var";
       fsType = "zfs";
     };
 
   fileSystems."/nix/store" =
-    { device = "saturne/os/nix/store";
+    { device = "helios/os/nix/store";
       fsType = "zfs";
     };
 
   fileSystems."/var/cache" =
-    { device = "saturne/os/var/cache";
+    { device = "helios/os/var/cache";
       fsType = "zfs";
     };
 
   fileSystems."/var/db" =
-    { device = "saturne/os/var/db";
+    { device = "helios/os/var/db";
       fsType = "zfs";
     };
 
   fileSystems."/var/empty" =
-    { device = "saturne/os/var/empty";
+    { device = "helios/os/var/empty";
       fsType = "zfs";
     };
 
   fileSystems."/var/log" =
-    { device = "saturne/os/var/log";
+    { device = "helios/os/var/log";
       fsType = "zfs";
     };
 
   fileSystems."/var/tmp" =
-    { device = "saturne/os/var/tmp";
+    { device = "helios/os/var/tmp";
       fsType = "zfs";
     };
 
   swapDevices = [ ];
 
-  nix.maxJobs = lib.mkDefault 12;
+  nix.maxJobs = lib.mkDefault 4;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

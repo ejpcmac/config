@@ -8,7 +8,6 @@
 
 let
   inherit (builtins) readFile;
-  confkit = import ../../../../confkit;
   jpc_overlay = import ../../overlays/jpc_overlay.nix;
   mixnix_overlay = import ../../overlays/mixnix_overlay;
 in
@@ -20,12 +19,43 @@ in
   # should.
   home.stateVersion = "19.09";  # Did you read the comment?
 
-  imports = with confkit.modules.user; [ git ];
+  # Import the confkit home-manager module to get ready-to-use configurations
+  # for several tools.
+  imports = [ ../../../../confkit/home-manager ];
 
   nixpkgs.overlays = [
     mixnix_overlay
     jpc_overlay
   ];
+
+  ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+
+  confkit = {
+    identity = {
+      name = "Jean-Philippe Cugnet";
+      email = "jean-philippe@cugnet.eu";
+      gpgKey = "C350CCB299D730FDAF8C5B7AE847B871DADD49DF";
+    };
+
+    # Use BÉPO-optimised keybindings.
+    keyboard.bepo = true;
+
+    git.enable = true;
+
+    zsh = {
+      enable = true;
+      ohMyZsh = true;
+      plugins = [
+        "aliases"
+        "git"
+        "imagemagick"
+        "nix"
+      ];
+    };
+  };
 
   ############################################################################
   ##                             User packages                              ##
@@ -46,21 +76,8 @@ in
   ############################################################################
 
   home.file = {
-    # Zsh aliases and environments
-    ".zsh/aliases.zsh".source = confkit.file "zsh/aliases.zsh";
-    ".zsh/git.zsh".source = confkit.file "zsh/git.zsh";
-    ".zsh/imagemagick.zsh".source = confkit.file "zsh/imagemagick.zsh";
-    ".zsh/nix.zsh".source = confkit.file "zsh/nix.zsh";
-
-    # Zsh themes
-    ".zsh-custom/themes/bazik.zsh-theme".source = confkit.file "zsh/themes/bazik.zsh-theme";
-
     # Non-natively handled configuration files
     ".spacemacs".source = ../../../../spacemacs/init.el;
-
-    ".gnupg/gpg.conf".text = ''
-        default-key C350CCB299D730FDAF8C5B7AE847B871DADD49DF
-      '' + readFile (confkit.file "misc/gpg.conf");
   };
 
   ############################################################################
@@ -71,31 +88,13 @@ in
     enable = true;
   };
 
-  programs.git = {
-    userName = "Jean-Philippe Cugnet";
-    userEmail = "***[ REDACTED ]***";
-    signing.key = "C350CCB299D730FDAF8C5B7AE847B871DADD49DF";
-  };
-
   programs.zsh = {
-    enable = true;
-    initExtra = readFile (confkit.file "zsh/config/home_init.zsh");
-
-    oh-my-zsh = {
-      enable = true;
-
-      custom = "$HOME/.zsh-custom";
-      theme = "bazik";
-
-      plugins = [
-        "git"
-        "git-flow"
-        "nix-shell"
-        "sudo"
-        "tmuxinator"
-        "zsh-syntax-highlighting"
-      ];
-    };
+    oh-my-zsh.plugins = [
+      "git"
+      "git-flow"
+      "tmuxinator"
+      "zsh-syntax-highlighting"
+    ];
 
     shellAliases = {
       # Base tmux session.

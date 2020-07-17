@@ -7,7 +7,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  libjpc = import ../lib { inherit pkgs; };
+  libjpc = import ../lib { inherit config pkgs; };
 
   ## Generates a Kermail account.
   mkKermail = userName: { primary ? false }:
