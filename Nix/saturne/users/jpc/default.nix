@@ -9,13 +9,13 @@
 {
   imports = [
     # Configuration shared between hosts.
-    ../../../common/users/jpc/general.nix
-    ../../../common/users/jpc/type/laptop.nix
-    ../../../common/users/jpc/usage/workstation.nix
-    ../../../common/users/jpc/usage/home.nix
-    ../../../common/users/jpc/features/repo-mirroring.nix
-    ../../../common/users/jpc/features/zfs.nix
-    ../../../common/users/jpc/location/kerguelen.nix
+    ../../../common/home-manager/jpc/general.nix
+    ../../../common/home-manager/jpc/type/laptop.nix
+    ../../../common/home-manager/jpc/usage/workstation.nix
+    ../../../common/home-manager/jpc/usage/home.nix
+    ../../../common/home-manager/jpc/features/repo-mirroring.nix
+    ../../../common/home-manager/jpc/features/zfs.nix
+    ../../../common/home-manager/jpc/location/kerguelen.nix
   ];
 
   ############################################################################

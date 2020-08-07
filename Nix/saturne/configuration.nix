@@ -18,14 +18,14 @@
     ./hardware-configuration.nix
 
     # Configuration shared between hosts.
-    ../common/system/general.nix
-    ../common/system/type/physical.nix
-    ../common/system/type/laptop.nix
-    ../common/system/usage/workstation.nix
-    ../common/system/usage/home.nix
-    ../common/system/features/systemd-boot.nix
-    ../common/system/features/zfs.nix
-    ../common/system/location/kerguelen.nix
+    ../common/nixos/general.nix
+    ../common/nixos/type/physical.nix
+    ../common/nixos/type/laptop.nix
+    ../common/nixos/usage/workstation.nix
+    ../common/nixos/usage/home.nix
+    ../common/nixos/features/systemd-boot.nix
+    ../common/nixos/features/zfs.nix
+    ../common/nixos/location/kerguelen.nix
 
     # Configuration for the users.
     ./users

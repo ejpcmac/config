@@ -12,9 +12,10 @@ in
 
 {
   imports = [
-    ../../../common/users/jpc/general.nix
-    ../../../common/users/jpc/features/repo-mirroring.nix
-    ../../../common/users/jpc/features/zfs.nix
+    # Configuration shared between hosts.
+    ../../../common/home-manager/jpc/general.nix
+    ../../../common/home-manager/jpc/features/repo-mirroring.nix
+    ../../../common/home-manager/jpc/features/zfs.nix
   ];
 
   ############################################################################

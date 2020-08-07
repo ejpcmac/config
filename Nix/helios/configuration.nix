@@ -18,12 +18,12 @@
     ./hardware-configuration.nix
 
     # Configuration shared between hosts.
-    ../common/system/general.nix
-    ../common/system/type/physical.nix
-    ../common/system/usage/server.nix
-    ../common/system/features/systemd-boot.nix
-    ../common/system/features/zfs.nix
-    ../common/system/location/lisieux.nix
+    ../common/nixos/general.nix
+    ../common/nixos/type/physical.nix
+    ../common/nixos/usage/server.nix
+    ../common/nixos/features/systemd-boot.nix
+    ../common/nixos/features/zfs.nix
+    ../common/nixos/location/lisieux.nix
 
     # Local features.
     ./features/mpd.nix
