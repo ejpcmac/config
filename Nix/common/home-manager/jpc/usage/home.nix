@@ -68,25 +68,18 @@ in
   ##                                 Programs                               ##
   ############################################################################
 
-  programs.pidgin = {
-    enable = true;
-    plugins = with pkgs; [ pidgin-otr ];
-  };
+  programs = {
+    mbsync.enable = true;
+    msmtp.enable = true;
+    pidgin = { enable = true; plugins = [ pkgs.pidgin-otr ]; };
 
-  programs.mbsync = {
-    enable = true;
-  };
-
-  programs.msmtp = {
-    enable = true;
-  };
-
-  programs.zsh = {
-    shellAliases = {
-      # iPhone management
-      mount-iphone = "ifuse ~/iPhone";
-      unmount-iphone = "fusermount -u ~/iPhone";
-      backup-iphone-photos = "rsync -a --progress ~/iPhone/DCIM/*/* ~/Photo/iPhone";
+    zsh = {
+      shellAliases = {
+        # iPhone management
+        mount-iphone = "ifuse ~/iPhone";
+        unmount-iphone = "fusermount -u ~/iPhone";
+        backup-iphone-photos = "rsync -a --progress ~/iPhone/DCIM/*/* ~/Photo/iPhone";
+      };
     };
   };
 
@@ -94,7 +87,6 @@ in
   ##                             User packages                              ##
   ############################################################################
 
-  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     # Utilities
     ifuse

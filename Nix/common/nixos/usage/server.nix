@@ -13,7 +13,7 @@
 
   confkit = {
     # Use Vim as a lightweight backup for Emacs TRAMP.
-    vim = { enable = true; bepo = true; };
+    vim.enable = true;
   };
 
   ############################################################################
@@ -44,5 +44,4 @@
     lzop
     mbuffer
   ];
-
 }

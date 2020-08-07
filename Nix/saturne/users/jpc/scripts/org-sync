@@ -2,3 +2,5 @@
 
 cd ~/Org/Pro
 git sync
+cd ~/Org/Perso
+git sync

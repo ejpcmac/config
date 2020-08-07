@@ -28,7 +28,7 @@ in
     cursorShape = mkDefault "block";
     dynamicTitle = mkDefault true;
     filterUnmatchedUrls = mkDefault true;
-    font = mkDefault "Monospace 9";
+    font = mkDefault "DejaVu Sans Mono 9";
     fullscreen = mkDefault true;
     geometry = mkDefault "800x600";
     mouseAutohide = mkDefault false;

@@ -39,7 +39,7 @@
     };
 
   fileSystems."/root" =
-    { device = "saturne/os/root";
+    { device = "saturne/system/root";
       fsType = "zfs";
     };
 

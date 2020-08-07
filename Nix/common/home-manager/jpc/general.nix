@@ -23,6 +23,7 @@ in
   # for several tools.
   imports = [ ../../../../confkit/home-manager ];
 
+  # Enable overlays on all hosts.
   nixpkgs.overlays = [
     mixnix_overlay
     jpc_overlay
@@ -31,7 +32,6 @@ in
   ############################################################################
   ##                                confkit                                 ##
   ############################################################################
-
 
   confkit = {
     identity = {
@@ -70,27 +70,31 @@ in
   ##                                 Programs                               ##
   ############################################################################
 
-  programs.home-manager = {
-    enable = true;
-  };
+  programs = {
+    home-manager.enable = true;
 
-  programs.zsh = {
-    oh-my-zsh.plugins = [
-      "git"
-      "git-flow"
-      "tmuxinator"
-      "zsh-syntax-highlighting"
-    ];
+    zsh = {
+      oh-my-zsh.plugins = [
+        "git"
+        "git-flow"
+        "tmuxinator"
+        "zsh-syntax-highlighting"
+      ];
 
-    shellAliases = {
-      # Base tmux session.
-      tmb = "tmuxinator base";
+      shellAliases = {
+        # Base tmux session.
+        tmb = "tmuxinator base";
 
-      # Get the property of files.
-      own = "sudo chown jpc:users";
+        # Get the property of files.
+        own = "sudo chown jpc:users";
 
-      # Generate quickly clean documents with pandoc.
-      pd = "pandoc --number-sections --toc -V geometry:margin=25mm -V fontsize=11pt";
+        # Generate quickly clean documents with pandoc.
+        pd = "pandoc --number-sections --toc -V geometry:margin=25mm -V fontsize=11pt";
+
+        # Make git and hub subcommands that need Emacs still work in Nix shells.
+        git = "TMPDIR=/tmp git";
+        hub = "TMPDIR=/tmp hub";
+      };
     };
   };
 

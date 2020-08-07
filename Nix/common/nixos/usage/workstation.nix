@@ -14,6 +14,23 @@ in
 
 {
   ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+  confkit = {
+    fonts.enable = true;
+  };
+
+  ############################################################################
+  ##                         General configuration                          ##
+  ############################################################################
+
+  users.groups = {
+    # Create the plugdev group to allow normal users to use OpenOCD.
+    plugdev = {};
+  };
+
+  ############################################################################
   ##                             Kernel modules                             ##
   ############################################################################
 
@@ -154,28 +171,8 @@ in
   ##                                 Fonts                                  ##
   ############################################################################
 
-  fonts = {
-    enableDefaultFonts = true;
-
-    fonts = with pkgs; [
-      carlito # Compatible with Calibri.
-      fira-code
-      inconsolata
-      lato
-      meslo-lg
-      (nerdfonts.override { withFont = "DejaVuSansMono Noto"; })
-      opensans-ttf
-      symbola
-    ];
-
-    fontconfig = {
-      enable = true;
-      antialias = true;
-      hinting = { enable = true; autohint = false; };
-      includeUserConf = false;
-      penultimate.enable = true;
-      ultimate.enable = false;
-      useEmbeddedBitmaps = true;
-    };
-  };
+  fonts.fonts = with pkgs; [
+    fira-code-symbols # Needed to get the ligatures in Emacs.
+    (nerdfonts.override { withFont = "DejaVuSansMono Noto"; })
+  ];
 }

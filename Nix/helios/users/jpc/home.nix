@@ -48,25 +48,24 @@ in
   ##                                 Programs                               ##
   ############################################################################
 
-  # Specific Git configuration
-  programs.git = {
-    extraConfig.credential.helper = "store";
-  };
+  programs = {
+    git.extraConfig.credential.helper = "store";
 
-  programs.zsh = {
-    shellAliases = {
-      # Emacs
-      eds = "systemctl --user start emacs";
-      edp = "systemctl --user stop emacs";
-      edr = "edp && eds";
+    zsh = {
+      shellAliases = {
+        # Emacs
+        eds = "systemctl --user start emacs";
+        edp = "systemctl --user stop emacs";
+        edr = "edp && eds";
 
-      # Mirrors
-      sync-crates = ''
-        cargo-cacher -dd --all \
-            --index /data/Mirroirs/crates.io \
-            --api http://crates.saturne \
-            --dl http://crates.saturne/crates
-      '';
+        # Mirrors
+        sync-crates = ''
+          cargo-cacher -dd --all \
+              --index /data/Mirroirs/crates.io \
+              --api http://crates.saturne \
+              --dl http://crates.saturne/crates
+        '';
+      };
     };
   };
 

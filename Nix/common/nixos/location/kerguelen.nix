@@ -24,13 +24,12 @@
 
   networking = {
     search = [ "kerguelen.ipev.fr" ];
+    timeServers = [ "0.ntp.kerguelen.ipev.fr" "1.ntp.kerguelen.ipev.fr" ];
 
     proxy = {
       default = "***[ REDACTED ]***";
     };
   };
-
-  services.ntp.servers = [ "time2.kerguelen.ipev.fr" "time.kerguene.ipev.fr" ];
 
   # Local network drives.
   fileSystems = {

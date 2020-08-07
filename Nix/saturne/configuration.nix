@@ -36,6 +36,17 @@
   ];
 
   ############################################################################
+  ##                         nixpkgs configuration                          ##
+  ############################################################################
+
+  nixpkgs.config = {
+    # Allow unfree licenses for:
+    # - the Nvidia driver,
+    # - the Oracle VirtualBox Extension Pack.
+    allowUnfree = true;
+  };
+
+  ############################################################################
   ##                     Configuration for offline mode                     ##
   ############################################################################
 
@@ -47,6 +58,7 @@
   environment.variables = {
     # Use the local mirrors.
     HEX_MIRROR_URL = "http://hex.saturne/repos/hexpm_mirror";
+    RUSTUP_DIST_SERVER = "http://rustup.saturne:8000";
   };
 
   ############################################################################
@@ -94,7 +106,7 @@
   '';
 
   ############################################################################
-  ##                         General configuration                          ##
+  ##                               Networking                               ##
   ############################################################################
 
   networking = {
@@ -114,6 +126,7 @@
         "crates.saturne"
         "hex.saturne"
         "nix.saturne"
+        "rustup.saturne"
         "dev.jpc.photos"
         "dev.bark-artwork.com"
       ];
@@ -157,6 +170,12 @@
         {
           hostName = "hex.saturne";
           documentRoot = "/data/Mirroirs/hex.pm";
+        }
+
+        {
+          hostName = "rustup.saturne";
+          documentRoot = "/data/Mirroirs/rustup/mirror";
+          listen = [ { port = 8000; } ];
         }
 
         {
@@ -215,7 +234,6 @@
   ##                            System packages                             ##
   ############################################################################
 
-  nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
     # Utilities
     thunderbolt

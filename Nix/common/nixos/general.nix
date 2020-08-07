@@ -8,7 +8,6 @@
 
 let
   inherit (lib.trivial) release;
-  jpc_overlay = import ../overlays/jpc_overlay.nix;
 in
 
 {
@@ -22,7 +21,8 @@ in
     ../../../home-manager/nixos
   ];
 
-  nixpkgs.overlays = [ jpc_overlay ];
+  # Enable my personal overlay on all hosts.
+  nixpkgs.overlays = [ (import ../overlays/jpc_overlay.nix) ];
 
   ############################################################################
   ##                                confkit                                 ##
@@ -62,7 +62,7 @@ in
   ############################################################################
 
   services = {
-    ntp.enable = true;
+    chrony.enable = true;
   };
 
   ############################################################################

@@ -70,6 +70,8 @@
    ;; List of packages installed out of a layer.
    dotspacemacs-additional-packages '(
      direnv
+     dokuwiki
+     dokuwiki-mode
      org-trello
      )
 
@@ -126,7 +128,7 @@
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-themes '(spacemacs-light
                          spacemacs-dark)
-   dotspacemacs-default-font '("Meslo LG S"
+   dotspacemacs-default-font '("Fira Code Retina"
                                :size 15
                                :weight normal
                                :width normal
@@ -183,7 +185,7 @@
   ;; eft-jpc specific configuration
   (if (string= (system-name) "eft-jpc")
       (setq-default
-       dotspacemacs-default-font '("Meslo LG S"
+       dotspacemacs-default-font '("Fira Code Retina"
                                    :size 13
                                    :weight normal
                                    :width normal
@@ -192,7 +194,7 @@
   ;; workspace-vm specific configuration
   (if (string= (system-name) "workspace-vm")
       (setq-default
-      dotspacemacs-default-font '("Meslo LG S"
+      dotspacemacs-default-font '("Fira Code Retina"
                                   :size 14
                                   ;; :size 17
                                   :weight normal
@@ -216,6 +218,69 @@
            (org-scheduled-today :height 1.0)
            (org-agenda-done :height 1.0)
            (org-agenda-date-today :height 1.1))))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;                          Fira Code Ligatures                           ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun fira-code-mode--make-alist (list)
+    "Generate prettify-symbols alist from LIST."
+    (let ((idx -1))
+      (mapcar
+       (lambda (s)
+         (setq idx (1+ idx))
+         (let* ((code (+ #Xe100 idx))
+                (width (string-width s))
+                (prefix ())
+                (suffix '(?\s (Br . Br)))
+                (n 1))
+           (while (< n width)
+             (setq prefix (append prefix '(?\s (Br . Bl))))
+             (setq n (1+ n)))
+           (cons s (append prefix suffix (list (decode-char 'ucs code))))))
+       list)))
+
+  (defconst fira-code-mode--ligatures
+    '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\"
+      "{-" "[]" "::" ":::" ":=" "!!" "!=" "!==" "-}"
+      "--" "---" "-->" "->" "->>" "-<" "-<<" "-~"
+      "#{" "#[" "##" "###" "####" "#(" "#?" "#_" "#_("
+      ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*"
+      "/**" "/=" "/==" "/>" "//" "///" "&&" "||" "||="
+      "|=" "|>" "^=" "$>" "++" "+++" "+>" "=:=" "=="
+      "===" "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-" ">="
+      ">=>" ">>" ">>-" ">>=" ">>>" "<*" "<*>" "<|" "<|>"
+      "<$" "<$>" "<!--" "<-" "<--" "<->" "<+" "<+>" "<="
+      "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
+      "<~~" "</" "</>" "~@" "~-" "~=" "~>" "~~" "~~>" "%%"
+      "x" ":" "+" "+" "*"))
+
+  (defvar fira-code-mode--old-prettify-alist)
+
+  (defun fira-code-mode--enable ()
+    "Enable Fira Code ligatures in current buffer."
+    (setq-local fira-code-mode--old-prettify-alist prettify-symbols-alist)
+    (setq-local prettify-symbols-alist (append (fira-code-mode--make-alist fira-code-mode--ligatures) fira-code-mode--old-prettify-alist))
+    (prettify-symbols-mode t))
+
+  (defun fira-code-mode--disable ()
+    "Disable Fira Code ligatures in current buffer."
+    (setq-local prettify-symbols-alist fira-code-mode--old-prettify-alist)
+    (prettify-symbols-mode -1))
+
+  (define-minor-mode fira-code-mode
+    "Fira Code ligatures minor mode"
+    :lighter " Fira Code"
+    (setq-local prettify-symbols-unprettify-at-point 'right-edge)
+    (if fira-code-mode
+        (fira-code-mode--enable)
+      (fira-code-mode--disable)))
+
+  (defun fira-code-mode--setup ()
+    "Setup Fira Code Symbols"
+    (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol"))
+
+  (provide 'fira-code-mode)
   )
 
 (defun dotspacemacs/user-config ()
@@ -224,6 +289,12 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;                         General configuration                          ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;;
+  ;; Enable Fira Code ligatures
+  ;;
+
+  (add-hook 'prog-mode-hook 'fira-code-mode)
 
   ;;
   ;; Enable modes
@@ -254,6 +325,13 @@
   ;; Use C-s to save.
   (global-set-key (kbd "C-s") 'save-buffer)
 
+  ;; Use C-<1-5> to switch between windows.
+  (global-set-key (kbd "C-\"") 'winum-select-window-1)
+  (global-set-key (kbd "C-«") 'winum-select-window-2)
+  (global-set-key (kbd "C-»") 'winum-select-window-3)
+  (global-set-key (kbd "C-(") 'winum-select-window-4)
+  (global-set-key (kbd "C-)") 'winum-select-window-5)
+
   ;; Make the right option key available to type symbols.
   (when (eq system-type 'darwin)
     (setq mac-right-option-modifier 'none))
@@ -271,6 +349,15 @@
   ;;
 
   (add-to-list 'auto-mode-alist '("sxhkdrc" . conf-unix-mode))
+  (add-to-list 'auto-mode-alist '("dwiki" . dokuwiki-mode))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;                                DokuWiki                                ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (require 'dokuwiki)
+  (setq dokuwiki-xml-rpc-url "http://wiki.kerguelen.ipev.fr/lib/exe/xmlrpc.php"
+        dokuwiki-login-user-name "instrum")
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;                                Org-mode                                ;;

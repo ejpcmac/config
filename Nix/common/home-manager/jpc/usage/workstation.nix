@@ -9,12 +9,6 @@
 let
   inherit (builtins) readFile;
 
-  # vscode = pkgs.vscode-with-extensions.override {
-  #   vscodeExtensions = with pkgs.vscode-extensions; [
-  #     ms-vscode.cpptools
-  #   ];
-  # };
-
   beamPackages = pkgs.beam.packages.erlangR22;
   elixir = beamPackages.elixir_1_10;
   erlang = beamPackages.erlang;
@@ -71,45 +65,42 @@ in
   ##                                 Programs                               ##
   ############################################################################
 
-  programs.git = {
-    extraConfig.credential.helper = "store";
-  };
+  programs = {
+    git.extraConfig.credential.helper = "store";
+    rofi.enable = true;
 
-  programs.rofi = {
-    enable = true;
-  };
+    zsh = {
+      oh-my-zsh.plugins = [
+        "cargo"
+        "docker"
+        "elixir"
+        "gem"
+        "mix"
+        "rust"
+      ];
 
-  programs.zsh = {
-    oh-my-zsh.plugins = [
-      "cargo"
-      "docker"
-      "elixir"
-      "gem"
-      "mix"
-      "rust"
-    ];
+      shellAliases = {
+        # Commandes fréquentes.
+        op = "xdg-open";
 
-    shellAliases = {
-      # Commandes fréquentes.
-      op = "xdg-open";
+        # Emacs
+        eds = "systemctl --user start emacs";
+        edp = "systemctl --user stop emacs";
+        edr = "edp && eds";
 
-      # Emacs
-      eds = "systemctl --user start emacs";
-      edp = "systemctl --user stop emacs";
-      edr = "edp && eds";
+        # Restart services
+        rc = "systemctl --user restart compton";
+        rp = "systemctl --user restart polybar";
 
-      # Restart services
-      rc = "systemctl --user restart compton";
-      rp = "systemctl --user restart polybar";
+        # Reload the custom keyoard configuration.
+        reload-xkb = "nix-shell -p xorg.xkbcomp --run 'xkbcomp ~/config/Nix/common/res/layout.xkb $DISPLAY'";
 
-      # Reload the custom keyoard configuration.
-      reload-xkb = "nix-shell -p xorg.xkbcomp --run 'xkbcomp ~/config/Nix/common/res/layout.xkb $DISPLAY'";
+        # Make SSH work with termite.
+        ssh = "TERM=xterm-256color ssh";
 
-      # Make SSH work with termite.
-      ssh = "TERM=xterm-256color ssh";
-
-      # Make direnv work correctly with tmux.
-      tmux = "direnv exec / tmux";
+        # Make direnv work correctly with tmux.
+        tmux = "direnv exec / tmux";
+      };
     };
   };
 
@@ -117,7 +108,6 @@ in
   ##                             User packages                              ##
   ############################################################################
 
-  nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     # Utilities
     bashInteractive
@@ -133,8 +123,8 @@ in
     nix-prefetch-github
     nixops
     pass
+    pijul
     qrencode
-    screen
     tokei
     xgen
     zolaUnstable
@@ -152,7 +142,7 @@ in
     meld
     riot-desktop
     tigervnc
-    vscode
+    vscodium
     yubioath-desktop
     zeal
   ];
