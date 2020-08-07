@@ -56,50 +56,6 @@ in
   };
 
   ############################################################################
-  ##                             User packages                              ##
-  ############################################################################
-
-  nixpkgs.config.allowUnfree = true;
-  home.packages = with pkgs; [
-    # Utilities
-    bashInteractive
-    ceedling
-    cloc
-    direnv
-    dmg2img
-    gitAndTools.hub
-    gitAndTools.git-sync
-    maim
-    mixnix
-    mpc_cli
-    nix-prefetch-github
-    nixops
-    pass
-    qrencode
-    screen
-    tokei
-    xgen
-    zolaUnstable
-
-    # Interpreters for scripts / tools
-    elixir
-    ruby
-    python
-
-    # Desktop environment
-    conky
-    sxhkd
-
-    # Applications
-    meld
-    riot-desktop
-    tigervnc
-    vscode
-    yubioath-desktop
-    zeal
-  ];
-
-  ############################################################################
   ##                          Custom configuration                          ##
   ############################################################################
 
@@ -156,4 +112,48 @@ in
       tmux = "direnv exec / tmux";
     };
   };
+
+  ############################################################################
+  ##                             User packages                              ##
+  ############################################################################
+
+  nixpkgs.config.allowUnfree = true;
+  home.packages = with pkgs; [
+    # Utilities
+    bashInteractive
+    ceedling
+    cloc
+    direnv
+    dmg2img
+    gitAndTools.hub
+    gitAndTools.git-sync
+    maim
+    mixnix
+    mpc_cli
+    nix-prefetch-github
+    nixops
+    pass
+    qrencode
+    screen
+    tokei
+    xgen
+    zolaUnstable
+
+    # Interpreters for scripts / tools
+    elixir
+    ruby
+    python
+
+    # Desktop environment
+    conky
+    sxhkd
+
+    # Applications
+    meld
+    riot-desktop
+    tigervnc
+    vscode
+    yubioath-desktop
+    zeal
+  ];
 }

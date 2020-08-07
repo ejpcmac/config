@@ -19,24 +19,6 @@
   ];
 
   ############################################################################
-  ##                             User packages                              ##
-  ############################################################################
-
-  nixpkgs.config.allowUnfree = true;
-  home.packages = with pkgs; [
-    # Utilities
-    unrar
-
-    # Applications
-    bitcoin
-    dashpay
-    kicad
-    scribus
-    thunderbird
-    tor-browser-bundle-bin
-  ];
-
-  ############################################################################
   ##                          Custom configuration                          ##
   ############################################################################
 
@@ -256,4 +238,22 @@
       };
     };
   };
+
+  ############################################################################
+  ##                             User packages                              ##
+  ############################################################################
+
+  nixpkgs.config.allowUnfree = true;
+  home.packages = with pkgs; [
+    # Utilities
+    unrar
+
+    # Applications
+    bitcoin
+    dashpay
+    kicad
+    scribus
+    thunderbird
+    tor-browser-bundle-bin
+  ];
 }

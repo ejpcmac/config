@@ -51,71 +51,6 @@ in
   };
 
   ############################################################################
-  ##                            System packages                             ##
-  ############################################################################
-
-  environment.systemPackages = with pkgs; [
-    # Utilities
-    betterlockscreen
-    ntfs3g
-    pandoc
-    pdfpc
-    wakelan
-    xorg.xev
-
-    # TeXLive can be useful for tools like Pandoc or Org.
-    texlive.combined.scheme-full
-
-    # Applications
-    firefox
-    keepassx2
-    libreoffice
-    mpv
-    pcmanfm
-    pqiv
-    veracrypt
-  ];
-
-  ############################################################################
-  ##                                 Fonts                                  ##
-  ############################################################################
-
-  fonts = {
-    enableDefaultFonts = true;
-
-    fonts = with pkgs; [
-      carlito # Compatible with Calibri.
-      fira-code
-      inconsolata
-      lato
-      meslo-lg
-      (nerdfonts.override { withFont = "DejaVuSansMono Noto"; })
-      opensans-ttf
-      symbola
-    ];
-
-    fontconfig = {
-      enable = true;
-      antialias = true;
-      hinting = { enable = true; autohint = false; };
-      includeUserConf = false;
-      penultimate.enable = true;
-      ultimate.enable = false;
-      useEmbeddedBitmaps = true;
-    };
-  };
-
-  ############################################################################
-  ##                                 Programs                               ##
-  ############################################################################
-
-  programs = {
-    gnupg.agent = { enable = true; enableSSHSupport = true; };
-    ssh.startAgent = false;
-    wireshark = { enable = true; package = pkgs.wireshark-qt; };
-  };
-
-  ############################################################################
   ##                                Services                                ##
   ############################################################################
 
@@ -177,5 +112,70 @@ in
     # Currently, we also need to disable this service to avoid ModemManager to
     # be respawn after rebooting.
     "dbus-org.freedesktop.ModemManager1".enable = false;
+  };
+
+  ############################################################################
+  ##                                 Programs                               ##
+  ############################################################################
+
+  programs = {
+    gnupg.agent = { enable = true; enableSSHSupport = true; };
+    ssh.startAgent = false;
+    wireshark = { enable = true; package = pkgs.wireshark-qt; };
+  };
+
+  ############################################################################
+  ##                            System packages                             ##
+  ############################################################################
+
+  environment.systemPackages = with pkgs; [
+    # Utilities
+    betterlockscreen
+    ntfs3g
+    pandoc
+    pdfpc
+    wakelan
+    xorg.xev
+
+    # TeXLive can be useful for tools like Pandoc or Org.
+    texlive.combined.scheme-full
+
+    # Applications
+    firefox
+    keepassx2
+    libreoffice
+    mpv
+    pcmanfm
+    pqiv
+    veracrypt
+  ];
+
+  ############################################################################
+  ##                                 Fonts                                  ##
+  ############################################################################
+
+  fonts = {
+    enableDefaultFonts = true;
+
+    fonts = with pkgs; [
+      carlito # Compatible with Calibri.
+      fira-code
+      inconsolata
+      lato
+      meslo-lg
+      (nerdfonts.override { withFont = "DejaVuSansMono Noto"; })
+      opensans-ttf
+      symbola
+    ];
+
+    fontconfig = {
+      enable = true;
+      antialias = true;
+      hinting = { enable = true; autohint = false; };
+      includeUserConf = false;
+      penultimate.enable = true;
+      ultimate.enable = false;
+      useEmbeddedBitmaps = true;
+    };
   };
 }

@@ -17,14 +17,15 @@
   };
 
   ############################################################################
-  ##                            System packages                             ##
+  ##                                Services                                ##
   ############################################################################
 
-  environment.systemPackages = with pkgs; [
-    # Syncoid expect these tools to be in PATH for remote accesses.
-    lzop
-    mbuffer
-  ];
+  services = {
+    openssh = {
+      enable = true;
+      passwordAuthentication = false;
+    };
+  };
 
   ############################################################################
   ##                                 Programs                               ##
@@ -35,13 +36,13 @@
   };
 
   ############################################################################
-  ##                                Services                                ##
+  ##                            System packages                             ##
   ############################################################################
 
-  services = {
-    openssh = {
-      enable = true;
-      passwordAuthentication = false;
-    };
-  };
+  environment.systemPackages = with pkgs; [
+    # Syncoid expect these tools to be in PATH for remote accesses.
+    lzop
+    mbuffer
+  ];
+
 }

@@ -121,16 +121,6 @@
   };
 
   ############################################################################
-  ##                            System packages                             ##
-  ############################################################################
-
-  nixpkgs.config.allowUnfree = true;
-  environment.systemPackages = with pkgs; [
-    # Utilities
-    thunderbolt
-  ];
-
-  ############################################################################
   ##                                Services                                ##
   ############################################################################
 
@@ -220,4 +210,14 @@
     docker.enable = true;
     virtualbox.host = { enable = true; enableExtensionPack = true; };
   };
+
+  ############################################################################
+  ##                            System packages                             ##
+  ############################################################################
+
+  nixpkgs.config.allowUnfree = true;
+  environment.systemPackages = with pkgs; [
+    # Utilities
+    thunderbolt
+  ];
 }
