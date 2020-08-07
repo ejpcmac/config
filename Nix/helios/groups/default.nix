@@ -1,16 +1,16 @@
 ################################################################################
 ##                                                                            ##
-##                      User declaration for root@helios                      ##
+##                              Groups on Helios                              ##
 ##                                                                            ##
 ################################################################################
 
 { config, pkgs, ... }:
 
 {
-  users.users.root = {
-    # Use `mkpasswd -m SHA-512` to generate a new password hash.
-    hashedPassword = "***[ REDACTED ]***";
+  users.groups = {
+    data.gid = 2000;
+    musique.gid = 2001;
+    videos.gid = 2002;
+    docs.gid = 2003;
   };
-
-  home-manager.users.root = import ./home.nix;
 }

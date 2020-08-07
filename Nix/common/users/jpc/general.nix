@@ -1,16 +1,17 @@
 ################################################################################
 ##                                                                            ##
-##                      User declaration for root@helios                      ##
+##                      General user declaration for jpc                      ##
 ##                                                                            ##
 ################################################################################
 
 { config, pkgs, ... }:
 
 {
-  users.users.root = {
-    # Use `mkpasswd -m SHA-512` to generate a new password hash.
-    hashedPassword = "***[ REDACTED ]***";
+  users.users.jpc = {
+    isNormalUser = true;
+    createHome = false;
+    uid = 1000;
+    description = "Jean-Philippe Cugnet";
+    extraGroups = [ "wheel" "chrony" ];
   };
-
-  home-manager.users.root = import ./home.nix;
 }

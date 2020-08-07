@@ -28,7 +28,8 @@
     ../common/nixos/location/kerguelen.nix
 
     # Configuration for the users.
-    ./users
+    ./users/root
+    ./users/jpc
 
     # Configuration to make a Pi-Gateway
     # ./pi-gateway.nix

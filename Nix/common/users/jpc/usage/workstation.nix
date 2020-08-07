@@ -1,16 +1,20 @@
 ################################################################################
 ##                                                                            ##
-##                      User declaration for root@helios                      ##
+##                  User declaration for jpc on workstations                  ##
 ##                                                                            ##
 ################################################################################
 
 { config, pkgs, ... }:
 
 {
-  users.users.root = {
-    # Use `mkpasswd -m SHA-512` to generate a new password hash.
-    hashedPassword = "***[ REDACTED ]***";
+  users.users.jpc = {
+    extraGroups = [
+      "cdrom"
+      "dialout"
+      "networkmanager"
+      "plugdev"
+      "video"
+      "wireshark"
+    ];
   };
-
-  home-manager.users.root = import ./home.nix;
 }

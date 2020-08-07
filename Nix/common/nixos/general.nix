@@ -16,6 +16,10 @@ in
     # Import the confkit NixOS module to get ready-to-use configurations for
     # several tools.
     ../../../confkit/nixos
+
+    # Import the home-manager NixOS module to handle user configurations
+    # declaratively.
+    ../../../home-manager/nixos
   ];
 
   nixpkgs.overlays = [ jpc_overlay ];
@@ -47,6 +51,11 @@ in
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "fr-bepo";
   } else {});
+
+  users = {
+    mutableUsers = false;
+    defaultUserShell = pkgs.zsh;
+  };
 
   ############################################################################
   ##                            System packages                             ##

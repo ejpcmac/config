@@ -30,7 +30,11 @@
     ./features/samba.nix
 
     # Configuration for the users.
-    ./users
+    ./users/root
+    ./users/jpc
+
+    # Configuration for the groups.
+    ./groups
   ];
 
   ############################################################################

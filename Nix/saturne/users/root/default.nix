@@ -1,6 +1,6 @@
 ################################################################################
 ##                                                                            ##
-##                      User declaration for root@helios                      ##
+##                     User declaration for root@saturne                      ##
 ##                                                                            ##
 ################################################################################
 
@@ -12,5 +12,5 @@
     hashedPassword = "***[ REDACTED ]***";
   };
 
-  home-manager.users.root = import ./home.nix;
+  home-manager.users.root = import ../../../../confkit/home-manager/configs/root.nix;
 }
