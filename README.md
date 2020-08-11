@@ -56,7 +56,7 @@ may change in the future to Nix building a `~/.zshrc` concatenating these files.
 I will however always keep pure Zsh files as source to maintain the
 compatibility with my FreeBSD server environment.
 
-In December 2018 I exctacted many files in a public configuration framework I
+In December 2018 I extracted many files in a public configuration framework I
 have named `confkit`. It is refered as a submodule here and you can use it
 yourself if you want: while I am using the `develop` branch of it, I publish
 tagged versions with a changelog. Some features that are currently only in this
