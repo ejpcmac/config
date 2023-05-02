@@ -4,12 +4,13 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 let
-  inherit (builtins) readFile;
+  libjpc = pkgs.callPackage ./lib { };
+  inherit (libjpc) link;
+
   jpc_overlay = import ../../overlays/jpc_overlay.nix;
-  mixnix_overlay = import ../../overlays/mixnix_overlay;
 in
 
 {
@@ -17,15 +18,14 @@ in
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  home.stateVersion = "19.09";  # Did you read the comment?
+  home.stateVersion = "22.11"; # Did you read the comment?
 
   # Import the confkit home-manager module to get ready-to-use configurations
   # for several tools.
-  imports = [ ../../../../confkit/home-manager ];
+  imports = [ inputs.confkit.nixosModules.confkit-home ];
 
   # Enable overlays on all hosts.
   nixpkgs.overlays = [
-    mixnix_overlay
     jpc_overlay
   ];
 
@@ -34,36 +34,50 @@ in
   ############################################################################
 
   confkit = {
+    keyboard.layout = "bépo";
+
     identity = {
       name = "Jean-Philippe Cugnet";
       email = "jean-philippe@cugnet.eu";
       gpgKey = "C350CCB299D730FDAF8C5B7AE847B871DADD49DF";
     };
 
-    # Use BÉPO-optimised keybindings.
-    keyboard.bepo = true;
+    programs = {
+      git.enable = true;
 
-    git.enable = true;
-
-    zsh = {
-      enable = true;
-      ohMyZsh = true;
-      plugins = [
-        "aliases"
-        "git"
-        "imagemagick"
-        "nix"
-      ];
+      zsh = {
+        enable = true;
+        ohMyZsh = true;
+        plugins = [
+          "aliases"
+          "git"
+          "imagemagick"
+          "nix"
+        ];
+      };
     };
   };
 
   ############################################################################
-  ##                          Custom configuration                          ##
+  ##                   Persistence & custom configuration                   ##
   ############################################################################
 
   home.file = {
-    # Non-natively handled configuration files
-    ".spacemacs".source = ../../../../spacemacs/init.el;
+    # General persistence
+    # TODO: Remove when plugins are installed by Nix.
+    ".zsh-custom/plugins".source = link "/home/jpc/.persist/zsh-plugins";
+
+    # Create a link to ~/.spacemacs.
+    ".spacemacs".source = link "/config/spacemacs/init.el";
+  };
+
+  xdg.configFile = {
+    "tmuxinator/jpc.yml".source = ./res/tmuxinator_jpc.yml;
+  };
+
+  xdg.dataFile = {
+    # General persistence
+    "ranger".source = link "/home/jpc/.persist/ranger";
   };
 
   ############################################################################
@@ -73,7 +87,14 @@ in
   programs = {
     home-manager.enable = true;
 
+    ssh = {
+      enable = true;
+      userKnownHostsFile = "~/.persist/ssh/known_hosts";
+    };
+
     zsh = {
+      history.path = "$HOME/.persist/Histories/zsh_history";
+
       oh-my-zsh.plugins = [
         "git"
         "git-flow"
@@ -83,7 +104,7 @@ in
 
       shellAliases = {
         # Base tmux session.
-        tmb = "tmuxinator base";
+        tmb = "tmuxinator jpc";
 
         # Get the property of files.
         own = "sudo chown jpc:users";
@@ -104,7 +125,7 @@ in
 
   home.packages = with pkgs; [
     # Build platforms
-    mixnix-platform
+    # mixnix-platform
 
     # Utilities
     diceware

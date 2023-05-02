@@ -4,26 +4,15 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
-  system.stateVersion = "20.03";  # Did you read the comment?
-
   imports = [
+    # Import my personal NixOS extension module.
+    ../common/nixos
+
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-
-    # Configuration shared between hosts.
-    ../common/nixos/general.nix
-    ../common/nixos/type/physical.nix
-    ../common/nixos/usage/server.nix
-    ../common/nixos/features/systemd-boot.nix
-    ../common/nixos/features/zfs.nix
-    ../common/nixos/location/lisieux.nix
 
     # Local features.
     ./features/mpd.nix
@@ -38,14 +27,40 @@
   ];
 
   ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+  confkit = {
+    info = {
+      name = "helios";
+      location = "caen";
+    };
+
+    profile = {
+      type = [ "physical" ];
+      usage = [ "server" ];
+    };
+
+    features = {
+      intel.enable = true;
+      zfs.enable = true;
+
+      bootloader = {
+        enable = true;
+        platform = "uefi";
+        program = "systemd-boot";
+      };
+    };
+  };
+
+  ############################################################################
   ##                          Boot & File systems                           ##
   ############################################################################
 
   boot = {
     kernelModules = [ "coretemp" "nct6775" ];
-    # TODO: Remove when I have physical access to the machine.
-    supportedFilesystems = [ "zfs" ];
     tmpOnTmpfs = true;
+    zfs.requestEncryptionCredentials = false;
 
     initrd = {
       availableKernelModules = [ "e1000e" ];
@@ -67,11 +82,7 @@
         ssh = {
           enable = true;
           port = 2222;
-          hostRSAKey = ./res/initrd-ssh-key;
-
-          authorizedKeys = [
-            # REDACTED.
-          ];
+          hostKeys = [ "***[ REDACTED ]***" ];
         };
 
         postCommands = ''
@@ -79,15 +90,12 @@
         '';
       };
     };
-
-    zfs.requestEncryptionCredentials = false;
   };
 
   # Set options for the legacy mountpoints.
   fileSystems = {
     "/".options = [ "noatime" ];
     "/boot".options = [ "nosuid" "nodev" "noexec" "noatime" ];
-    "/config".options = [ "nosuid" "nodev" "noexec" "noatime" ];
     "/etc".options = [ "nosuid" "nodev" "noatime" ];
     "/root".options = [ "nosuid" "nodev" "noatime" ];
     "/var".options = [ "nosuid" "nodev" "noexec" ];
@@ -103,7 +111,6 @@
   ############################################################################
 
   networking = {
-    hostName = "helios";
     hostId = "9c20421a";
     useDHCP = true;
 
@@ -113,7 +120,7 @@
 
     interfaces = {
       enp3s0 = {
-        ipv4.addresses = [ { address = "192.168.15.1"; prefixLength = 24; } ];
+        ipv4.addresses = [{ address = "***[ REDACTED ]***"; prefixLength = 24; }];
       };
     };
   };
@@ -135,13 +142,9 @@
       '';
     };
 
-    zfs = {
-      autoScrub.interval = "Sun, 10:00";
-
-      autoSnapshot = {
-        hourly = 48;
-        monthly = 24;
-      };
+    zfs.autoSnapshot = {
+      hourly = 48;
+      monthly = 24;
     };
   };
 

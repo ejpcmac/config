@@ -1,0 +1,1010 @@
+{
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.fontSize": 12,
+    "editor.fontFamily": "Fira Code Retina, monospace",
+    "editor.fontLigatures": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.minimap.showSlider": "always",
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.rulers": [
+        80
+    ],
+    "editor.scrollBeyondLastColumn": 2,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.snippetSuggestions": "top",
+    "elixirLS.dialyzerWarnOpts": [
+        "unmatched_returns",
+        "error_handling"
+    ],
+    "evenBetterToml.formatter.arrayAutoExpand": true,
+    "evenBetterToml.formatter.arrayTrailingComma": true,
+    "evenBetterToml.formatter.reorderArrays": true,
+    "explorer.confirmDragAndDrop": false,
+    "extensions.autoUpdate": false,
+    "extensions.ignoreRecommendations": true,
+    "files.associations": {
+        "erlinit.config": "shellscript",
+        "sxhkdrc": "properties",
+        "vimrc": "viml",
+        "vm.args": "shellscript",
+        "vm.args.eex": "shellscript",
+        "zshrc": "shellscript",
+        ".clang-format": "yaml",
+        ".envrc": "shellscript",
+        ".gitignore.eex": "gitignore",
+        "*.ex.eex": "elixir",
+        "*.exs.eex": "elixir",
+        "*.md.eex": "markdown",
+        "*.nix.eex": "nix",
+        "*.toml.eex": "toml"
+    },
+    "files.autoSave": "onFocusChange",
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": false,
+        "**/.hg": false,
+        "**/CVS": false,
+        "**/.DS_Store": false
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "git.confirmSync": false,
+    "git-graph.dialog.rebase.ignoreDate": false,
+    "git-graph.repository.fetchAndPrune": true,
+    "gitlens.codeLens.scopes": [
+        "document",
+        "containers",
+        "blocks"
+    ],
+    "gitlens.currentLine.enabled": false,
+    "gitlens.defaultDateFormat": "YYYY-MM-DD HH:mm:ss Y",
+    "gitlens.defaultDateShortFormat": "YYYY-MM-DD",
+    "gitlens.defaultTimeFormat": "HH:mm",
+    "gitlens.hovers.currentLine.over": "line",
+    "gitlens.hovers.pullRequests.enabled": false,
+    "gitlens.plusFeatures.enabled": false,
+    "gitlens.statusBar.alignment": "left",
+    "gitlens.statusBar.pullRequests.enabled": false,
+    "gitlens.views.branches.branches.layout": "list",
+    "gitlens.views.branches.pullRequests.enabled": false,
+    "gitlens.views.commits.pullRequests.enabled": false,
+    "gitlens.views.contributors.pullRequests.enabled": false,
+    "gitlens.views.repositories.branches.layout": "list",
+    "gitlens.views.repositories.pullRequests.enabled": false,
+    "gitlens.views.remotes.branches.layout": "list",
+    "gitlens.views.remotes.pullRequests.enabled": false,
+    "latex-workshop.chktex.args.active": [
+        "-wall",
+        "-n1",
+        "-n13",
+        "-n19",
+        "-n22",
+        "-n30",
+        "-n44",
+        "-e16",
+        "-q"
+    ],
+    "latex-workshop.chktex.args.root": [
+        "-wall",
+        "-n1",
+        "-n13",
+        "-n19",
+        "-n22",
+        "-n30",
+        "-n44",
+        "-e16",
+        "-q"
+    ],
+    "latex-workshop.chktex.enabled": true,
+    "latex-workshop.latex.autoBuild.run": "never",
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.aux.bak",
+        "*.bbl",
+        "*.bcf",
+        "*.blg",
+        "*.brf",
+        "*.dvi",
+        "*.fdb_latexmk",
+        "*.fls",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.glsdefs",
+        "*.idx",
+        "*.idx.bak",
+        "*.ilg",
+        "*.ind",
+        "*.lof",
+        "*.log",
+        "*.lol",
+        "*.lot",
+        "*.nav",
+        "*.out",
+        "*.pdf",
+        "*.ps",
+        "*.snm",
+        "*.synctex.gz",
+        "*.toc",
+        "*.tns",
+        "*.vrb",
+        "*.xdy",
+        "_minted-*/*",
+        "_minted-*/",
+        "sage-plots-for-*.tex",
+        "missfont.log",
+        "texput.log",
+        "texput.aux"
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-shell-escape",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.view.pdf.viewer": "tab",
+    "macros.list": {
+        "commentLine": [
+            "editor.action.commentLine",
+            "cursorDown"
+        ]
+    },
+    "nebulaOni.applyChanges": false,
+    "nebulaOni.add.favorite": "OFF",
+    "nebulaOni.editor.comments": "Light Forest",
+    "nebulaOni.update.restoreConfiguration": {
+        "themeSettings": {
+            "background": "Grey",
+            "main": "Bumblebee",
+            "highlight": "Ultra Violet",
+            "focusBorder": "ON",
+            "fontStyle": "Italic",
+            "comments": "Light Forest",
+            "favorite": "OFF"
+        },
+        "favoriteSettings": {
+            "background": "Dark Grey",
+            "main": "Bumblebee",
+            "highlight": "Ultra Violet",
+            "focusBorder": "ON",
+            "fontStyle": "Italic",
+            "comments": "Light Forest",
+            "favorite": "Nebula Oni (Spirograph)"
+        }
+    },
+    "nix.enableLanguageServer": true,
+    "nix.serverPath": "nil",
+    "nix.serverSettings": {
+        "nil": {
+            "formatting": {
+                "command": [
+                    "nixpkgs-fmt"
+                ]
+            }
+        }
+    },
+    "python.formatting.provider": "black",
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "rust-analyzer.checkOnSave.command": "clippy",
+    "search.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.history": true,
+        "**/node_modules": true,
+        "**/bower_components": true
+    },
+    "terminal.integrated.shellIntegration.enabled": false,
+    "todohighlight.keywords": [
+        {
+            "text": "TODO:",
+            "color": "white",
+            "backgroundColor": "#ffbd2a"
+        },
+        {
+            "text": "TODO",
+            "color": "white",
+            "backgroundColor": "#ffbd2a"
+        },
+        {
+            "text": "FIXME:",
+            "color": "white",
+            "backgroundColor": "#f06292"
+        },
+        {
+            "text": "FIXME",
+            "color": "white",
+            "backgroundColor": "#f06292"
+        },
+        {
+            "text": "NOTE:",
+            "color": "white",
+            "backgroundColor": "#3333cc"
+        },
+        {
+            "text": "NOTE",
+            "color": "white",
+            "backgroundColor": "#3333cc"
+        },
+        {
+            "text": "IDEA:",
+            "color": "white",
+            "backgroundColor": "green"
+        },
+        {
+            "text": "IDEA",
+            "color": "white",
+            "backgroundColor": "green"
+        },
+        {
+            "text": "REVIEW:",
+            "color": "white",
+            "backgroundColor": "#880088"
+        },
+        {
+            "text": "REVIEW",
+            "color": "white",
+            "backgroundColor": "#880088"
+        },
+        {
+            "text": "HACK:",
+            "color": "white",
+            "backgroundColor": "#cc3333"
+        },
+        {
+            "text": "HACK",
+            "color": "white",
+            "backgroundColor": "#cc3333"
+        }
+    ],
+    "trailing-spaces.highlightCurrentLine": false,
+    "vim.handleKeys": {
+        "<C-a>": false,
+        "<C-c>": false,
+        "<C-k>": false,
+        "<C-n>": false,
+        "<C-t>": false,
+        "<C-w>": false
+    },
+    "vim.useSystemClipboard": true,
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "é"
+            ],
+            "after": [
+                "w"
+            ]
+        },
+        {
+            "before": [
+                "É"
+            ],
+            "after": [
+                "W"
+            ]
+        },
+        {
+            "before": [
+                "d",
+                "a",
+                "é"
+            ],
+            "after": [
+                "d",
+                "a",
+                "w"
+            ]
+        },
+        {
+            "before": [
+                "d",
+                "a",
+                "É"
+            ],
+            "after": [
+                "d",
+                "a",
+                "W"
+            ]
+        },
+        {
+            "before": [
+                "d",
+                "i",
+                "é"
+            ],
+            "after": [
+                "d",
+                "i",
+                "w"
+            ]
+        },
+        {
+            "before": [
+                "d",
+                "i",
+                "É"
+            ],
+            "after": [
+                "d",
+                "i",
+                "W"
+            ]
+        },
+        {
+            "before": [
+                "l",
+                "a",
+                "é"
+            ],
+            "after": [
+                "l",
+                "a",
+                "w"
+            ]
+        },
+        {
+            "before": [
+                "l",
+                "a",
+                "É"
+            ],
+            "after": [
+                "l",
+                "a",
+                "W"
+            ]
+        },
+        {
+            "before": [
+                "l",
+                "i",
+                "é"
+            ],
+            "after": [
+                "l",
+                "i",
+                "w"
+            ]
+        },
+        {
+            "before": [
+                "l",
+                "i",
+                "É"
+            ],
+            "after": [
+                "l",
+                "i",
+                "W"
+            ]
+        },
+        {
+            "before": [
+                "w"
+            ],
+            "after": [
+                "<C-w>"
+            ]
+        },
+        {
+            "before": [
+                "W"
+            ],
+            "after": [
+                "<C-w>",
+                "<C-w>"
+            ]
+        },
+        {
+            "before": [
+                "c"
+            ],
+            "after": [
+                "h"
+            ]
+        },
+        {
+            "before": [
+                "t"
+            ],
+            "after": [
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "s"
+            ],
+            "after": [
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "r"
+            ],
+            "after": [
+                "l"
+            ]
+        },
+        {
+            "before": [
+                "C"
+            ],
+            "after": [
+                "H"
+            ]
+        },
+        {
+            "before": [
+                "T"
+            ],
+            "after": [
+                "<C-d>"
+            ]
+        },
+        {
+            "before": [
+                "S"
+            ],
+            "after": [
+                "<C-u>"
+            ]
+        },
+        {
+            "before": [
+                "R"
+            ],
+            "after": [
+                "L"
+            ]
+        },
+        {
+            "before": [
+                "z",
+                "s"
+            ],
+            "after": [
+                "z",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "z",
+                "t"
+            ],
+            "after": [
+                "z",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "h"
+            ],
+            "after": [
+                "r"
+            ]
+        },
+        {
+            "before": [
+                "j"
+            ],
+            "after": [
+                "t"
+            ]
+        },
+        {
+            "before": [
+                "k"
+            ],
+            "after": [
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "l"
+            ],
+            "after": [
+                "c"
+            ]
+        },
+        {
+            "before": [
+                "H"
+            ],
+            "after": [
+                "R"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "after": [
+                "S"
+            ]
+        },
+        {
+            "before": [
+                "L"
+            ],
+            "after": [
+                "C"
+            ]
+        },
+        {
+            "before": [
+                "]",
+                "k"
+            ],
+            "after": [
+                "]",
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "[",
+                "k"
+            ],
+            "after": [
+                "[",
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "s"
+            ],
+            "after": [
+                "g",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "t"
+            ],
+            "after": [
+                "g",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "b"
+            ],
+            "after": [
+                "g",
+                "T"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "é"
+            ],
+            "after": [
+                "g",
+                "t"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "\""
+            ],
+            "after": [
+                "g",
+                "0"
+            ]
+        },
+        {
+            "before": [
+                "«"
+            ],
+            "after": [
+                "<"
+            ]
+        },
+        {
+            "before": [
+                ">"
+            ],
+            "after": [
+                ">"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "c"
+            ],
+            "after": [
+                "<C-w>",
+                "h"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "t"
+            ],
+            "after": [
+                "<C-w>",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "s"
+            ],
+            "after": [
+                "<C-w>",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "r"
+            ],
+            "after": [
+                "<C-w>",
+                "l"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "d"
+            ],
+            "after": [
+                "<C-w>",
+                "c"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "o"
+            ],
+            "after": [
+                "<C-w>",
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "w",
+                "p"
+            ],
+            "after": [
+                "<C-w>",
+                "o"
+            ]
+        },
+        {
+            "before": [
+                "<C-l>"
+            ],
+            "after": [
+                "z",
+                "."
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "é"
+            ],
+            "after": [
+                "w"
+            ]
+        },
+        {
+            "before": [
+                "É"
+            ],
+            "after": [
+                "W"
+            ]
+        },
+        {
+            "before": [
+                "c"
+            ],
+            "after": [
+                "h"
+            ]
+        },
+        {
+            "before": [
+                "t"
+            ],
+            "after": [
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "s"
+            ],
+            "after": [
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "r"
+            ],
+            "after": [
+                "l"
+            ]
+        },
+        {
+            "before": [
+                "C"
+            ],
+            "after": [
+                "H"
+            ]
+        },
+        {
+            "before": [
+                "T"
+            ],
+            "after": [
+                "<C-d>"
+            ]
+        },
+        {
+            "before": [
+                "S"
+            ],
+            "after": [
+                "<C-u>"
+            ]
+        },
+        {
+            "before": [
+                "R"
+            ],
+            "after": [
+                "L"
+            ]
+        },
+        {
+            "before": [
+                "z",
+                "s"
+            ],
+            "after": [
+                "z",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "z",
+                "t"
+            ],
+            "after": [
+                "z",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "h"
+            ],
+            "after": [
+                "r"
+            ]
+        },
+        {
+            "before": [
+                "j"
+            ],
+            "after": [
+                "t"
+            ]
+        },
+        {
+            "before": [
+                "k"
+            ],
+            "after": [
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "l"
+            ],
+            "after": [
+                "c"
+            ]
+        },
+        {
+            "before": [
+                "H"
+            ],
+            "after": [
+                "R"
+            ]
+        },
+        {
+            "before": [
+                "K"
+            ],
+            "after": [
+                "S"
+            ]
+        },
+        {
+            "before": [
+                "L"
+            ],
+            "after": [
+                "C"
+            ]
+        },
+        {
+            "before": [
+                "]",
+                "k"
+            ],
+            "after": [
+                "]",
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "[",
+                "k"
+            ],
+            "after": [
+                "[",
+                "s"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "s"
+            ],
+            "after": [
+                "g",
+                "k"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "t"
+            ],
+            "after": [
+                "g",
+                "j"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "b"
+            ],
+            "after": [
+                "g",
+                "T"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "é"
+            ],
+            "after": [
+                "g",
+                "t"
+            ]
+        },
+        {
+            "before": [
+                "g",
+                "\""
+            ],
+            "after": [
+                "g",
+                "0"
+            ]
+        },
+        {
+            "before": [
+                "«"
+            ],
+            "after": [
+                "<"
+            ]
+        },
+        {
+            "before": [
+                ">"
+            ],
+            "after": [
+                ">"
+            ]
+        },
+        {
+            "before": [
+                "<C-l>"
+            ],
+            "after": [
+                "z",
+                "."
+            ]
+        }
+    ],
+    "window.autoDetectColorScheme": true,
+    "window.restoreWindows": "all",
+    "window.titleBarStyle": "custom",
+    "window.zoomLevel": -1,
+    "workbench.colorTheme": "Nebula Oni (Favorite)",
+    "workbench.enableExperiments": false,
+    "workbench.iconTheme": "vscode-great-icons",
+    "workbench.preferredDarkColorTheme": "Nebula Oni (Favorite)",
+    "workbench.preferredLightColorTheme": "Quiet Light",
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "workbench.settings.openDefaultSettings": false,
+    "workbench.startupEditor": "none",
+    "[latex]": {
+        "editor.formatOnSave": false
+    }
+}

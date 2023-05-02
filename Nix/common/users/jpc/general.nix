@@ -4,14 +4,12 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, pkgs, ... }:
-
 {
   users.users.jpc = {
     isNormalUser = true;
-    createHome = false;
     uid = 1000;
     description = "Jean-Philippe Cugnet";
     extraGroups = [ "wheel" "chrony" ];
+    openssh.authorizedKeys.keyFiles = [ "***[ REDACTED ]***" ];
   };
 }

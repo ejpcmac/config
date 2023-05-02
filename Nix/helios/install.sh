@@ -14,7 +14,9 @@ set -x
 ################################################################################
 
 name=helios
-config_repo=https://gitlab.ejpcmac.net/univers/$name.git
+user=jpc
+config_repo=https://gitlab.ejpcmac.net/jpc/config.git
+config_dir=/config
 zpool=$name
 root=$zpool/os
 boot_disk=/dev/nvme0n1
@@ -31,22 +33,21 @@ luks_options="--cipher aes-xts-plain64 \
 ##                                   Script                                   ##
 ################################################################################
 
-# Configure Nix.
 printf "\n\e[32m=> Configuring Nix...\e[0m\n\n"
 (
     set -x
     mkdir -p ~/.config/nix
-    echo "max-jobs = auto\nauto-optimise-store = true" > ~/.config/nix/nix.conf
+    echo "auto-optimise-store = true" > ~/.config/nix/nix.conf
+    echo "max-jobs = auto" >> ~/.config/nix/nix.conf
+    echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
 )
 
-# Install the dependencies for the script.
 printf "\n\e[32m=> Installing the dependencies for the script...\e[0m\n\n"
 (
     set -x
-    nix-env -Ai nixos.git
+    nix profile install nixpkgs#git
 )
 
-# Partition the boot disk.
 printf "\n\e[32m=> Partitioning the boot disk...\e[0m\n\n"
 (
     set -x
@@ -57,14 +58,12 @@ printf "\n\e[32m=> Partitioning the boot disk...\e[0m\n\n"
     parted $boot_disk -- set 1 boot on
 )
 
-# Format the ESP.
 printf "\n\e[32m=> Formatting the ESP...\e[0m\n\n"
 (
     set -x
     mkfs.fat -F 32 -n boot $boot_partition
 )
 
-# Format the LUKS devices.
 printf "\n\e[32m=> Formatting the LUKS devices...\e[0m\n\n"
 (
     set -x
@@ -77,7 +76,6 @@ printf "\n\e[32m=> Formatting the LUKS devices...\e[0m\n\n"
     cryptsetup $luks_options luksFormat /dev/sdf
 )
 
-# Mount the LUKS devices.
 printf "\n\e[32m=> Mounting the LUKS devices...\e[0m\n\n"
 (
     set -x
@@ -90,7 +88,6 @@ printf "\n\e[32m=> Mounting the LUKS devices...\e[0m\n\n"
     cryptsetup luksOpen /dev/sdf hdd6
 )
 
-# Create the ZFS pool.
 printf "\n\e[32m=> Creating the ZFS pool...\e[0m\n\n"
 (
     set -x
@@ -98,7 +95,7 @@ printf "\n\e[32m=> Creating the ZFS pool...\e[0m\n\n"
         -O acltype=posixacl \
         -O atime=off \
         -O checksum=sha512 \
-        -O compression=lz4 \
+        -O compression=zstd \
         -O dnodesize=auto \
         -O normalization=formD \
         -O reservation=1G \
@@ -115,7 +112,6 @@ printf "\n\e[32m=> Creating the ZFS pool...\e[0m\n\n"
         /dev/mapper/ssd
 )
 
-# Create the OS filesystems.
 printf "\n\e[32m=> Creating the OS filesystems...\e[0m\n\n"
 (
     set -x
@@ -134,14 +130,12 @@ printf "\n\e[32m=> Creating the OS filesystems...\e[0m\n\n"
     zfs create -o mountpoint=/home                                 $zpool/home
 )
 
-# Unmount the automatically mounted filesystems.
 printf "\n\e[32m=> Unmounting the automatically mounted filesystems...\e[0m\n\n"
 (
     set -x
     zfs unmount -a
 )
 
-# Mount the filesystems.
 printf "\n\e[32m=> Mounting the filesystems...\e[0m\n\n"
 (
     set -x
@@ -162,29 +156,46 @@ printf "\n\e[32m=> Mounting the filesystems...\e[0m\n\n"
     mount -t zfs $root/var/tmp /mnt/var/tmp
 )
 
-# Generate the hardware configuration.
+function mkhome() {
+    local user=$1
+    local uid=$2
+
+    local user_home=/mnt/home/$user
+    local user_nix_profile=/mnt/nix/var/nix/profiles/per-user/$user
+    local user_gcroots=/mnt/nix/var/nix/gcroots/per-user/$user
+
+    mkdir -p $user_home $user_nix_profile $user_gcroots
+    chown -R $uid:users $user_home $user_nix_profile $user_gcroots
+    chmod 700 $user_home
+}
+
+printf "\n\e[32m=> Configuring the user homes...\e[0m\n\n"
+(
+    set -x
+    mkhome $user 1000
+)
+
 printf "\n\e[32m=> Generating the hardware configuration...\e[0m\n\n"
 (
     set -x
     nixos-generate-config --root /mnt
 )
 
-# Install the configuration.
 printf "\n\e[32m=> Installing the configuration...\e[0m\n\n"
 (
     set -x
-    git clone --recurse-submodules $config_repo /mnt/config
-    rm /mnt/etc/nixos/configuration.nix
-    ln -s ../../config/Nix/$name/configuration.nix /mnt/etc/nixos/
+    git clone --recurse-submodules $config_repo $config_dir
+    mv /mnt/etc/nixos/hardware-configuration.nix $config_dir/Nix/$name
+
+    # Tweak to get the initrd generation with SSH working.
+    mkdir -p /mnt$config_dir/Nix/$name/res
+    cp $config_dir/Nix/$name/res/initrd-ssh-key /mnt$config_dir/Nix/$name/res
 )
 
-# Install NixOS.
 printf "\n\e[32m=> Installing NixOS...\e[0m\n\n"
 (
     set -x
-    nix-channel --add https://github.com/ejpcmac/jpc-nix/archive/master.tar.gz jpc-nix
-    nix-channel --update
-    nixos-install
+    nixos-install --no-root-passwd --flake git+file:///mnt$config_dir?dir=Nix/$name#$name
 )
 
 printf "\n\e[32m\e[1mInstallation complete!\e[0m\n\n"

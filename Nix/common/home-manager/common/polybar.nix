@@ -6,7 +6,7 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   inherit (lib) mkDefault;
@@ -16,266 +16,251 @@ in
   services.polybar = {
     enable = true;
 
-    package = pkgs.polybar.override {
-      mpdSupport = true;
-    };
-
     script = mkDefault "polybar main &";
 
     config = {
-      colors = mkDefault {
-        background = "#dd222222";
-        background-alt = "#dd444444";
-        foreground = "#dfdfdf";
-        foreground-alt = "#555";
-        primary = "#ffb52a";
-        secondary = "#e60053";
-        alert = "#bd2c40";
+      colors = {
+        background = mkDefault "#dd222222";
+        background-alt = mkDefault "#dd444444";
+        foreground = mkDefault "#dfdfdf";
+        foreground-alt = mkDefault "#555";
+        primary = mkDefault "#ffb52a";
+        secondary = mkDefault "#e60053";
+        alert = mkDefault "#bd2c40";
       };
 
       settings = {
         screenchange-reload = mkDefault true;
       };
 
-      "bar/main" = mkDefault {
-        fixed-center = false;
+      "bar/main" = {
+        fixed-center = mkDefault false;
 
-        width = "100%";
-        height = 36;
+        width = mkDefault "100%";
+        height = mkDefault 36;
 
-        background = "\${colors.background}";
-        foreground = "\${colors.foreground}";
+        background = mkDefault "\${colors.background}";
+        foreground = mkDefault "\${colors.foreground}";
 
-        line-size = 3;
-        line-color = "#f00";
+        line-size = mkDefault 3;
+        line-color = mkDefault "#f00";
 
-        padding-left = 0;
-        padding-right = 2;
+        padding-left = mkDefault 0;
+        padding-right = mkDefault 2;
 
-        module-margin-left = 1;
-        module-margin-right = 2;
+        module-margin-left = mkDefault 1;
+        module-margin-right = mkDefault 2;
 
-        font-0 = "NotoSansMono Nerd Font:size=10:weight=bold;0";
+        font-0 = mkDefault "NotoSansMono Nerd Font:size=10:weight=bold;0";
 
-        modules-left = "bspwm";
-        modules-center = "mpd";
-        modules-right = "emacs alsa temperature memory cpu battery wlan eth date";
+        modules-left = mkDefault "bspwm";
+        modules-right = mkDefault "alsa backlight temperature memory cpufreq cpu battery wlan eth date";
 
-        locale = "fr_FR.UTF-8";
+        locale = mkDefault "fr_FR.UTF-8";
 
-        tray-position = "right";
-        tray-padding = 2;
+        tray-position = mkDefault "right";
+        tray-padding = mkDefault 2;
 
-        wm-restack = "bspwm";
+        wm-restack = mkDefault "bspwm";
 
-        cursor-click = "pointer";
-        cursor-scroll = "ns-resize";
+        cursor-click = mkDefault "pointer";
+        cursor-scroll = mkDefault "ns-resize";
       };
 
-      "module/bspwm" = mkDefault {
-        type = "internal/bspwm";
+      "module/bspwm" = {
+        type = mkDefault "internal/bspwm";
 
-        format = "<label-state> <label-mode>";
+        format = mkDefault "<label-state> <label-mode>";
 
-        label-focused-background = "\${colors.background-alt}";
-        label-focused-underline= "\${colors.primary}";
-        label-focused-padding = 2;
+        label-focused-background = mkDefault "\${colors.background-alt}";
+        label-focused-underline = mkDefault "\${colors.primary}";
+        label-focused-padding = mkDefault 2;
 
-        label-occupied-padding = 2;
+        label-occupied-padding = mkDefault 2;
 
-        label-urgent-background = "\${colors.alert}";
-        label-urgent-padding = 2;
+        label-urgent-background = mkDefault "\${colors.alert}";
+        label-urgent-padding = mkDefault 2;
 
-        label-empty-foreground = "\${colors.foreground-alt}";
-        label-empty-padding = 2;
+        label-empty-foreground = mkDefault "\${colors.foreground-alt}";
+        label-empty-padding = mkDefault 2;
 
-        label-monocle = "";
-        label-floating = "";
-        label-pseudotiled = "P";
-        label-locked = "";
-        label-locked-foreground = "#bd2c40";
-        label-sticky = "ﯻ";
-        label-sticky-foreground = "#fba922";
-        label-private = "";
-        label-private-foreground = "#bd2c40";
+        label-monocle = mkDefault "";
+        label-floating = mkDefault "";
+        label-pseudotiled = mkDefault "P";
+        label-locked = mkDefault "";
+        label-locked-foreground = mkDefault "#bd2c40";
+        label-sticky = mkDefault "ﯻ";
+        label-sticky-foreground = mkDefault "#fba922";
+        label-private = mkDefault "";
+        label-private-foreground = mkDefault "#bd2c40";
       };
 
-      "module/date" = mkDefault {
-        type = "internal/date";
+      "module/date" = {
+        type = mkDefault "internal/date";
 
-        label = "%date% %time%";
-        date = "%Y-%m-%d";
-        time = "%H:%M:%S";
+        label = mkDefault "%date% %time%";
+        date = mkDefault "%Y-%m-%d";
+        time = mkDefault "%H:%M:%S";
 
-        format-prefix = "";
-        format-prefix-foreground = "\${colors.foreground-alt}";
-        format-underline = "#0a6cf5";
+        format-prefix = mkDefault "";
+        format-prefix-foreground = mkDefault "\${colors.foreground-alt}";
+        format-underline = mkDefault "#0a6cf5";
       };
 
-      "module/eth" = mkDefault {
-        type = "internal/network";
-        interface = "enp10s0u1u3u3";
-        interval = 3;
+      "module/eth" = {
+        type = mkDefault "internal/network";
+        interval = mkDefault 3;
 
-        format-connected-underline = "#55aa55";
-        format-connected-prefix = " ";
-        format-connected-prefix-foreground = "\${colors.foreground-alt}";
-        label-connected = "%local_ip%";
+        format-connected-underline = mkDefault "#55aa55";
+        format-connected-prefix = mkDefault " ";
+        format-connected-prefix-foreground = mkDefault "\${colors.foreground-alt}";
+        label-connected = mkDefault "%local_ip%";
 
-        format-disconnected = "";
-        # format-disconnected = "<label-disconnected>";
-        # format-disconnected-underline = "\${self.format-connected-underline}";
-        # label-disconnected = "%ifname% disconnected";
-        # label-disconnected-foreground = "\${colors.foreground-alt}";
+        format-disconnected = mkDefault "";
+        # format-disconnected = mkDefault "<label-disconnected>";
+        # format-disconnected-underline = mkDefault "\${self.format-connected-underline}";
+        # label-disconnected = mkDefault "%ifname% disconnected";
+        # label-disconnected-foreground = mkDefault "\${colors.foreground-alt}";
       };
 
-      "module/wlan" = mkDefault {
-        type = "internal/network";
-        interface = "wlp0s20f3";
-        interval = 3;
+      "module/wlan" = {
+        type = mkDefault "internal/network";
+        interval = mkDefault 3;
 
-        format-connected = "<ramp-signal> <label-connected>";
-        format-connected-underline = "#9f78e1";
-        label-connected = "%essid%";
+        format-connected = mkDefault "<ramp-signal> <label-connected>";
+        format-connected-underline = mkDefault "#9f78e1";
+        label-connected = mkDefault "%essid%";
 
-        ramp-signal-0 = "";
-        ramp-signal-1 = "";
-        ramp-signal-2 = "";
-        ramp-signal-3 = "";
-        ramp-signal-4 = "";
-        ramp-signal-foreground = "\${colors.foreground-alt}";
+        ramp-signal-0 = mkDefault "1";
+        ramp-signal-1 = mkDefault "2";
+        ramp-signal-2 = mkDefault "3";
+        ramp-signal-3 = mkDefault "4";
+        ramp-signal-4 = mkDefault "5";
+        ramp-signal-foreground = mkDefault "\${colors.foreground-alt}";
       };
 
-      "module/battery" = mkDefault {
-        type = "internal/battery";
-        battery = "BAT0";
-        adapter = "ADP1";
-        full-at = 96;
+      "module/battery" = {
+        type = mkDefault "internal/battery";
+        full-at = mkDefault 100;
 
-        format-charging = "<animation-charging> <label-charging>";
-        format-charging-underline = "#ffb52a";
+        format-charging = mkDefault "<animation-charging> <label-charging>";
+        format-charging-underline = mkDefault "#45dd00";
 
-        format-discharging = "<ramp-capacity> <label-discharging>";
-        format-discharging-underline = "\${self.format-charging-underline}";
+        format-discharging = mkDefault "<ramp-capacity> <label-discharging>";
+        format-discharging-underline = mkDefault "#ffb52a";
 
-        format-full-prefix = " ";
-        format-full-prefix-foreground = "\${colors.foreground-alt}";
-        format-full-underline = "\${self.format-charging-underline}";
+        format-full-prefix = mkDefault " ";
+        format-full-prefix-foreground = mkDefault "\${colors.foreground-alt}";
+        format-full-underline = mkDefault "#45dd00";
 
-        ramp-capacity-0 = "";
-        ramp-capacity-1 = "";
-        ramp-capacity-2 = "";
-        ramp-capacity-3 = "";
-        ramp-capacity-4 = "";
-        ramp-capacity-5 = "";
-        ramp-capacity-6 = "";
-        ramp-capacity-7 = "";
-        ramp-capacity-8 = "";
-        ramp-capacity-9 = "";
-        ramp-capacity-foreground = "\${colors.foreground-alt}";
+        label-charging = mkDefault "%percentage%% %consumption%W";
+        label-discharging = mkDefault "%percentage%% %consumption%W";
 
-        animation-charging-0 = "";
-        animation-charging-1 = "";
-        animation-charging-2 = "";
-        animation-charging-3 = "";
-        animation-charging-4 = "";
-        animation-charging-5 = "";
-        animation-charging-6 = "";
-        animation-charging-7 = "";
-        animation-charging-8 = "";
-        animation-charging-9 = "";
-        animation-charging-foreground = "\${colors.foreground-alt}";
-        animation-charging-framerate = 750;
+        ramp-capacity-0 = mkDefault "";
+        ramp-capacity-1 = mkDefault "";
+        ramp-capacity-2 = mkDefault "";
+        ramp-capacity-3 = mkDefault "";
+        ramp-capacity-4 = mkDefault "";
+        ramp-capacity-5 = mkDefault "";
+        ramp-capacity-6 = mkDefault "";
+        ramp-capacity-7 = mkDefault "";
+        ramp-capacity-8 = mkDefault "";
+        ramp-capacity-9 = mkDefault "";
+        ramp-capacity-foreground = mkDefault "\${colors.foreground-alt}";
+
+        animation-charging-0 = mkDefault "";
+        animation-charging-1 = mkDefault "";
+        animation-charging-2 = mkDefault "";
+        animation-charging-3 = mkDefault "";
+        animation-charging-4 = mkDefault "";
+        animation-charging-5 = mkDefault "";
+        animation-charging-6 = mkDefault "";
+        animation-charging-7 = mkDefault "";
+        animation-charging-8 = mkDefault "";
+        animation-charging-9 = mkDefault "";
+        animation-charging-foreground = mkDefault "\${colors.foreground-alt}";
+        animation-charging-framerate = mkDefault 750;
       };
 
-      "module/cpu" = mkDefault {
-        type = "internal/cpu";
-        interval = 1;
-        format-prefix = "﬙ ";
-        format-prefix-foreground = "\${colors.foreground-alt}";
-        format-underline = "#f90000";
-        label = "%percentage-sum:3%%";
+      "module/cpu" = {
+        type = mkDefault "internal/cpu";
+        interval = mkDefault 1;
+        format-prefix = mkDefault "﬙ ";
+        format-prefix-foreground = mkDefault "\${colors.foreground-alt}";
+        format-underline = mkDefault "#f90000";
+        label = mkDefault "%percentage-sum:3%%";
       };
 
-      "module/memory" = mkDefault {
-        type = "internal/memory";
-        interval = "2";
-        format-prefix = " ";
-        format-prefix-foreground = "\${colors.foreground-alt}";
-        format-underline = "#4bffdc";
-        label = "%mb_used%";
+      "module/cpufreq" = {
+        type = mkDefault "custom/script";
+        interval = mkDefault 1;
+        format-underline = mkDefault "#f90000";
+        exec = mkDefault ("printf '%8s' \"$("
+          + "${pkgs.linuxPackages.cpupower}/bin/cpupower frequency-info -fm"
+          + "| ${pkgs.gnugrep}/bin/grep -oP '(?<=frequency: )([^ ]+ [^ ]+)'"
+          + ")\"");
       };
 
-      "module/temperature" = mkDefault {
-        type = "internal/temperature";
-
-        thermal-zone = 0;
-        hwmon-path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input";
-
-        warn-temperature = 60;
-
-        format-underline = "#f50a4d";
-        format-warn-underline = "\${self.format-underline}";
-
-        label-warn-foreground = "\${colors.secondary}";
+      "module/memory" = {
+        type = mkDefault "internal/memory";
+        interval = mkDefault "2";
+        format-prefix = mkDefault " ";
+        format-prefix-foreground = mkDefault "\${colors.foreground-alt}";
+        format-underline = mkDefault "#4bffdc";
+        label = mkDefault "%mb_used%";
       };
 
-      "module/alsa" = mkDefault {
-        type = "internal/alsa";
+      "module/temperature" = {
+        type = mkDefault "internal/temperature";
 
-        # master-soundcard = "default";
-        # speaker-soundcard = "default";
-        # headphone-soundcard = "default";
+        thermal-zone = mkDefault 0;
 
-        mapped = true;
-        interval = 5;
+        warn-temperature = mkDefault 60;
 
-        format-volume = "<label-volume> <bar-volume>";
-        label-volume = "墳 %percentage%%";
+        format-underline = mkDefault "#f50a4d";
+        format-warn-underline = mkDefault "\${self.format-underline}";
 
-        format-muted-prefix = "婢 ";
-        format-muted-foreground = "\${colors.foreground-alt}";
-        label-muted = "sound muted";
-
-        bar-volume-width = 10;
-        bar-volume-foreground-0 = "#55aa55";
-        bar-volume-foreground-1 = "#55aa55";
-        bar-volume-foreground-2 = "#55aa55";
-        bar-volume-foreground-3 = "#55aa55";
-        bar-volume-foreground-4 = "#55aa55";
-        bar-volume-foreground-5 = "#f5a70a";
-        bar-volume-foreground-6 = "#ff5555";
-        bar-volume-gradient = false;
-        bar-volume-indicator = "|";
-        bar-volume-indicator-font = 2;
-        bar-volume-fill = "─";
-        bar-volume-fill-font = 2;
-        bar-volume-empty = "─";
-        bar-volume-empty-font = 2;
-        bar-volume-empty-foreground = "\${colors.foreground-alt}";
+        label-warn-foreground = mkDefault "\${colors.secondary}";
       };
 
-      # TODO: Faire mieux.
-      "module/emacs" = mkDefault {
-        type = "custom/script";
-        exec = "echo \"E\"";
-        exec-if = "systemctl --user status emacs";
-        interval = 5;
+      "module/backlight" = {
+        type = mkDefault "internal/backlight";
+        card = mkDefault "intel_backlight";
+        label = mkDefault "盛 %percentage%%";
       };
 
-      "module/mpd" = mkDefault {
-        type = "internal/mpd";
+      "module/alsa" = {
+        type = mkDefault "internal/alsa";
 
-        format-online = "ﱘ <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next>";
+        # master-mixer = mkDefault "PCM";
+        master-soundcard = mkDefault "hw:0";
 
-        icon-prev = "玲";
-        icon-stop = "";
-        icon-play = "";
-        icon-pause = "";
-        icon-next = "怜";
+        mapped = mkDefault true;
+        interval = mkDefault 5;
 
-        label-song-maxlen = 50;
-        label-song-ellipsis = true;
+        format-volume = mkDefault "<label-volume> <bar-volume>";
+        label-volume = mkDefault "墳 %percentage%%";
+
+        format-muted-prefix = mkDefault "婢 ";
+        format-muted-foreground = mkDefault "\${colors.foreground-alt}";
+        label-muted = mkDefault "sound muted";
+
+        bar-volume-width = mkDefault 10;
+        bar-volume-foreground-0 = mkDefault "#55aa55";
+        bar-volume-foreground-1 = mkDefault "#55aa55";
+        bar-volume-foreground-2 = mkDefault "#55aa55";
+        bar-volume-foreground-3 = mkDefault "#55aa55";
+        bar-volume-foreground-4 = mkDefault "#55aa55";
+        bar-volume-foreground-5 = mkDefault "#f5a70a";
+        bar-volume-foreground-6 = mkDefault "#ff5555";
+        bar-volume-gradient = mkDefault false;
+        bar-volume-indicator = mkDefault "|";
+        bar-volume-indicator-font = mkDefault 2;
+        bar-volume-fill = mkDefault "─";
+        bar-volume-fill-font = mkDefault 2;
+        bar-volume-empty = mkDefault "─";
+        bar-volume-empty-font = mkDefault 2;
+        bar-volume-empty-foreground = mkDefault "\${colors.foreground-alt}";
       };
     };
   };

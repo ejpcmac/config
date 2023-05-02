@@ -1,4 +1,29 @@
 {
+    "FIXME": {
+        "prefix": "FIXME",
+        "body": "// FIXME: ",
+        "description": "FIXME"
+    },
+    "HACK": {
+        "prefix": "HACK",
+        "body": "// HACK: ",
+        "description": "HACK"
+    },
+    "IDEA": {
+        "prefix": "IDEA",
+        "body": "// IDEA: ",
+        "description": "IDEA"
+    },
+    "NOTE": {
+        "prefix": "NOTE",
+        "body": "// NOTE: ",
+        "description": "NOTE"
+    },
+    "REVIEW": {
+        "prefix": "REVIEW",
+        "body": "// REVIEW: ",
+        "description": "REVIEW"
+    },
     "TODO": {
         "prefix": "TODO",
         "body": "// TODO: ",

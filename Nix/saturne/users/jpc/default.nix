@@ -4,8 +4,6 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, pkgs, ... }:
-
 {
   imports = [
     # Configuration shared between hosts.
@@ -14,6 +12,7 @@
   ];
 
   users.users.jpc = {
+    createHome = false;
     # Use `mkpasswd -m SHA-512` to generate a new password hash.
     hashedPassword = "***[ REDACTED ]***";
     extraGroups = [ "docker" "vboxusers" ];

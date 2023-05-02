@@ -12,30 +12,35 @@ various customisations I use for my everyday comfort. Enjoy! :)
 
 * `Nix`
     * `common` - configuration shared between hosts.
+        * `home-manager` – common home configuration, to be imported in
+            host-specific home configurations.
         * `modules` – NixOS or `home-manager` modules that are not ready enough
-          or too much specific to be `confkit` or proposed in NixOS or
+            or too much specific to be `confkit` or proposed in NixOS or
             `home-manager`.
+        * `nixos` – personal NixOS configuration framework. This imports
+            [`confkit`](https://github.com/ejpcmac/confkit),
+            [`home-manager`](https://github.com/nix-community/home-manager), and
+            provides extentions to `confkit`.
         * `overlays` – `nixpkgs` overlays.
-        * `pkgs` – packages (maybe should I setup a proper
-            [NUR](https://github.com/nix-community/NUR) at some point).
+        * `pkgs` – packages.
         * `res` – resource files for the configuration.
-        * `system` – common system configuration, modularised to be flexible.
-        * `users` – common `home-manager` configuration.
-    * `saturne` – configuration for my personal PC.
+        * `users` – common user definitions.
+    * `containers` – configuration for containers (mostly redacted, some left
+        for reference).
     * `helios` – configuration for my home NAS.
-* [`confkit`](https://github.com/ejpcmac/confkit) – my public opinionated
-    configuration framework. You can also use it if you want, and even
-    contribute :)
-* `home-manager` – I now refer to
-    [`home-manager`](https://github.com/rycee/home-manager) as a submodule
-    instead of a channel. It gives me more control about the exact version I am
-    using and eases the deployment or re-deployment of my configuration.
+    * `neptune` – configuration for my server.
+    * `philae` – configuration for my “lander”, used to transform any rescue
+        system into NixOS.
+    * `pluton` – configuration for my work VM.
+    * `saturne` – configuration for my personal PC.
 * `desktop` – some desktop environment related configuration. Some more
     configuration (`bspwn`, …) can be found under `Nix/`.
 * `spacemacs` – Spacemacs configuration.
 * `vscode` – VSCode settings, keybindings and snippets.
 
 ## History
+
+*Note: This is not up to date. I may update it in a future commit.*
 
 I started to use Zsh back in 2013 when another student introduced me to it.
 Then, I started to use vim, tmux and other console tools. I was sharing by hand

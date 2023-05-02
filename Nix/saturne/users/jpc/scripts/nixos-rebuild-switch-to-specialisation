@@ -1,0 +1,15 @@
+#!/bin/sh
+
+specialisation=$(
+    cat /run/current-system/nixos-version | sed "s/[0-9].*//" | sed "s/-$//"
+)
+
+nixos-rebuild boot
+
+if [ -z $specialisation ]; then
+    echo "swithing to base system..."
+    /nix/var/nix/profiles/system/bin/switch-to-configuration switch
+else
+    echo "swithing to $specialisation..."
+    /nix/var/nix/profiles/system/specialisation/$specialisation/bin/switch-to-configuration switch
+fi

@@ -10,7 +10,17 @@ super + Return
 
 # Open the program launcher.
 super + @space
-    rofi -modi combi -show combi -combi-modi window,drun,run
+    rofi -show combi -font "mono 18"
+
+# Open the file launcher.
+super + shift + @space
+    xdg-open "$(\
+        fd \
+        | rofi -dmenu -i \
+               -p 'File to open' \
+               -font 'mono 18' \
+               -theme-str 'window \{width: 60%; height: 60%;\}' \
+        )"
 
 # Reload sxhkd and bspwm.
 super + Escape
@@ -29,8 +39,10 @@ super + l
     betterlockscreen --lock
 
 # Take a screenshot.
-Print
-    maim $HOME/Images/Captures/$HOSTNAME/$(date +%Y-%m-%d_%H-%M-%S).png
+{_, shift, ctrl} + Print
+    maim --hidecursor {_,--window $(xdotool getactivewindow),--select} \
+    | tee $HOME/Images/Captures/$HOSTNAME/$(date +%Y-%m-%d_%H-%M-%S).png \
+    | xclip -selection clipboard -t image/png
 
 ################################################################################
 #                             Application hotkeys                              #
@@ -42,7 +54,7 @@ super + e
 
 # Open the configuration.
 super + o
-    emacsclient -c ~/config
+    codium /config
 
 # Open the Org Notes.
 super + b
@@ -56,9 +68,9 @@ super + shift + b
 super + m
     emacsclient -ce '(mu4e)'
 
-# Open KeePassX.
+# Open KeePassXC.
 super + k
-    keepassx
+    keepassxc
 
 # Open a Web browser.
 super + i
@@ -82,7 +94,10 @@ super + z
 
 # Switch between dark and light themes.
 super + {_,shift +}g
-    $HOME/.config/termite/switch-theme && {echo,emacsclient --eval "(spacemacs/cycle-spacemacs-theme)"}
+    $HOME/.config/termite/switch-theme && \
+        {true,$HOME/.config/xsettingsd/switch-theme && \
+        $HOME/.config/rofi/switch-theme && \
+        emacsclient --eval "(spacemacs/cycle-spacemacs-theme)"}
 
 # Switch between hard and soft variants.
 super + h
@@ -128,17 +143,20 @@ super + q
 ## Brightness management
 ##
 
+XF86Display
+    toggle-brightness
+
 XF86MonBrightnessDown
-    brightnessctl set 5-
+    brightnessctl set 5%-
 
 XF86MonBrightnessUp
-    brightnessctl set 5+
+    brightnessctl set 5%+
 
 super + F1
-    brightnessctl set 5-
+    brightnessctl set 5%-
 
 super + F2
-    brightnessctl set 5+
+    brightnessctl set 5%+
 
 ################################################################################
 #                                bspwm hotkeys                                 #
@@ -154,16 +172,6 @@ super + alt + Escape
 super + {_,shift + }w
     bspc node -{c,k}
 
-# TODO: Call a script instead, and just define the same key to switch between
-# modes, as the state would be stored in a file.
-# Switch to monoscreen mode
-super + shift + b
-    bspc monitor VGA-1 -d 1 2 3 4 5 6 7 8 9 0 $ = % && bspc monitor VGA-2 -r && bspc monitor VGA-3 -r && bspc wm -o
-
-# Switch to multiscreen mode
-super + shift + eacute
-    bspc monitor VGA-2 -d 1 2 3 4 5 && bspc monitor VGA-3 -d 6 7 8 9 0 && bspc monitor VGA-1 -d $ = %
-
 # Alternate between the tiled and monocle layout.
 super + n
     bspc desktop -l next
@@ -178,23 +186,15 @@ super + {d,shift + d,v,f}
 super + ctrl + {l,x,z}
     bspc node -g {locked,sticky,private}
 
-############################ Focus / Swap / Rotate #############################
+######################### Focus / Swap / Send / Rotate #########################
 
 # Focus / swap with / send to the node in the given direction.
-super + {_,shift + ,shift + control + }{c,t,s,r}
+super + {_,shift + ,control + }{c,t,s,r}
     bspc node -{f,s,n} {west,south,north,east}
 
-# Focus the next/previous node in the current desktop.
-super + {_,shift + }e
-    bspc node -f {next,prev}.local
-
-# Send the newest marked node to the newest preselected node.
-super + y
-    bspc node newest.marked.local -n newest.!automatic.local
-
-# Rotate the current node with other nodes in the current desktop.
-super + shift + o
-    bspc node @focused:/ --rotate 90
+# Swap the current desktop with the desktop in the given direction.
+super + alt + shift + {c,t,s,r}
+    bspc node @focused:/ -s @{west,south,north,east}:focused:/
 
 # Focus the given desktop.
 super + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,dollar,equal,percent}
@@ -204,33 +204,23 @@ super + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minu
 super + shift + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,dollar,equal,percent}
     bspc node -d '^{1-9,10,11,12,13}' --follow
 
-################################## Preselect ###################################
+# Send the current desktop to the given desktop and follow.
+super + alt + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,dollar,equal,percent}
+    bspc node @focused:/ -d '^{1-9,10,11,12,13}' --follow
 
-# Preselect the direction.
-super + ctrl + {c,t,s,r}
-    bspc node -p {west,south,north,east}
+# Swap the current desktop with the given desktop and follow.
+super + alt + shift + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash,asterisk,dollar,equal,percent}
+    bspc node @focused:/ -s @'^{1-9,10,11,12,13}':/ --follow
 
-# Preselect the ratio.
-super + ctrl + {quotedbl,guillemotleft,guillemotright,parenleft,parenright,at,plus,minus,slash}
-    bspc node -o 0.{1-9}
-
-# Cancel the preselection for the focused node.
-super + ctrl + space
-    bspc node -p cancel
-
-# Cancel the preselection for the focused desktop.
-super + ctrl + shift + space
-    bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+# Rotate the current node with other nodes in the current desktop.
+super + shift + o
+    bspc node @focused:/ --rotate 90
 
 ################################ Move & Resize #################################
 
 # Expand a window by moving one of its side outward.
 super + alt + {c,t,s,r}
     bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-
-# Contract a window by moving one of its side inward.
-super + alt + shift + {c,t,s,r}
-    bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
 # Move a floating window.
 super + {Left,Down,Up,Right}

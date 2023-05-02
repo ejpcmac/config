@@ -4,71 +4,153 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, system, ... }:
+
+let
+  inherit (lib) getName mkDefault optional;
+  unstable = import inputs.nixpkgs-unstable { inherit system; };
+  mkFs = pkgs.lib.confkit.mkFs config;
+in
 
 {
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
-  system.stateVersion = "19.09";  # Did you read the comment?
-
   imports = [
+    # Import my personal NixOS extension module.
+    ./nixos
+
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-
-    # Configuration shared between hosts.
-    ../common/nixos/general.nix
-    ../common/nixos/type/physical.nix
-    ../common/nixos/type/laptop.nix
-    ../common/nixos/usage/workstation.nix
-    ../common/nixos/usage/home.nix
-    ../common/nixos/features/systemd-boot.nix
-    ../common/nixos/features/zfs.nix
-    ../common/nixos/location/kerguelen.nix
 
     # Configuration for the users.
     ./users/root
     ./users/jpc
-
-    # Configuration to make a Pi-Gateway
-    # ./pi-gateway.nix
   ];
+
+  ############################################################################
+  ##                                confkit                                 ##
+  ############################################################################
+
+  confkit = {
+    info = {
+      name = "saturne";
+      machineId = "***[ REDACTED ]***";
+    };
+
+    profile = {
+      type = [ "physical" "laptop" ];
+      usage = [ "workstation" "home" ]
+        ++ optional (config.specialisation != { }) "docked";
+    };
+
+    features = {
+      intel.enable = true;
+      zfs.enable = true;
+
+      bootloader = {
+        enable = true;
+        platform = "uefi";
+        program = "systemd-boot";
+      };
+
+      fileSystems = {
+        enable = true;
+        fs = "zfs";
+        rootOnTmpfs = true;
+      };
+
+      custom.jpc = {
+        docker.enable = true;
+        serverMountpoints.enable = true;
+      };
+
+      custom.saturne = {
+        tlp = {
+          enable = true;
+          powersave = mkDefault "on-battery";
+        };
+
+        # mpd.enable = true;
+        # nix-serve.enable = true;
+        # pi-gateway.enable = true;
+        # webserver.enable = true;
+      };
+    };
+  };
+
+  ############################################################################
+  ##                       Alternative configurations                       ##
+  ############################################################################
+
+  specialisation = {
+    nomade = {
+      inheritParentConfig = true;
+      configuration = {
+        system.nixos.tags = [ "nomade" ];
+        confkit.profile.usage = [ "nomade" ];
+      };
+    };
+
+    nomade-performance = {
+      inheritParentConfig = true;
+      configuration = {
+        system.nixos.tags = [ "nomade" "performance" ];
+        confkit = {
+          profile.usage = [ "nomade" ];
+          features.custom.saturne.tlp.powersave = "never";
+        };
+      };
+    };
+
+    nomade-powersave = {
+      inheritParentConfig = true;
+      configuration = {
+        system.nixos.tags = [ "nomade" "powersave" ];
+        confkit = {
+          profile.usage = [ "nomade" ];
+          features.custom.saturne.tlp.powersave = "always";
+        };
+      };
+    };
+  };
+
+  ############################################################################
+  ##                           Nix configuration                            ##
+  ############################################################################
+
+  nix = {
+    # Only garbage-collect once a week to avoir rebuilding too often the
+    # Daedalus IFD, and do it before update day.
+    gc.dates = "Sat, 21:00";
+
+    settings = {
+      # Add the IOHK binary cache to build the Cardano platform more quickly.
+      substituters = [ "https://hydra.iohk.io" ];
+      trusted-public-keys = [
+        "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+      ];
+    };
+  };
 
   ############################################################################
   ##                         nixpkgs configuration                          ##
   ############################################################################
 
   nixpkgs.config = {
-    # Allow unfree licenses for:
-    # - the Nvidia driver,
-    # - the Oracle VirtualBox Extension Pack.
-    allowUnfree = true;
+    allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
+      # TODO: Check why it is needed here despite also being in workstation*.
+      "veracrypt"
+      "nvidia-x11"
+      "nvidia-settings"
+      "Oracle_VM_VirtualBox_Extension_Pack"
+    ];
   };
 
   ############################################################################
-  ##                     Configuration for offline mode                     ##
-  ############################################################################
-
-  nix = {
-    binaryCaches = lib.mkForce [ "file:///data/Mirroirs/nixpkgs/cache" ];
-    gc.automatic = false;
-  };
-
-  environment.variables = {
-    # Use the local mirrors.
-    HEX_MIRROR_URL = "http://hex.saturne/repos/hexpm_mirror";
-    RUSTUP_DIST_SERVER = "http://rustup.saturne:8000";
-  };
-
-  ############################################################################
-  ##                          Boot & File systems                           ##
+  ##                              Boot process                              ##
   ############################################################################
 
   boot = {
-    # TODO: Remove in NixOS 20.03.
-    supportedFilesystems = [ "zfs" ];
-    tmpOnTmpfs = true;
+    supportedFilesystems = [ "btrfs" ];
+    zfs.requestEncryptionCredentials = false;
 
     initrd = {
       luks.devices = {
@@ -76,28 +158,36 @@
         ssd2 = { device = "/dev/nvme1n1p2"; allowDiscards = true; };
       };
     };
-
-    zfs.requestEncryptionCredentials = false;
   };
 
+  ############################################################################
+  ##                              File systems                              ##
+  ############################################################################
+
   fileSystems = {
-    # Set options for the legacy mountpoints.
-    "/".options = [ "noatime" ];
-    "/config".options = [ "nosuid" "nodev" "noexec" "noatime" ];
-    "/boot".options = [ "nosuid" "nodev" "noexec" "noatime" ];
-    "/etc".options = [ "nosuid" "nodev" "noatime" ];
-    "/root".options = [ "nosuid" "nodev" "noatime" ];
-    "/var".options = [ "nosuid" "nodev" "noexec" ];
-    "/var/cache".options = [ "nosuid" "nodev" "noexec" ];
-    "/var/db".options = [ "nosuid" "nodev" "noexec" ];
-    "/var/empty".options = [ "nosuid" "nodev" "noexec" "noatime" ];
-    "/var/log".options = [ "nosuid" "nodev" "noexec" ];
-    "/var/tmp".options = [ "nosuid" "nodev" ];
+    "/persist/adjtime" = mkFs { volumePath = "/system/data/adjtime"; };
+    "/var/lib/boltd" = mkFs { volumePath = "/system/data/boltd"; };
+  };
+
+  ############################################################################
+  ##                              Persistence                               ##
+  ############################################################################
+
+  environment.etc = {
+    # Persisted non-static files in /etc
+    "adjtime".source = "/persist/adjtime/adjtime";
   };
 
   ############################################################################
   ##                                Hardware                                ##
   ############################################################################
+
+  hardware = {
+    bluetooth = {
+      enable = true;
+      powerOnBoot = false;
+    };
+  };
 
   # Tweak to get the touchpad working when waking up from sleep.
   powerManagement.resumeCommands = ''
@@ -106,119 +196,15 @@
   '';
 
   ############################################################################
-  ##                               Networking                               ##
-  ############################################################################
-
-  networking = {
-    hostName = "saturne";
-    hostId = "66f21a93";
-
-    firewall = {
-      # Share websites and mirrors.
-      allowedTCPPorts = [ 80 6543 ];
-    };
-
-    hosts = {
-      # Local web servers
-      "127.0.0.1" = [
-        "localhost"
-        "saturne"
-        "crates.saturne"
-        "hex.saturne"
-        "nix.saturne"
-        "rustup.saturne"
-        "dev.jpc.photos"
-        "dev.bark-artwork.com"
-      ];
-    };
-  };
-
-  ############################################################################
   ##                                Services                                ##
   ############################################################################
 
   services = {
     hardware.bolt.enable = true;
     throttled.enable = true;
-    # TODO: Switch to the default or 6 when going back from Kerguelen.
-    zfs.autoSnapshot.monthly = 24;
 
     printing.drivers = [ pkgs.epson-escpr ];
-    udev.packages = [ pkgs.mixxx ];
-
-    httpd = {
-      enable = true;
-      enablePHP = true;
-      adminAddr = "jpc+saturne@ejpcmac.net";
-
-      virtualHosts = [
-        {
-          hostName = "localhost";
-          documentRoot = "/var/lib/www/localhost";
-        }
-
-        {
-          hostName = "nix.saturne";
-          documentRoot = "/data/Mirroirs/nixpkgs";
-        }
-
-        {
-          hostName = "crates.saturne";
-          documentRoot = "/data/Mirroirs/crates.io";
-        }
-
-        {
-          hostName = "hex.saturne";
-          documentRoot = "/data/Mirroirs/hex.pm";
-        }
-
-        {
-          hostName = "rustup.saturne";
-          documentRoot = "/data/Mirroirs/rustup/mirror";
-          listen = [ { port = 8000; } ];
-        }
-
-        {
-          hostName = "dev.jpc.photos";
-          documentRoot = "/var/lib/www/jpc_photos";
-          extraConfig = ''
-            <Directory "/var/lib/www/jpc_photos">
-              DirectoryIndex index.html index.php
-              AllowOverride All
-            </Directory>
-          '';
-        }
-
-        {
-          hostName = "dev.bark-artwork.com";
-          documentRoot = "/var/lib/www/bark-artwork.com";
-          extraConfig = ''
-            <Directory "/var/lib/www/bark-artwork.com">
-              DirectoryIndex index.html index.php
-              AllowOverride All
-            </Directory>
-          '';
-        }
-      ];
-    };
-
-    mpd = {
-      enable = true;
-      musicDirectory = "/data/Musique";
-      extraConfig = builtins.readFile ./res/mpd.conf;
-    };
-
-    nix-serve = {
-      enable = true;
-      port = 6543;
-      secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
-    };
-
-    xserver = {
-      dpi = 141;
-      videoDrivers = [ "nvidia" ];
-      xrandrHeads = [ { output = "DP-0"; primary = true; } ];
-    };
+    udev.packages = [ unstable.mixxx ];
   };
 
   ############################################################################
@@ -226,7 +212,6 @@
   ############################################################################
 
   virtualisation = {
-    docker.enable = true;
     virtualbox.host = { enable = true; enableExtensionPack = true; };
   };
 

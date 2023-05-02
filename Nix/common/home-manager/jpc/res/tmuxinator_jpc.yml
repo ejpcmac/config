@@ -1,0 +1,7 @@
+---
+name: jpc
+project_root: ~/
+windows:
+  - Fichiers:
+      panes:
+        - ranger

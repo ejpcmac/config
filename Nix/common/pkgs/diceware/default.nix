@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "diceware";
-  version = "1.0.1";
+  version = "1.0.2";
 
   src = fetchFromGitHub {
     owner = "ejpcmac";
     repo = pname;
     rev = "v${version}";
-    sha256 = "0z3nnaazgvj1j8a0xw5jjcdzqpqai875p4fi0ncfjsa8ar6krcfs";
+    hash = "sha256-PR9csAQHSJWq5x286+vUYLeFJuTHoWqSvGvfIDJjGuc=";
   };
 
-  cargoSha256 = "042l9hm87a9vjhp24fpkxi3wcwdxmqqc7i55rqi7gm1whn78861p";
+  cargoHash = "sha256-wbf2l+QdPOBnmYewPWnSMc05DKnkXPFlprJLMLVKHkU=";
 
   doCheck = false;
 }

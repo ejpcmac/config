@@ -4,66 +4,66 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
-
-let
-  inherit (lib.trivial) release;
-in
+{ inputs, pkgs, ... }:
 
 {
+  # This value determines the NixOS release with which your system is to be
+  # compatible, in order to avoid breaking some software such as database
+  # servers. You should change this only after NixOS release notes say you
+  # should.
+  system.stateVersion = "22.11"; # Did you read the comment?
+
   imports = [
     # Import the confkit NixOS module to get ready-to-use configurations for
     # several tools.
-    ../../../confkit/nixos
+    inputs.confkit.nixosModules.confkit-nixos
 
     # Import the home-manager NixOS module to handle user configurations
     # declaratively.
-    ../../../home-manager/nixos
+    inputs.home-manager.nixosModules.home-manager
   ];
 
-  # Enable my personal overlay on all hosts.
-  nixpkgs.overlays = [ (import ../overlays/jpc_overlay.nix) ];
+  nixpkgs.overlays = [
+    # Enable my personal overlay on all hosts.
+    (import ../overlays/jpc_overlay.nix)
+  ];
 
   ############################################################################
   ##                                confkit                                 ##
   ############################################################################
 
   confkit = {
-    nix.enable = true;
-    ranger.enable = true;
-    shell.enable = true;
-    tmux.enable = true;
-    utilities.enable = true;
-    zsh.enable = true;
+    keyboard.layout = "bépo";
 
-    # Use BÉPO-optimised keybindings.
-    keyboard.bepo = true;
+    features = {
+      base.enable = true;
+      shell.enable = true;
+      utilities.enable = true;
+    };
+
+    programs = {
+      nix.enable = true;
+      ranger.enable = true;
+      tmux.enable = true;
+      zsh.enable = true;
+    };
+  };
+
+  ############################################################################
+  ##                           Nix configuration                            ##
+  ############################################################################
+
+  nix = {
+    extraOptions = "experimental-features = nix-command flakes";
   };
 
   ############################################################################
   ##                         General configuration                          ##
   ############################################################################
 
-  # TODO: Remove NixOS 19.09 support once all machines are on NixOS 20.03.
-  i18n = {
-    defaultLocale = "fr_FR.UTF-8";
-  } // (if release == "19.09" then {
-    consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "fr-bepo";
-  } else {});
-
-  users = {
-    mutableUsers = false;
-    defaultUserShell = pkgs.zsh;
-  };
-
-  ############################################################################
-  ##                                Services                                ##
-  ############################################################################
-
-  services = {
-    chrony.enable = true;
-  };
+  console.keyMap = "fr-bepo";
+  i18n.defaultLocale = "fr_FR.UTF-8";
+  home-manager.useUserPackages = true;
 
   ############################################################################
   ##                            System packages                             ##
@@ -71,16 +71,8 @@ in
 
   environment.systemPackages = with pkgs; [
     # Utilities
-    lm_sensors
+    glances
     openssl
     pv
-    pythonPackages.glances
   ];
 }
-// (if release == "20.03" then {
-  # TODO: Remove NixOS 19.09 support once all machines are on NixOS 20.03.
-  console = {
-    font = "Lat2-Terminus16";
-    keyMap = "fr-bepo";
-  };
-} else {})

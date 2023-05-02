@@ -1,0 +1,330 @@
+diff --git a/libgnucash/engine/iso-4217-currencies.xml b/libgnucash/engine/iso-4217-currencies.xml
+index 93c22311f..398b85132 100644
+--- a/libgnucash/engine/iso-4217-currencies.xml
++++ b/libgnucash/engine/iso-4217-currencies.xml
+@@ -37,6 +37,19 @@
+ 
+ 
+ <currencylist>
++<!-- "ADA" - "Cardano Token"
++-->
++<currency
++  isocode="ADA"
++  fullname="Cardano Token"
++  unitname="ADA"
++  partname="lovelace"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000"
++  smallest-fraction="1000000"
++  local-symbol="₳"
++/>
+ <!-- "ADF" - "Andorran Franc"
+   2002-01-01 "FRF" 1  ;; = 1/1 French Franc replaced by EUR
+ -->
+@@ -512,6 +525,19 @@
+   smallest-fraction="100"
+   local-symbol="B$"
+ />
++<!-- "BTC" - "Bitcoin"
++-->
++<currency
++  isocode="BTC"
++  fullname="Bitcoin"
++  unitname="bitcoin"
++  partname="satoshi"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="฿"
++/>
+ <!-- "BTN" - "Ngultrum"
+ -->
+ <currency
+@@ -806,6 +832,19 @@
+   smallest-fraction="100"
+   local-symbol="Kč"
+ />
++<!-- "DASH" - "Dash"
++-->
++<currency
++  isocode="DASH"
++  fullname="Dash"
++  unitname="dash"
++  partname="duff"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="DASH"
++/>
+ <!-- "DEM" - "Deutsche Mark"
+   2002-01-01 "EUR" 1.95583
+ -->
+@@ -955,6 +994,19 @@
+   smallest-fraction="100"
+   local-symbol="Br"
+ />
++<!-- "ETH" - "Ethereum"
++-->
++<currency
++  isocode="ETH"
++  fullname="Ethereum"
++  unitname=""
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="ETH"
++/>
+ <!-- "EUR" - "Euro"
+ -->
+ <currency
+@@ -1035,6 +1087,19 @@
+   smallest-fraction="100"
+   local-symbol="£"
+ />
++<!-- "GCR" - "Global Currency Reserve"
++-->
++<currency
++  isocode="GCR"
++  fullname="Global Currency Reserve"
++  unitname=""
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="GCR"
++/>
+ <!-- "GEL" - "Lari"
+ -->
+ <currency
+@@ -1286,6 +1351,19 @@
+   smallest-fraction="100"
+   local-symbol="₹"
+ />
++<!-- "MIOTA" - "IOTA"
++-->
++<currency
++  isocode="MIOTA"
++  fullname="IOTA"
++  unitname="MIOTA"
++  partname="IOTA"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000"
++  smallest-fraction="1000000"
++  local-symbol="MIOTA"
++/>
+ <!-- "IQD" - "Iraqi Dinar"
+ -->
+ <currency
+@@ -1521,6 +1599,19 @@
+   smallest-fraction="100"
+   local-symbol="ل.ل"
+ />
++<!-- "LSK" - "Lisk"
++-->
++<currency
++  isocode="LSK"
++  fullname="Lisk"
++  unitname="lisk"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="LSK"
++/>
+ <!-- "LKR" - "Sri Lanka Rupee"
+ -->
+ <currency
+@@ -1560,6 +1651,19 @@
+   smallest-fraction="100"
+   local-symbol="M"
+ />
++<!-- "LTC" - "Litecoin"
++-->
++<currency
++  isocode="LTC"
++  fullname="Litecoin"
++  unitname="litecoin"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="LTC"
++/>
+ <!-- "LTL" - "Lithuanian Litas"
+ -->
+ <currency
+@@ -1627,6 +1731,19 @@
+   smallest-fraction="100"
+   local-symbol="د.م"
+ />
++<!-- "MINA" - "MINA Token"
++-->
++<currency
++  isocode="MINA"
++  fullname="MINA Token"
++  unitname="MINA"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000000"
++  smallest-fraction="1000000000"
++  local-symbol="MINA"
++/>
+ <!-- "MDL" - "Moldovan Leu"
+ -->
+ <currency
+@@ -1895,6 +2012,19 @@
+   smallest-fraction="100"
+   local-symbol="N$"
+ />
++<!-- "NEO" - "Neo"
++-->
++<currency
++  isocode="NEO"
++  fullname="Neo"
++  unitname="neo"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="NEO"
++/>
+ <!-- "NGN" - "Naira"
+ -->
+ <currency
+@@ -2348,6 +2478,19 @@
+   smallest-fraction="100"
+   local-symbol="Le"
+ />
++<!-- "SOL" - "Solana"
++-->
++<currency
++  isocode="SOL"
++  fullname="Solana"
++  unitname=""
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000000"
++  smallest-fraction="1000000000"
++  local-symbol="SOL"
++/>
+ <!-- "SOS" - "Somali Shilling"
+ -->
+ <currency
+@@ -2535,6 +2678,19 @@
+   smallest-fraction="100"
+   local-symbol="T$"
+ />
++<!-- "TRX" - "TRON"
++-->
++<currency
++  isocode="TRX"
++  fullname="TRON"
++  unitname="tron"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000000"
++  smallest-fraction="1000000000"
++  local-symbol="TRON"
++/>
+ <!-- "TRY" - "Turkish Lira"
+ -->
+ <currency
+@@ -2827,6 +2983,19 @@
+   smallest-fraction="100"
+   local-symbol="R"
+ />
++<!-- "ZEC" - "Zcash"
++-->
++<currency
++  isocode="ZEC"
++  fullname="Zcash"
++  unitname="zcash"
++  partname="zat"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="ZEC"
++/>
+ <!-- "ZMK" - "Kwacha (old)"
+   replaced by ZMW from 2013-01-01 onwards
+ -->
+@@ -2956,6 +3125,32 @@
+   smallest-fraction="100"
+   local-symbol=""
+ />
++<!-- "XLM" - "Stellar"
++-->
++<currency
++  isocode="XLM"
++  fullname="Stellar"
++  unitname="stellar"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="XLM"
++/>
++<!-- "XMR" - "Monero"
++-->
++<currency
++  isocode="XMR"
++  fullname="Monero"
++  unitname="monero"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000000"
++  smallest-fraction="1000000000"
++  local-symbol="XMR"
++/>
+ <!-- "XOF" - "CFA Franc BCEAO"
+   Banque Centrale des États de l'Afrique de l'Ouest
+ -->
+@@ -2984,6 +3179,32 @@
+   smallest-fraction="100"
+   local-symbol=""
+ />
++<!-- "XRP" - "Ripple"
++-->
++<currency
++  isocode="XRP"
++  fullname="Ripple"
++  unitname="ripple"
++  partname="drop"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="1000000"
++  smallest-fraction="1000000"
++  local-symbol="XRP"
++/>
++<!-- "XVG" - "Verge"
++-->
++<currency
++  isocode="XVG"
++  fullname="Verge"
++  unitname="verge"
++  partname=""
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100000000"
++  smallest-fraction="100000000"
++  local-symbol="XVG"
++/>
+ <!-- "XTS" - "Code for testing purposes"
+   Code reserved for testing purposes
+ -->

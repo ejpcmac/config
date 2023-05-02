@@ -1,0 +1,116 @@
+{
+  "nodes": {
+    "confkit": {
+      "locked": {
+        "lastModified": 1682952136,
+        "narHash": "sha256-eoJNr93aYHKGm6v0eBWGjvwtoeqlsRAp5NWdPAQHe6s=",
+        "owner": "ejpcmac",
+        "repo": "confkit",
+        "rev": "291d47415817c8daeb0ed4755a97851d2b232077",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ejpcmac",
+        "ref": "v0.0.18",
+        "repo": "confkit",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1681092193,
+        "narHash": "sha256-JerCqqOqbT2tBnXQW4EqwFl0hHnuZp21rIQ6lu/N4rI=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "f9edbedaf015013eb35f8caacbe0c9666bbc16af",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "release-22.11",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1682817260,
+        "narHash": "sha256-kFMXzKNj4d/0Iqbm5l57rHSLyUeyCLMuvlROZIuuhvk=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "db1e4eeb0f9a9028bcb920e00abbc1409dd3ef36",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-22.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1682879489,
+        "narHash": "sha256-sASwo8gBt7JDnOOstnps90K1wxmVfyhsTPPNTGBPjjg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "da45bf6ec7bbcc5d1e14d3795c025199f28e0de0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "confkit": "confkit",
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "vpn": "vpn"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "vpn": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1676644391,
+        "narHash": "sha256-yHjEe4qfoJRKLxJ1eo2Y5rL7j7T1uZmUPqX2rOmjgOY=",
+        "ref": "refs/heads/main",
+        "rev": "2799ccd31c361da52ca131ca2f386a942db884df",
+        "revCount": 8,
+        "type": "git",
+        "url": "file:///config/Nix/common/vpn"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///config/Nix/common/vpn"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

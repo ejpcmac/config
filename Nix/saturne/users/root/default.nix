@@ -4,7 +4,7 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, pkgs, ... }:
+{ inputs, ... }:
 
 {
   users.users.root = {
@@ -12,5 +12,5 @@
     hashedPassword = "***[ REDACTED ]***";
   };
 
-  home-manager.users.root = import ../../../../confkit/home-manager/configs/root.nix;
+  home-manager.users.root = inputs.confkit.nixosModules.home-config-root;
 }

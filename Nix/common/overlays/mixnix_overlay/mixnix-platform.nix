@@ -1,18 +1,18 @@
-{ stdenv, fetchFromGitLab }:
+{ stdenv, fetchFromGitHub }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   name = "mixnix-src";
-  version = "2019-07-24";
+  version = "ejpcmac-2021-12-30";
 
-  src = fetchFromGitLab {
-    owner = "manveru";
+  src = fetchFromGitHub {
+    owner = "ejpcmac";
     repo = "mixnix";
-    rev = "3fe662bf6f764a7a49677663d234202e61f528d3";
-    sha256 = "14sn0szlyzj5x63damsk9xryxmngryc6fmhsqh8x6yk0xxy082a9";
+    rev = "0119d6dfd102d7ade83144e888e8103b0aa982e2";
+    sha256 = "0n7nm7995s6d674mjlaxrxjrbf525aynp1fwp2ima5ig85c7k1nd";
   };
 
   installPhase = ''
-    mkdir -p $out
-    cp -r $src/* $out
+    mkdir -p $out/mixnix
+    cp -r $src/* $out/mixnix
   '';
 }

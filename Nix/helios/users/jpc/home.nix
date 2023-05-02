@@ -4,27 +4,14 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
-
-let
-  inherit (lib) mkForce;
-in
+{ pkgs, ... }:
 
 {
   imports = [
     # Configuration shared between hosts.
     ../../../common/home-manager/jpc/general.nix
-    ../../../common/home-manager/jpc/features/repo-mirroring.nix
     ../../../common/home-manager/jpc/features/zfs.nix
   ];
-
-  ############################################################################
-  ##                                confkit                                 ##
-  ############################################################################
-
-  confkit = {
-    pms.enable = true;
-  };
 
   ############################################################################
   ##                          Custom configuration                          ##
@@ -41,7 +28,7 @@ in
     ".local/bin/nix-mirror-channel".source = ./scripts/nix-mirror-channel;
     ".local/bin/prepare-op-mirror".source = ./scripts/prepare-op-mirror;
     ".local/bin/start-drives-fans".source = ./scripts/start-drives-fans;
-    ".local/bin/zfs-clean-snapshots".source = ./scripts/zfs-clean-snapshots;
+    ".local/bin/zfs-clean-snapshots".source = ../../../common/scripts/zfs-clean-snapshots;
   };
 
   ############################################################################
@@ -57,14 +44,6 @@ in
         eds = "systemctl --user start emacs";
         edp = "systemctl --user stop emacs";
         edr = "edp && eds";
-
-        # Mirrors
-        sync-crates = ''
-          cargo-cacher -dd --all \
-              --index /data/Mirroirs/crates.io \
-              --api http://crates.saturne \
-              --dl http://crates.saturne/crates
-        '';
       };
     };
   };
@@ -76,8 +55,5 @@ in
   home.packages = with pkgs; [
     browsh
     firefox
-
-    # Repositories mirroring tools
-    cargo-cacher
   ];
 }

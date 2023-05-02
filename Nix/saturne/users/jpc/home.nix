@@ -4,7 +4,12 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
+
+let
+  libjpc = pkgs.callPackage ../../../common/home-manager/jpc/lib { };
+  inherit (libjpc) link;
+in
 
 {
   imports = [
@@ -13,23 +18,48 @@
     ../../../common/home-manager/jpc/type/laptop.nix
     ../../../common/home-manager/jpc/usage/workstation.nix
     ../../../common/home-manager/jpc/usage/home.nix
-    ../../../common/home-manager/jpc/features/repo-mirroring.nix
+    ../../../common/home-manager/jpc/features/server-aliases.nix
     ../../../common/home-manager/jpc/features/zfs.nix
-    ../../../common/home-manager/jpc/location/kerguelen.nix
   ];
 
   ############################################################################
-  ##                          Custom configuration                          ##
+  ##                   Persistence & custom configuration                   ##
   ############################################################################
 
   home.file = {
+    # Persistence
+    ".bitcoin".source = link "/home/jpc/.persist/Crypto-monnaies/Bitcoin";
+    ".bitmonero".source = link "/home/jpc/.persist/Crypto-monnaies/Monero/data";
+    ".dashcore".source = link "/home/jpc/.persist/Crypto-monnaies/Dash";
+    ".influx_history".source = link "/home/jpc/.persist/Histories/influx_history";
+    ".vpn".source = link "/home/jpc/.persist/vpn";
+    ".persist/Crypto-monnaies/Bitcoin/blocks".source = link "/data/Blockchains/Bitcoin";
+    ".persist/Crypto-monnaies/Dash/blocks".source = link "/data/Blockchains/Dash";
+    ".persist/Crypto-monnaies/Monero/data/lmdb".source = link "/data/Blockchains/Monero";
+
+    # Cache persistence
+    ".cache/monero-project".source = link "/home/jpc/.persist/Crypto-monnaies/Monero/cache";
+
     # Scripts
     ".local/bin/docked".source = ./scripts/docked;
     ".local/bin/format-ssd".source = ./scripts/format-ssd;
-    ".local/bin/org-sync".source = ./scripts/org-sync;
+    ".local/bin/nixos-rebuild-switch-to-specialisation".source = ./scripts/nixos-rebuild-switch-to-specialisation;
+    ".local/bin/org-sync".source = ../../../common/scripts/org-sync;
+    ".local/bin/titan-backup".source = ./scripts/titan-backup;
+    ".local/bin/toggle-brightness".source = ./scripts/toggle-brightness;
     ".local/bin/toggle-touchpad".source = ./scripts/toggle-touchpad;
     ".local/bin/undocked".source = ./scripts/undocked;
-    ".local/bin/zfs-clean-snapshots".source = ./scripts/zfs-clean-snapshots;
+    ".local/bin/zfs-clean-snapshots".source = ../../../common/scripts/zfs-clean-snapshots;
+  };
+
+  xdg.configFile = {
+    # Persistence
+    "monero-project".source = link "/home/jpc/.persist/Crypto-monnaies/Monero/config";
+  };
+
+  xdg.dataFile = {
+    # Persistence
+    "Daedalus/mainnet".source = link "/home/jpc/.persist/Crypto-monnaies/Daedalus";
   };
 
   ############################################################################
@@ -38,14 +68,35 @@
 
   services = {
     # Compositor for windows transparency.
-    compton.enable = true;
+    picom = {
+      # FIXME: Disabled temporary due to a crash of X-server when using the
+      # NVidia card on NixOS 22.11.
+      enable = false;
+    };
 
     polybar = {
-      script = "polybar laptop & polybar center & polybar right &";
+      script = ''
+        if [ -f $HOME/.local/share/is_docked ]; then
+          polybar laptop &
+          polybar center &
+          polybar right &
+        else
+          polybar laptop &
+        fi
+      '';
 
       config = {
+        "module/eth".interface = "enp10s0u1u3u3";
+        "module/wlan".interface = "wlp0s20f3";
+        "module/temperature".hwmon-path = "/sys/devices/platform/coretemp.0/hwmon/hwmon6/temp1_input";
+        "module/alsa".master-soundcard = "hw:0";
+
+        "module/battery" = {
+          battery = "BAT0";
+          adapter = "ADP1";
+        };
+
         "bar/laptop" = {
-          monitor = "DP-0";
           fixed-center = false;
 
           width = "100%";
@@ -66,8 +117,7 @@
           font-0 = "NotoSansMono Nerd Font:size=10:weight=bold;0";
 
           modules-left = "bspwm";
-          modules-center = "mpd";
-          modules-right = "alsa temperature memory cpu battery wlan eth date";
+          modules-right = "alsa backlight temperature memory cpufreq cpu battery wlan eth date";
 
           locale = "fr_FR.UTF-8";
 
@@ -85,7 +135,7 @@
           fixed-center = false;
 
           width = "100%";
-          height = 32;
+          height = 60;
 
           background = "\${colors.background}";
           foreground = "\${colors.foreground}";
@@ -99,11 +149,10 @@
           module-margin-left = 1;
           module-margin-right = 2;
 
-          font-0 = "NotoSansMono Nerd Font:size=8.5:weight=bold;0";
+          font-0 = "NotoSansMono Nerd Font:size=15:weight=bold;0";
 
           modules-left = "bspwm";
-          modules-center = "mpd";
-          modules-right = "alsa temperature memory cpu battery wlan eth date";
+          modules-right = "alsa temperature memory cpufreq cpu battery wlan eth date";
 
           locale = "fr_FR.UTF-8";
 
@@ -118,7 +167,7 @@
           fixed-center = false;
 
           width = "100%";
-          height = 32;
+          height = 60;
 
           background = "\${colors.background}";
           foreground = "\${colors.foreground}";
@@ -132,11 +181,10 @@
           module-margin-left = 1;
           module-margin-right = 2;
 
-          font-0 = "NotoSansMono Nerd Font:size=8.5:weight=bold;0";
+          font-0 = "NotoSansMono Nerd Font:size=15:weight=bold;0";
 
           modules-left = "bspwm";
-          modules-center = "mpd";
-          modules-right = "alsa temperature memory cpu battery wlan eth date";
+          modules-right = "alsa temperature memory cpufreq cpu battery wlan eth date";
 
           locale = "fr_FR.UTF-8";
 
@@ -144,56 +192,6 @@
 
           cursor-click = "pointer";
           cursor-scroll = "ns-resize";
-        };
-
-        "module/alsa" = {
-          type = "internal/alsa";
-
-          # master-mixer = "PCM";
-          master-soundcard = "hw:0";
-
-          mapped = true;
-          interval = 5;
-
-          format-volume = "<label-volume> <bar-volume>";
-          label-volume = "墳 %percentage%%";
-
-          format-muted-prefix = "婢 ";
-          format-muted-foreground = "\${colors.foreground-alt}";
-          label-muted = "sound muted";
-
-          bar-volume-width = 10;
-          bar-volume-foreground-0 = "#55aa55";
-          bar-volume-foreground-1 = "#55aa55";
-          bar-volume-foreground-2 = "#55aa55";
-          bar-volume-foreground-3 = "#55aa55";
-          bar-volume-foreground-4 = "#55aa55";
-          bar-volume-foreground-5 = "#f5a70a";
-          bar-volume-foreground-6 = "#ff5555";
-          bar-volume-gradient = false;
-          bar-volume-indicator = "|";
-          bar-volume-indicator-font = 2;
-          bar-volume-fill = "─";
-          bar-volume-fill-font = 2;
-          bar-volume-empty = "─";
-          bar-volume-empty-font = 2;
-          bar-volume-empty-foreground = "\${colors.foreground-alt}";
-        };
-
-        "module/mpd" = {
-          type = "internal/mpd";
-          # host = "helios";
-
-          format-online = "ﱘ <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next>";
-
-          icon-prev = "玲";
-          icon-stop = "";
-          icon-play = "";
-          icon-pause = "";
-          icon-next = "怜";
-
-          label-song-maxlen = 50;
-          label-song-ellipsis = true;
         };
       };
     };
@@ -205,36 +203,34 @@
 
   programs = {
     termite.font = "DejaVu Sans Mono 8.5";
-    ssh = { enable = true; extraOptionOverrides.HostKeyAlgorithms = "ssh-rsa"; };
-
-    bspwm = {
-      monitors = ''
-        if [ -f $HOME/.local/share/is_docked ]; then
-            bspc wm --reorder-monitors DP-1.1 DP-1.2 DP-0
-            bspc monitor %DP-1.1 -d 1 2 3 4 5
-            bspc monitor %DP-1.2 -d 6 7 8 9 0
-            bspc monitor DP-0 -d $ = %
-        else
-            bspc monitor DP-0 -d $ 1 2 3 4 5 6 7 8 9 0 = %
-        fi
-      '';
-    };
 
     zsh = {
       shellAliases = {
-        # Aliases to local scripts and tools
-        mkp = "mount-keepass";
-        ta = "track all";
+        # Specialisation management.
+        nospe = "sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch";
+        spe-nomade = "sudo /nix/var/nix/profiles/system/specialisation/nomade/bin/switch-to-configuration switch";
+        spe-nomade-performance = "sudo /nix/var/nix/profiles/system/specialisation/nomade-performance/bin/switch-to-configuration switch";
+        spe-nomade-powersave = "sudo /nix/var/nix/profiles/system/specialisation/nomade-powersave/bin/switch-to-configuration switch";
+        snors = "sudo nixos-rebuild-switch-to-specialisation";
 
         # External drive shortcuts
         umnt = "udisksctl mount -b /dev/sda1";
         uumnt = "udisksctl unmount -b /dev/sda1";
         upo = "udisksctl power-off -b /dev/sda";
+        upob = "udisksctl power-off -b /dev/sdb";
         ueject = "uumnt && upo";
 
-        # Network drives shortcuts
-        lm = "mount | grep media";
-        unet = "sudo systemctl stop 'media-*.mount'";
+        mount-titan = ''
+          sudo udevadm trigger && \
+          sudo cryptsetup open --allow-discards /dev/sda2 titan && \
+          sudo zpool import titan -R /titan
+        '';
+
+        unmount-titan = ''
+          sudo zpool export titan && \
+          sudo cryptsetup close titan && \
+          udisksctl power-off -b /dev/sda
+        '';
       };
     };
   };
@@ -244,12 +240,15 @@
   ############################################################################
 
   home.packages = with pkgs; [
+    # Utilities
+    # influxdb
+
     # Applications
     bitcoin
-    dashpay
-    kicad
-    scribus
-    thunderbird
-    tor-browser-bundle-bin
+    # daedalus
+    gnucash
+    monero-gui
+    tdesktop
+    # tor-browser-bundle-bin
   ];
 }

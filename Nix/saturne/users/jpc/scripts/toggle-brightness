@@ -1,0 +1,23 @@
+#!/bin/sh
+
+value=$(brightnessctl get)
+
+if [ $value -gt 100 ]; then
+    # Rules for Intel graphics.
+    if [ $value -gt 10800 ]; then
+        brightnessctl set 45%
+    elif [ $value -gt 6000 ]; then
+        brightnessctl set 25%
+    else
+        brightnessctl set 100%
+    fi
+else
+    # Rules for NVidia graphics.
+    if [ $value -gt 70 ]; then
+        brightnessctl set 70%
+    elif [ $value -gt 60 ]; then
+        brightnessctl set 60%
+    else
+        brightnessctl set 100%
+    fi
+fi

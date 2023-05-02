@@ -1,12 +1,12 @@
 ####### Configuration for bspwm ################################################
 ##                                                                            ##
 ## * Use sxhkd for keyboard shortcuts                                         ##
-## * Load the wallpaper from $HOME/Images/wallpaper.jpg using feh             ##
+## * Load the wallpaper from $HOME/.loca/sharewallpaper.jpg using feh         ##
 ## * 50/50 splits                                                             ##
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   inherit (lib) mkDefault;
@@ -29,7 +29,7 @@ in
           sxhkd &
       fi
 
-      betterlockscreen --wall
+      ${pkgs.feh}/bin/feh --bg-fill "$HOME/.local/share/wallpaper.jpg"
     '';
 
     extraConfig = mkDefault ''
@@ -43,10 +43,8 @@ in
 
     extraRules = mkDefault ''
       bspc rule -a Emacs state=tiled
-      bspc rule -a Firefox:Places split_dir=south split_ratio=0.8
-      bspc rule -a Gimp desktop='^0' state=floating follow=on
-      bspc rule -a Keepassx locked=on
       bspc rule -a mpv state=fullscreen
+      bspc rule -a Pqiv state=tiled
       bspc rule -a Veracrypt state=tiled
       bspc rule -a Zathura state=tiled
     '';

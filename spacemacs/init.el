@@ -56,7 +56,6 @@
 
      ;; Tools
      docker
-     forge
      git
      restclient
      version-control
@@ -70,8 +69,7 @@
    ;; List of packages installed out of a layer.
    dotspacemacs-additional-packages '(
      direnv
-     dokuwiki
-     dokuwiki-mode
+     org-super-agenda
      org-trello
      )
 
@@ -87,13 +85,6 @@
 
 (defun dotspacemacs/init ()
   "Initialization function."
-
-  ;; Use local ELPA mirrors on saturne.
-  (if (string= (system-name) "saturne")
-      (setq configuration-layer--elpa-archives
-            '(("melpa" . "/data/Mirroirs/ELPA/MELPA")
-              ("org"   . "/data/Mirroirs/ELPA/Org")
-              ("gnu"   . "/data/Mirroirs/ELPA/GNU"))))
 
   (setq-default
    ;; Package management
@@ -177,29 +168,28 @@
    dotspacemacs-helm-no-header nil
    dotspacemacs-helm-position 'bottom
    dotspacemacs-helm-use-fuzzy 'always
-   ))
+   )
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;                    Hardware-specific customisations                    ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun jpc/on-machine (name)
+    (string= (system-name) name))
+
+  (defun jpc/is-docked ()
+    (file-exists-p "~/.local/share/is_docked"))
+
+  (if (and (jpc/on-machine "saturne") (jpc/is-docked))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 23
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+)
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code."
-
-  ;; eft-jpc specific configuration
-  (if (string= (system-name) "eft-jpc")
-      (setq-default
-       dotspacemacs-default-font '("Fira Code Retina"
-                                   :size 13
-                                   :weight normal
-                                   :width normal
-                                   :powerline-scale 1.1)))
-
-  ;; workspace-vm specific configuration
-  (if (string= (system-name) "workspace-vm")
-      (setq-default
-      dotspacemacs-default-font '("Fira Code Retina"
-                                  :size 14
-                                  ;; :size 17
-                                  :weight normal
-                                  :width normal
-                                  :powerline-scale 1.1)))
 
   ;; Theme customisations
   (setq theming-modifications
@@ -301,7 +291,7 @@
   ;;
 
   (direnv-mode)
-  (global-git-commit-mode t)
+  (org-super-agenda-mode)
 
   ;;
   ;; Default behaviour
@@ -314,9 +304,11 @@
   ;; Specific behaviour
   ;;
 
-  ;; Show the 80 characters rule in text-mode and prog-mode.
-  (add-hook 'text-mode-hook 'turn-on-fci-mode)
-  (add-hook 'prog-mode-hook 'turn-on-fci-mode)
+  ;; Show the line numbers and 80 characters rule in text-mode and prog-mode.
+  (add-hook 'text-mode-hook 'display-line-numbers-mode)
+  (add-hook 'text-mode-hook 'display-fill-column-indicator-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
 
   ;;
   ;; Keyboard options
@@ -324,6 +316,9 @@
 
   ;; Use C-s to save.
   (global-set-key (kbd "C-s") 'save-buffer)
+
+  ;; Use C-0 to open Treemacs.
+  (global-set-key (kbd "C-$") 'treemacs-select-window)
 
   ;; Use C-<1-5> to switch between windows.
   (global-set-key (kbd "C-\"") 'winum-select-window-1)
@@ -336,10 +331,6 @@
   (when (eq system-type 'darwin)
     (setq mac-right-option-modifier 'none))
 
-  ;; Use T and S to scroll up and down.
-  (define-key evil-normal-state-map (kbd "T") 'evil-scroll-down)
-  (define-key evil-normal-state-map (kbd "S") 'evil-scroll-up)
-
   ;; Use gb and gé to switch between workspaces.
   (define-key evil-normal-state-map (kbd "gé") 'eyebrowse-next-window-config)
   (define-key evil-normal-state-map (kbd "gb") 'eyebrowse-prev-window-config)
@@ -349,15 +340,23 @@
   ;;
 
   (add-to-list 'auto-mode-alist '("sxhkdrc" . conf-unix-mode))
-  (add-to-list 'auto-mode-alist '("dwiki" . dokuwiki-mode))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;                                DokuWiki                                ;;
+  ;;                        Fixes for BÉPO Keyboards                        ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (require 'dokuwiki)
-  (setq dokuwiki-xml-rpc-url "http://wiki.kerguelen.ipev.fr/lib/exe/xmlrpc.php"
-        dokuwiki-login-user-name "instrum")
+  (define-key org-mode-map (kbd "M-c") 'org-metaleft)
+  (define-key org-mode-map (kbd "M-t") 'org-metadown)
+  (define-key org-mode-map (kbd "M-s") 'org-metaup)
+  (define-key org-mode-map (kbd "M-r") 'org-metaright)
+
+  (with-eval-after-load 'treemacs
+    (define-key evil-treemacs-state-map (kbd "t") 'treemacs-next-line))
+
+  (with-eval-after-load 'magit
+    (define-key magit-mode-map (kbd "t") 'evil-next-visual-line)
+    (define-key magit-mode-map (kbd "s") 'evil-previous-visual-line)
+    (define-key magit-mode-map (kbd "k") 'magit-stage))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;                                Org-mode                                ;;
@@ -370,9 +369,9 @@
                                  ("En-cours"   . "orange")
                                  ("En-attente" . "DarkGrey")
                                  ("En-pause"   . "maroon"))
-        org-highest-priority ?1
-        org-lowest-priority  ?5
-        org-default-priority ?3
+        org-highest-priority 1
+        org-lowest-priority  5
+        org-default-priority 3
         org-priority-faces '((?1 . "red")
                              (?2 . "LimeGreen")
                              (?3 . "DodgerBlue1")
@@ -381,36 +380,81 @@
         org-capture-templates '(("i" "Idée" entry
                                  (file "Perso/Idées.org")
                                  "** Idée [#3] %?\n   %a")
-                                ("I" "Idée pro" entry
-                                 (file "Pro/Idées Pro.org")
-                                 "** Idée [#3] %?\n   %a")
                                 ("t" "Tâche classique" entry
                                  (file "Perso/Tâches.org")
-                                 "** À-faire [#3] %?\n   SCHEDULED: %t\n   %a")
-                                ("T" "Tâche pro classique" entry
-                                 (file "Pro/Tâches Pro.org")
                                  "** À-faire [#3] %?\n   SCHEDULED: %t\n   %a")
                                 ("d" "Tâche à échéance" entry
                                  (file "Perso/Tâches.org")
                                  "** À-faire [#3] %?\n   DEADLINE: %t\n   %a")
-                                ("D" "Tâche pro à échéance"
-                                 entry (file "Pro/Tâches Pro.org")
-                                 "** À-faire [#3] %?\n   DEADLINE: %t\n   %a")
                                 ("e" "Événement" entry
                                  (file "Perso/Événements.org")
-                                 "** %?\n   %t\n   %a")
-                                ("E" "Événement pro"
-                                 entry (file "Pro/Événements.org")
                                  "** %?\n   %t\n   %a"))
-        org-agenda-files (list (concat org-directory "/Perso")
-                               (concat org-directory "/Pro"))
+        org-agenda-files (list
+                          (concat org-directory "/Perso")
+                          (concat org-directory "/Perso/Projets"))
         org-agenda-skip-deadline-prewarning-if-scheduled t
         org-agenda-custom-commands '(("o" "Tâches occasionnelles" tags "rec")
                                      ("O" "Tâches pro occasionnelles" tags "pro:rec")
                                      ("w" "Tâches en attente" todo "En-attente")
                                      ("p" "Tâches en attente" todo "En-pause")
                                      ("i" "Idées" todo "Idée"))
-        org-list-description-max-indent 5)
+        org-super-agenda-groups '((:name "Planifié"
+                                         :scheduled today
+                                         :scheduled past)
+                                  (:name "Important"
+                                         :priority "1")
+                                  (:name "Organisation"
+                                         :tag "org")
+                                  (:name "Administratif"
+                                         :tag "adm")
+                                  (:name "Professionnel"
+                                         :tag "pro")
+                                  (:name "Social"
+                                         :tag "soc")
+                                  (:name "Photo"
+                                         :tag "photo")
+                                  (:name "Informatique"
+                                         :tag ("sys" "dev" "contrib"))
+                                  (:name "Entretien"
+                                         :tag "entretien"))
+        org-adapt-indentation t
+        org-habit-graph-column 58
+        org-habit-show-habits-only-for-today nil
+        org-habit-show-all-today nil
+        org-list-description-max-indent 5
+        org-pomodoro-manual-break t
+        org-pomodoro-keep-killed-pomodoro-time t
+        org-startup-folded t)
+
+  ;; Add professionnal tasks on pluton.
+  (if (string= (system-name) "pluton")
+      (setq org-capture-templates '(("i" "Idée" entry
+                                     (file "Perso/Idées.org")
+                                     "** Idée [#3] %?\n   %a")
+                                    ("I" "Idée pro" entry
+                                     (file "Pro/Idées Pro.org")
+                                     "** Idée [#3] %?\n   %a")
+                                    ("t" "Tâche classique" entry
+                                     (file "Perso/Tâches.org")
+                                     "** À-faire [#3] %?\n   SCHEDULED: %t\n   %a")
+                                    ("T" "Tâche pro classique" entry
+                                     (file "Pro/Tâches Pro.org")
+                                     "** À-faire [#3] %?\n   SCHEDULED: %t\n   %a")
+                                    ("d" "Tâche à échéance" entry
+                                     (file "Perso/Tâches.org")
+                                     "** À-faire [#3] %?\n   DEADLINE: %t\n   %a")
+                                    ("D" "Tâche pro à échéance"
+                                     entry (file "Pro/Tâches Pro.org")
+                                     "** À-faire [#3] %?\n   DEADLINE: %t\n   %a")
+                                    ("e" "Événement" entry
+                                     (file "Perso/Événements.org")
+                                     "** %?\n   %t\n   %a")
+                                    ("E" "Événement pro"
+                                     entry (file "Pro/Événements.org")
+                                     "** %?\n   %t\n   %a"))
+            org-agenda-files (list (concat org-directory "/Perso")
+                                   (concat org-directory "/Pro")
+                                   (concat org-directory "/Pro/Projets"))))
 
   ;;
   ;; Keyboard options
@@ -421,7 +465,7 @@
   (global-set-key (kbd "C-<f8>") '(lambda (&optional arg)
                                  (interactive "P")
                                  (org-agenda arg "o")))
-  (global-set-key (kbd "C-<f9>") '(lambda (&optional arg)
+  (global-set-key (kbd "C-S-<f9>") '(lambda (&optional arg)
                                     (interactive "P")
                                     (org-agenda arg "O")))
   (global-set-key (kbd "C-<f6>") '(lambda (&optional arg)
@@ -430,7 +474,7 @@
   (global-set-key (kbd "C-<f7>") '(lambda (&optional arg)
                                     (interactive "P")
                                     (org-agenda arg "w")))
-  (global-set-key (kbd "C-<f10>") '(lambda (&optional arg)
+  (global-set-key (kbd "C-<f9>") '(lambda (&optional arg)
                                     (interactive "P")
                                     (org-agenda arg "i")))
 
@@ -439,7 +483,7 @@
     (define-key org-agenda-mode-map (kbd "C-s") '(lambda (&optional arg)
                                                    (interactive)
                                                    (org-save-all-org-buffers)
-                                                   (call-process-shell-command "org-sync &"))))
+                                                   (call-process-shell-command "~/.local/bin/org-sync &"))))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;                                  mu4e                                  ;;
@@ -452,36 +496,14 @@
     "*internal* Name of the mu4e main view buffer.")
 
   (with-eval-after-load 'mu4e
-    ;; Redefine this function to tweak it in several ways:
-    ;;
-    ;; 1. accept a lambda for mu4e-view-auto-mark-as-read,
-    ;; 2. mark only the given message as read and not all messages with the same
-    ;;    message-id, so that duplicates from other mailboxs are left untouched,
-    ;;    which is what we want with shared mailboxes.
-    (defun mu4e~view-mark-as-read-maybe (msg)
-      "Clear the message MSG New/Unread status and set it to Seen.
-If the message is not New/Unread, do nothing. Evaluates to t if it
-triggers any changes, nil otherwise. If this function does any
-changes, it triggers a refresh."
-      (when (and (funcall mu4e-view-auto-mark-as-read msg) msg)
-        (let ((flags (mu4e-message-field msg :flags))
-              (docid (mu4e-message-field msg :docid)))
-          ;; attached (embedded) messages don't have docids; leave them alone if it
-          ;; is a new message
-          (when (and docid (or (member 'unread flags) (member 'new flags)))
-            ;; Mark /only/ the given message as read, so that duplicates from
-            ;; other mailboxes are left untouched. We don't want an update
-            ;; though, we want a full message, so images etc. work correctly.
-            (mu4e~proc-move docid nil "+S-u-N" 'noview)
-            (mu4e~proc-view docid mu4e-view-show-images (mu4e~decrypt-p msg))
-            t))))
-
     (setq mu4e-get-mail-command "mbsync ***"
           send-mail-function 'sendmail-send-it
           message-citation-line-format "Le %A %d/%m/%Y à %T %Z, %N a écrit :\n"
           message-citation-line-function 'message-insert-formatted-citation-line
           mu4e-attachment-dir "~/Téléchargements/_Courriels"
           mu4e-change-filenames-when-moving t
+
+          ;; Interface
           mu4e-headers-fields '((:human-date . 12)
                                 (:flags . 6)
                                 (:mailing-list . 10)
@@ -493,25 +515,23 @@ changes, it triggers a refresh."
           mu4e-view-show-addresses t
           mu4e-view-show-images t
           mu4e-enable-notifications t
-          mu4e-enable-mode-line t)
+          mu4e-enable-mode-line t
+
+          ;; OpenPGP settings
+          mml-secure-openpgp-sign-with-sender t
+          mml-secure-openpgp-encrypt-to-self t)
+
+    ;;
+    ;; Contexts
+    ;;
 
     (setq mu4e-contexts
           redacted)
 
-    ;; Sign emails by default.
-    (add-hook 'mu4e-compose-mode-hook
-              (defun jpc/sign-by-default ()
-                (mml-secure-message-sign)))
 
     ;;
     ;; Keyboard options
     ;;
-
-    ;; Use T and S to scroll up and down like everywhere else.
-    (define-key mu4e-headers-mode-map (kbd "T") 'evil-scroll-down)
-    (define-key mu4e-headers-mode-map (kbd "S") 'evil-scroll-up)
-    (define-key mu4e-view-mode-map (kbd "T") 'evil-scroll-down)
-    (define-key mu4e-view-mode-map (kbd "S") 'evil-scroll-up)
 
     ;; Move T to È like t is already moved to è in BÉPO evil mode.
     (define-key mu4e-headers-mode-map (kbd "È") 'mu4e-headers-mark-thread)

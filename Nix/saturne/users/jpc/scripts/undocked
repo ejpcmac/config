@@ -2,19 +2,24 @@
 
 set -e
 
+# Switch the configuration.
 rm $HOME/.local/share/is_docked
 ln -sf sxhkdrc_undocked $HOME/.config/sxhkd/sxhkdrc
+
+# Reload the desktop environment.
+killall sxhkd
 $HOME/.config/bspwm/bspwmrc
 
+# Remove monitors without desktops and get orphaned windows.
 bspc monitor %DP-1.2 -r
 bspc monitor %DP-1.1 -r
 bspc wm -o
 
+# Switch off external monitors.
 xrandr --output DP-1.2 --off
 xrandr --output DP-1.1 --off
-xrandr --output DP-0 --panning 1920x1080
 xrandr --dpi 141
 
-pkill -USR1 -x sxhkd
+# Reload other parts of the desktop environment.
 pkill -USR1 termite
 systemctl --user restart polybar

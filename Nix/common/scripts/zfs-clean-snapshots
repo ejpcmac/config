@@ -1,0 +1,50 @@
+#!/bin/sh
+
+filter_snapshots() {
+    echo "$1" | grep $2 | tac | tail -n +$(($3 + 1)) | sed 's/.*@//' | sed -z 's/\n/,/g'
+}
+
+if [ $# -ne 6 ]; then
+    echo "usage: $0 <dataset> <frequent> <hourly> <daily> <weekly> <monthly>"
+    exit 1
+fi
+
+for dataset in $(zfs list -Hro name $1); do
+    printf "\e[32m=> Cleaning up snapshots for $dataset\e[0m\n"
+
+    snapshots=$(zfs list -H -t snapshot -o name $dataset)
+
+    # Remove manual syncoid snapshots.
+    manual_saturne=$(filter_snapshots "$snapshots" syncoid_saturne_2 0)
+    manual_neptune=$(filter_snapshots "$snapshots" syncoid_neptune_2 0)
+    manual_helios=$(filter_snapshots "$snapshots" syncoid_helios_2 0)
+    manual_nixos=$(filter_snapshots "$snapshots" syncoid_nixos_2 0)
+    manual=$manual_saturne$manual_neptune$manual_helios$manual_nixos
+
+    # Remove legacy syncoid snapshots once the backup has been migrated.
+    legacy_helios=$(filter_snapshots "$snapshots" syncoid_helios_saturne 1)
+    legacy_titan=$(filter_snapshots "$snapshots" syncoid_titan_saturne 0)
+    legacy_tethys=$(filter_snapshots "$snapshots" syncoid_tethys_saturne 0)
+    legacy_neptune_helios=$(filter_snapshots "$snapshots" syncoid_neptune_helios 1)
+    legacy_neptune_saturne=$(filter_snapshots "$snapshots" syncoid_neptune_saturne 0)
+    legacy_backup=$legacy_helios$legacy_titan$legacy_tethys$legacy_neptune_helios$legacy_neptune_saturne
+
+    # Keep only one backup snapshot per backup pool.
+    old_saturne=$(filter_snapshots "$snapshots" backup-saturne 1)
+    old_neptune=$(filter_snapshots "$snapshots" backup-neptune 1)
+    old_backup=$old_saturne$old_neptune
+
+    # Keep auto-snapshots as configured.
+    old_frequent=$(filter_snapshots "$snapshots" frequent $2)
+    old_hourly=$(filter_snapshots "$snapshots" hourly $3)
+    old_daily=$(filter_snapshots "$snapshots" daily $4)
+    old_weekly=$(filter_snapshots "$snapshots" weekly $5)
+    old_monthly=$(filter_snapshots "$snapshots" monthly $6)
+    old_auto=$old_frequent$old_hourly$old_daily$old_weekly$old_monthly
+
+    old_snapshots=$(echo $manual$legacy_backup$old_backup$old_auto | sed 's/.$//')
+
+    if [ "$old_snapshots" != "" ]; then
+      zfs destroy -v $dataset@$old_snapshots
+    fi
+done

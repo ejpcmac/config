@@ -4,28 +4,57 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, lib, pkgs, ... }:
+{ config, inputs, pkgs, system, ... }:
 
 let
-  inherit (pkgs) writeShellScript;
-  inherit (libjpc) mkEmail;
-  libjpc = import ../lib { inherit config pkgs; };
+  unstable = import inputs.nixpkgs-unstable { inherit system; };
+  libjpc = pkgs.callPackage ../lib { };
 
-  # Index the mailbox and update mu4e after running mbsync.
-  mbsyncPostExec = writeShellScript "mbsync-post-exec" ''
-    ${pkgs.emacs}/bin/emacsclient \
-        --socket-name=/var/run/user/1000/emacs1000/server \
-        --eval '(mu4e~proc-kill)' &&
-
-    ${pkgs.mu}/bin/mu index --maildir=$HOME/Courriels &&
-
-    ${pkgs.emacs}/bin/emacsclient \
-        --socket-name=/var/run/user/1000/emacs1000/server \
-        --eval '(mu4e-alert-enable-mode-line-display)'
-  '';
+  inherit (libjpc) link mkEmail;
 in
 
 {
+  ############################################################################
+  ##                              Persistence                               ##
+  ############################################################################
+
+  home.file = {
+    # General persistence
+    ".mixxx".source = link "/home/jpc/.persist/Mixxx";
+    ".purple".source = link "/home/jpc/.persist/Pidgin";
+    ".thunderbird".source = link "/home/jpc/.persist/Thunderbird";
+    ".wine".source = link "/home/jpc/.persist/wine";
+
+    # General cache persistence
+    ".cache/calibre".source = link "/home/jpc/.persist/Calibre/cache";
+    ".cache/cantata".source = link "/home/jpc/.persist/Cantata/cache";
+    ".cache/liferea".source = link "/home/jpc/.persist/Liferea/cache";
+
+    # Persistence for the Courriels module
+    ".cache/mu".source = link "/home/jpc/.persist/mu";
+
+    # Persistence for the Photo module
+    ".cache/darktable".source = link "/home/jpc/.persist/Darktable/cache";
+  };
+
+  xdg.configFile = {
+    # General persistence
+    "asunder".source = link "/home/jpc/.persist/Asunder";
+    "calibre".source = link "/home/jpc/.persist/Calibre/config";
+    "cantata".source = link "/home/jpc/.persist/Cantata/config";
+    "liferea".source = link "/home/jpc/.persist/Liferea/config";
+    "Signal".source = link "/home/jpc/.persist/Signal";
+
+    # Persistence for the Photo module
+    "darktable".source = link "/home/jpc/.persist/Darktable/config";
+  };
+
+  xdg.dataFile = {
+    # General persistence
+    "cantata".source = link "/home/jpc/.persist/Cantata/data";
+    "liferea".source = link "/home/jpc/.persist/Liferea/data";
+  };
+
   ############################################################################
   ##                                Accounts                                ##
   ############################################################################
@@ -34,9 +63,9 @@ in
     maildirBasePath = "${config.home.homeDirectory}/Courriels";
 
     accounts = {
-      "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" {};
-      "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" {};
-      "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" {};
+      "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" { };
+      "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" { };
+      "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" { };
 
       "***[ REDACTED ]***" = mkEmail "***[ REDACTED ]***" {
         imap = {
@@ -45,7 +74,7 @@ in
           tls.enable = true;
         };
 
-       smtp = {
+        smtp = {
           host = "***[ REDACTED ]***";
           port = 465;
           tls.enable = true;
@@ -58,11 +87,9 @@ in
   ##                                Services                                ##
   ############################################################################
 
-  # services.mbsync = {
-  #   enable = true;
-  #   frequency = "*:0/5";
-  #   postExec = "${mbsyncPostExec}";
-  # };
+  services = {
+    nextcloud-client = { enable = true; startInBackground = true; };
+  };
 
   ############################################################################
   ##                                 Programs                               ##
@@ -75,10 +102,23 @@ in
 
     zsh = {
       shellAliases = {
-        # iPhone management
-        mount-iphone = "ifuse ~/iPhone";
-        unmount-iphone = "fusermount -u ~/iPhone";
-        backup-iphone-photos = "rsync -a --progress ~/iPhone/DCIM/*/* ~/Photo/iPhone";
+        # Aliases to local scripts and tools
+        ta = "track all";
+
+        # Network drives shortcuts
+        lm = "mount | grep media";
+        unet = "sudo systemctl stop 'media-*.mount'";
+
+        # Emailing aliases
+        eg = "mbsync ***[ REDACTED ]***:INBOX ***[ REDACTED ]***:INBOX";
+        es = "mbsync -a";
+
+        # mu initialisation
+        mu-init = ''
+          mu init -m ~/Courriels \
+                  --my-address=***[ REDACTED ]*** \
+                  --my-address=***[ REDACTED ]***
+        '';
       };
     };
   };
@@ -89,12 +129,23 @@ in
 
   home.packages = with pkgs; [
     # Utilities
-    ifuse
+    gitAndTools.hub
+    nixops
+    pijul
+    tokei
+    zola
 
     # Applications
+    calibre
     darktable
-    mixxx
+    element-desktop
+    liferea
+    unstable.mixxx
+    scribus
     signal-desktop
     stellarium
+    thunderbird
+    yubioath-desktop
+    zeal
   ];
 }
