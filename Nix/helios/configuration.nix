@@ -59,7 +59,7 @@
 
   boot = {
     kernelModules = [ "coretemp" "nct6775" ];
-    tmpOnTmpfs = true;
+    tmp.useTmpfs = true;
     zfs.requestEncryptionCredentials = false;
 
     initrd = {
@@ -130,18 +130,6 @@
   ############################################################################
 
   services = {
-    dhcpd4 = {
-      enable = true;
-      interfaces = [ "enp3s0" ];
-      extraConfig = ''
-        option subnet-mask 255.255.255.0;
-        option broadcast-address 192.168.15.255;
-        subnet 192.168.15.0 netmask 255.255.255.0 {
-          range 192.168.15.100 192.168.15.200;
-        }
-      '';
-    };
-
     zfs.autoSnapshot = {
       hourly = 48;
       monthly = 24;

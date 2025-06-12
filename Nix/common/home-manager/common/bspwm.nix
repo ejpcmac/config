@@ -24,10 +24,8 @@ in
     '';
 
     initScript = mkDefault ''
-      # Avoid spawning sxhkd twice.
-      if [ $(ps x | grep sxhkd | grep -v grep | wc -l) -eq 0 ]; then
-          sxhkd &
-      fi
+      killall sxhkd 2> /dev/null || true
+      systemd-cat -t sxhkd sxhkd &
 
       ${pkgs.feh}/bin/feh --bg-fill "$HOME/.local/share/wallpaper.jpg"
     '';

@@ -14,10 +14,10 @@
     ########################################################################
 
     location = {
-      latitude = 52.37;
-      longitude = 4.89;
+      latitude = 49.18;
+      longitude = -0.23;
     };
 
-    time.timeZone = "Europe/Amsterdam";
+    time.timeZone = "Europe/Paris";
   };
 }

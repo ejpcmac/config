@@ -2,7 +2,7 @@
   description = "The configuration for helios.";
 
   inputs = {
-    common.url = "git+file:///config?ref=main&dir=Nix/common";
+    common.url = "path:../common";
   };
 
   outputs = { self, common, ... }:

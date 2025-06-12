@@ -4,6 +4,36 @@
         "body": "// TODO: ",
         "description": "TODO"
     },
+    "FIXME": {
+        "prefix": "fixme",
+        "body": "// FIXME: ",
+        "description": "FIXME"
+    },
+    "BUG": {
+        "prefix": "bug",
+        "body": "// BUG: ",
+        "description": "BUG"
+    },
+    "HACK": {
+        "prefix": "hack",
+        "body": "// HACK: ",
+        "description": "HACK"
+    },
+    "REVIEW": {
+        "prefix": "review",
+        "body": "// REVIEW: ",
+        "description": "REVIEW"
+    },
+    "IDEA": {
+        "prefix": "idea",
+        "body": "// IDEA: ",
+        "description": "IDEA"
+    },
+    "NOTE": {
+        "prefix": "note",
+        "body": "// NOTE: ",
+        "description": "NOTE"
+    },
     "bkpt": {
         "prefix": "bkpt",
         "body": "__asm(\"bkpt #0\\n\");",
@@ -11,6 +41,7 @@
     },
     "doc": {
         "prefix": "doc",
+        // prettier-ignore
         "body": [
             "///",
             "/// ${1:Brief description.}",
@@ -20,6 +51,7 @@
     },
     "cdoc": {
         "prefix": "cdoc",
+        // prettier-ignore
         "body": [
             "/**",
             " * ${1:Brief description.}",

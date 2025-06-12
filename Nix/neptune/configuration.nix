@@ -11,15 +11,7 @@ let
 in
 
 {
-  # TODO: Remove this when on NixOS 23.05.
-  disabledModules = [ "virtualisation/nixos-containers.nix" ];
-
   imports = [
-    # TODO: Remove this when on NixOS 23.05.
-    # HACK: Import nixos-containers from unstable to allow adding inputs to the
-    # configurations.
-    "${inputs.nixpkgs-unstable}/nixos/modules/virtualisation/nixos-containers.nix"
-
     # Import my personal NixOS extension module.
     ../common/nixos
 

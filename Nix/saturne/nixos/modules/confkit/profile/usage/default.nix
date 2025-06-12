@@ -2,10 +2,10 @@
   imports = [
     # Custom usages
     ./docked.nix
-    ./nomade.nix
+    ./undocked.nix
   ];
 
   confkit.extensions = {
-    profile.additionalUsages = [ "docked" "nomade" ];
+    profile.additionalUsages = [ "docked" "undocked" ];
   };
 }

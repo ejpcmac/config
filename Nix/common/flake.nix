@@ -2,18 +2,28 @@
   description = "Common inputs for all machines.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    confkit.url = "github:ejpcmac/confkit/v0.0.18";
+    confkit.url = "github:ejpcmac/confkit/develop-25.05";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-22.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    vpn = {
-      url = "git+file:///config/Nix/common/vpn";
-      flake = false;
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    git-z = {
+      url = "https://flakehub.com/f/ejpcmac/git-z/*";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nh = {
+      url = "github:nix-community/nh/master";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

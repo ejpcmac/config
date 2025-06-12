@@ -4,10 +4,35 @@
         "body": "/* TODO: $1 */",
         "description": "TODO"
     },
+    "FIXME": {
+        "prefix": "fixme",
+        "body": "/* FIXME: $1 */",
+        "description": "FIXME"
+    },
+    "BUG": {
+        "prefix": "bug",
+        "body": "/* BUG: $1 */",
+        "description": "BUG"
+    },
+    "HACK": {
+        "prefix": "hack",
+        "body": "/* HACK: $1 */",
+        "description": "HACK"
+    },
     "REVIEW": {
         "prefix": "review",
         "body": "/* REVIEW: $1 */",
         "description": "REVIEW"
+    },
+    "IDEA": {
+        "prefix": "idea",
+        "body": "/* IDEA: $1 */",
+        "description": "IDEA"
+    },
+    "NOTE": {
+        "prefix": "note",
+        "body": "/* NOTE: $1 */",
+        "description": "NOTE"
     },
     "bkpt": {
         "prefix": "bkpt",
@@ -21,11 +46,12 @@
     },
     "doc": {
         "prefix": "doc",
+        // prettier-ignore
         "body": [
             "/**",
             " * ${1:Brief description.}",
             " */"
         ],
-        "description": "Insert fonction header"
+        "description": "Insert function header"
     }
 }

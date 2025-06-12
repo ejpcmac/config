@@ -46,7 +46,6 @@
      markdown
      nixos
      org
-     php
      ruby
      rust
      shell-scripts
@@ -68,10 +67,10 @@
 
    ;; List of packages installed out of a layer.
    dotspacemacs-additional-packages '(
-     direnv
-     org-super-agenda
-     org-trello
-     )
+                                      direnv
+                                      org-super-agenda
+                                      org-trello
+                                      )
 
    ;; List of installed packages not to update.
    dotspacemacs-frozen-packages '()
@@ -169,24 +168,7 @@
    dotspacemacs-helm-position 'bottom
    dotspacemacs-helm-use-fuzzy 'always
    )
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;;                    Hardware-specific customisations                    ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  (defun jpc/on-machine (name)
-    (string= (system-name) name))
-
-  (defun jpc/is-docked ()
-    (file-exists-p "~/.local/share/is_docked"))
-
-  (if (and (jpc/on-machine "saturne") (jpc/is-docked))
-      (setq-default dotspacemacs-default-font '("Fira Code Retina"
-                                                :size 23
-                                                :weight normal
-                                                :width normal
-                                                :powerline-scale 1.0)))
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code."
@@ -275,6 +257,85 @@
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code."
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;                    Hardware-specific customisations                    ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun jpc/on-machine (name)
+    (string= (system-name) name))
+
+  (defun jpc/current-mode ()
+    (if (f-file? "~/.local/share/mode")
+        (f-read-text "~/.local/share/mode" 'utf-8)
+      "laptop"))
+
+  (defun jpc/is-laptop ()
+    (string-prefix-p "laptop" (jpc/current-mode)))
+
+  (defun jpc/is-docked ()
+    (string-prefix-p "docked" (jpc/current-mode)))
+
+  (defun jpc/is-company ()
+    (string-prefix-p "docked-company" (jpc/current-mode)))
+
+  (defun jpc/is-home ()
+    (string-prefix-p "docked-home" (jpc/current-mode)))
+
+  (defun jpc/is-4k ()
+    (string-prefix-p "docked-4k" (jpc/current-mode)))
+
+  (defun jpc/is-hd ()
+    (string-prefix-p "docked-hd" (jpc/current-mode)))
+
+  (if (and (jpc/on-machine "saturne") (jpc/is-docked))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 23
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+
+  (if (and (jpc/on-machine "mercure") (jpc/is-laptop))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 16
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+
+  (if (and (jpc/on-machine "mercure") (jpc/is-company))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 14
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+
+  (if (and (jpc/on-machine "mercure") (jpc/is-home))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 23
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+
+  (if (and (jpc/on-machine "pluton") (jpc/is-laptop))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 16
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+
+  (if (and (jpc/on-machine "pluton") (jpc/is-hd))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 14
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
+
+  (if (and (jpc/on-machine "pluton") (jpc/is-4k))
+      (setq-default dotspacemacs-default-font '("Fira Code Retina"
+                                                :size 23
+                                                :weight normal
+                                                :width normal
+                                                :powerline-scale 1.0)))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;                         General configuration                          ;;
@@ -409,14 +470,16 @@
                                          :tag "adm")
                                   (:name "Professionnel"
                                          :tag "pro")
+                                  (:name "Entretien & Travaux"
+                                         :tag ("entretien" "travaux"))
+                                  (:name "Achats"
+                                         :tag "achats")
                                   (:name "Social"
                                          :tag "soc")
                                   (:name "Photo"
                                          :tag "photo")
                                   (:name "Informatique"
-                                         :tag ("sys" "dev" "contrib"))
-                                  (:name "Entretien"
-                                         :tag "entretien"))
+                                         :tag ("sys" "dev" "contrib")))
         org-adapt-indentation t
         org-habit-graph-column 58
         org-habit-show-habits-only-for-today nil
@@ -426,8 +489,8 @@
         org-pomodoro-keep-killed-pomodoro-time t
         org-startup-folded t)
 
-  ;; Add professionnal tasks on pluton.
-  (if (string= (system-name) "pluton")
+  ;; Add professionnal tasks on mercure.
+  (if (string= (system-name) "mercure")
       (setq org-capture-templates '(("i" "Idée" entry
                                      (file "Perso/Idées.org")
                                      "** Idée [#3] %?\n   %a")
@@ -463,11 +526,11 @@
   (global-set-key (kbd "C-+") 'org-capture)
   (global-set-key (kbd "C--") 'org-agenda-list)
   (global-set-key (kbd "C-<f8>") '(lambda (&optional arg)
-                                 (interactive "P")
-                                 (org-agenda arg "o")))
-  (global-set-key (kbd "C-S-<f9>") '(lambda (&optional arg)
                                     (interactive "P")
-                                    (org-agenda arg "O")))
+                                    (org-agenda arg "o")))
+  (global-set-key (kbd "C-S-<f9>") '(lambda (&optional arg)
+                                      (interactive "P")
+                                      (org-agenda arg "O")))
   (global-set-key (kbd "C-<f6>") '(lambda (&optional arg)
                                     (interactive "P")
                                     (org-agenda arg "p")))

@@ -15,7 +15,10 @@
 
     services = {
       zfs = {
-        autoScrub.interval = "Sun, 20:00";
+        autoScrub = {
+          interval = "Mon 20:00";
+          randomizedDelaySec = "0";
+        };
       };
     };
   };

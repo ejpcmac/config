@@ -24,7 +24,7 @@ super + shift + @space
 
 # Reload sxhkd and bspwm.
 super + Escape
-    pkill -USR1 -x sxhkd && $HOME/.config/bspwm/bspwmrc && pkill -USR1 termite
+    $HOME/.config/bspwm/bspwmrc && pkill -USR1 termite
 
 # Switch to undocked mode
 super + F6
@@ -39,8 +39,8 @@ super + l
     betterlockscreen --lock
 
 # Take a screenshot.
-{_, shift, ctrl} + Print
-    maim --hidecursor {_,--window $(xdotool getactivewindow),--select} \
+{_, shift, ctrl, super} + Print
+    maim --hidecursor {_,--window $(xdotool getactivewindow),--select,-g 3840x2160+1920+0} \
     | tee $HOME/Images/Captures/$HOSTNAME/$(date +%Y-%m-%d_%H-%M-%S).png \
     | xclip -selection clipboard -t image/png
 
@@ -84,10 +84,6 @@ super + shift + p
 super + p
     emacsclient -c ~/Photo/_Documents/Inventaires
 
-# Open Zeal.
-super + z
-      zeal
-
 ################################################################################
 ##                               Theme hotkeys                                ##
 ################################################################################
@@ -121,11 +117,11 @@ super + alt + m
 
 # Mute / unmute the internal sound card.
 XF86AudioMute
-    amixer -qc 0 set Master toggle
+    amixer -qc 1 set Master toggle
 
 # Fine-grained volume management for the internal sound card.
 XF86Audio{Raise,Lower}Volume
-    amixer -qc 0 set Master 1dB{+,-}
+    amixer -qc 1 set Master 1dB{+,-}
 
 # Clear the MPD playlist.
 super + control + m

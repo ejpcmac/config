@@ -22,9 +22,8 @@ in
       type = str;
       description = "Init script for other desktop-related services.";
       default = ''
-        if [ $(ps x | grep sxhkd | grep -v grep | wc -l) -eq 0 ]; then
-            sxhkd &
-        fi
+        killall sxhkd 2> /dev/null || true
+        systemd-cat -t sxhkd sxhkd &
       '';
     };
 

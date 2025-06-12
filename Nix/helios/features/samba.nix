@@ -24,19 +24,20 @@
     # Enable avahi for auto-discovering Samba shares.
     avahi = {
       enable = true;
-      nssmdns = true;
+      nssmdns4 = true;
       publish = { enable = true; userServices = true; };
     };
 
     samba = {
       enable = true;
-      extraConfig = ''
-        guest account = nobody
-        map to guest = bad user
-      '';
 
-      shares = {
-        Musique = {
+      settings = {
+        global = {
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+        };
+
+        "Musique" = {
           path = "/data/Musique";
           public = "yes";
           browsable = "yes";
@@ -52,7 +53,7 @@
           "guest ok" = "yes";
         };
 
-        Logiciels = {
+        "Logiciels" = {
           path = "/data/Logiciels";
           public = "yes";
           browsable = "yes";

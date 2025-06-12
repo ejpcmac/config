@@ -4,10 +4,10 @@
 ##                                                                            ##
 ################################################################################
 
-{ inputs, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 let
-  libjpc = pkgs.callPackage ./lib { };
+  libjpc = import ./lib { inherit config lib pkgs; };
   inherit (libjpc) link;
 
   jpc_overlay = import ../../overlays/jpc_overlay.nix;
@@ -18,7 +18,7 @@ in
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  home.stateVersion = "22.11"; # Did you read the comment?
+  home.stateVersion = "25.05"; # Did you read the comment?
 
   # Import the confkit home-manager module to get ready-to-use configurations
   # for several tools.
@@ -43,6 +43,8 @@ in
     };
 
     programs = {
+      dua.enable = true;
+      eza.enable = true;
       git.enable = true;
 
       zsh = {
@@ -51,7 +53,6 @@ in
         plugins = [
           "aliases"
           "git"
-          "imagemagick"
           "nix"
         ];
       };
@@ -72,6 +73,10 @@ in
   };
 
   xdg.configFile = {
+    # General persistence
+    "htop".source = link "/home/jpc/.persist/htop";
+
+    # Install the configuration for tmuxinator.
     "tmuxinator/jpc.yml".source = ./res/tmuxinator_jpc.yml;
   };
 
@@ -103,18 +108,18 @@ in
       ];
 
       shellAliases = {
+        # Helpers to get the current file system.
+        fs = "findmnt -n -o SOURCE -T .";
+        mnt = "findmnt -n -o TARGET -T .";
+
         # Base tmux session.
         tmb = "tmuxinator jpc";
 
         # Get the property of files.
         own = "sudo chown jpc:users";
 
-        # Generate quickly clean documents with pandoc.
-        pd = "pandoc --number-sections --toc -V geometry:margin=25mm -V fontsize=11pt";
-
-        # Make git and hub subcommands that need Emacs still work in Nix shells.
-        git = "TMPDIR=/tmp git";
-        hub = "TMPDIR=/tmp hub";
+        # Low-level sysadmin.
+        clear-memcache = "sudo sysctl vm.drop_caches=3";
       };
     };
   };
@@ -124,12 +129,9 @@ in
   ############################################################################
 
   home.packages = with pkgs; [
-    # Build platforms
-    # mixnix-platform
-
     # Utilities
-    diceware
-    mu
+    hwatch
     nmap
+    viddy
   ];
 }

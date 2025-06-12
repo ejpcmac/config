@@ -1,32 +1,94 @@
 {
+    "TODO": {
+        "prefix": "todo",
+        "body": "// TODO: ",
+        "description": "TODO"
+    },
     "FIXME": {
-        "prefix": "FIXME",
+        "prefix": "fixme",
         "body": "// FIXME: ",
         "description": "FIXME"
     },
+    "BUG": {
+        "prefix": "bug",
+        "body": "// BUG: ",
+        "description": "BUG"
+    },
     "HACK": {
-        "prefix": "HACK",
+        "prefix": "hack",
         "body": "// HACK: ",
         "description": "HACK"
     },
+    "REVIEW": {
+        "prefix": "review",
+        "body": "// REVIEW: ",
+        "description": "REVIEW"
+    },
     "IDEA": {
-        "prefix": "IDEA",
+        "prefix": "idea",
         "body": "// IDEA: ",
         "description": "IDEA"
     },
     "NOTE": {
-        "prefix": "NOTE",
+        "prefix": "note",
         "body": "// NOTE: ",
         "description": "NOTE"
     },
-    "REVIEW": {
-        "prefix": "REVIEW",
-        "body": "// REVIEW: ",
-        "description": "REVIEW"
+    "NOTE(allow)": {
+        "prefix": "allow",
+        "body": "// NOTE(allow): ",
+        "description": "NOTE(allow)"
     },
-    "TODO": {
-        "prefix": "TODO",
-        "body": "// TODO: ",
-        "description": "TODO"
+    "SAFETY": {
+        "prefix": "safety",
+        "body": "// SAFETY: ",
+        "description": "SAFETY"
+    },
+    "tracing::error!": {
+        "prefix": "error",
+        "body": "tracing::error!($0);",
+        "description": "Insert an error log"
+    },
+    "tracing::warning!": {
+        "prefix": "warning",
+        "body": "tracing::warning!($0);",
+        "description": "Insert an warning log"
+    },
+    "tracing::info!": {
+        "prefix": "info",
+        "body": "tracing::info!($0);",
+        "description": "Insert an info log"
+    },
+    "tracing::debug!": {
+        "prefix": "debug",
+        "body": "tracing::debug!($0);",
+        "description": "Insert an debug log"
+    },
+    "tracing::trace!": {
+        "prefix": "trace",
+        "body": "tracing::trace!($0);",
+        "description": "Insert an trace log"
+    },
+    "fn test()": {
+        "prefix": "test",
+        // prettier-ignore
+        "body": [
+            "#[test]",
+            "fn $0() {",
+            "    todo!()",
+            "}"
+        ],
+        "description": "Write a new test"
+    },
+    "fn test() -> Result<()>": {
+        "prefix": "rtest",
+        // prettier-ignore
+        "body": [
+            "#[test]",
+            "fn $0() -> Result<()> {",
+            "    todo!()",
+            "}"
+        ],
+        "description": "Write a new test"
     }
 }

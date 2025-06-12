@@ -9,8 +9,10 @@
     extraGroups = [
       "cdrom"
       "dialout"
+      "lp"
       "networkmanager"
       "plugdev"
+      "scanner"
       "video"
       "wireshark"
     ];

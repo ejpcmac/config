@@ -4,8 +4,39 @@
         "body": "# TODO: ",
         "description": "TODO"
     },
+    "FIXME": {
+        "prefix": "fixme",
+        "body": "# FIXME: ",
+        "description": "FIXME"
+    },
+    "BUG": {
+        "prefix": "bug",
+        "body": "# BUG: ",
+        "description": "BUG"
+    },
+    "HACK": {
+        "prefix": "hack",
+        "body": "# HACK: ",
+        "description": "HACK"
+    },
+    "REVIEW": {
+        "prefix": "review",
+        "body": "# REVIEW: ",
+        "description": "REVIEW"
+    },
+    "IDEA": {
+        "prefix": "idea",
+        "body": "# IDEA: ",
+        "description": "IDEA"
+    },
+    "NOTE": {
+        "prefix": "note",
+        "body": "# NOTE: ",
+        "description": "NOTE"
+    },
     "let": {
         "prefix": "let",
+        // prettier-ignore
         "body": [
             "let",
             "  $1",

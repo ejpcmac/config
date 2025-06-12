@@ -6,6 +6,7 @@
     },
     "appendices": {
         "prefix": "appendices",
+        // prettier-ignore
         "body": [
             "\\begin{appendices}",
             "",
@@ -22,6 +23,7 @@
     },
     "block": {
         "prefix": "block",
+        // prettier-ignore
         "body": [
             "\\begin{block}{${1:Title}}",
             "  $0",
@@ -72,11 +74,7 @@
     },
     "frame": {
         "prefix": "frame",
-        "body": [
-            "\\begin{frame}",
-            "  $0",
-            "\\end{frame}"
-        ],
+        "body": ["\\begin{frame}", "  $0", "\\end{frame}"],
         "description": "Insert a new frame"
     },
     "fragile": {
@@ -212,11 +210,7 @@
     },
     "setbeamertemplate": {
         "prefix": "setbeamertemplate",
-        "body": [
-            "\\setbeamertemplate{${1:template}}{",
-            "  $2",
-            "}"
-        ],
+        "body": ["\\setbeamertemplate{${1:template}}{", "  $2", "}"],
         "description": "Set the beamer template"
     },
     "setbeamercolor": {

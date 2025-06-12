@@ -1,5 +1,5 @@
 diff --git a/libgnucash/engine/iso-4217-currencies.xml b/libgnucash/engine/iso-4217-currencies.xml
-index 93c22311f..398b85132 100644
+index 8318312ca6..7bbbc6668d 100644
 --- a/libgnucash/engine/iso-4217-currencies.xml
 +++ b/libgnucash/engine/iso-4217-currencies.xml
 @@ -37,6 +37,19 @@
@@ -37,7 +37,7 @@ index 93c22311f..398b85132 100644
 +  exchange-code="nil"
 +  parts-per-unit="100000000"
 +  smallest-fraction="100000000"
-+  local-symbol="฿"
++  local-symbol="₿"
 +/>
  <!-- "BTN" - "Ngultrum"
  -->
@@ -102,7 +102,7 @@ index 93c22311f..398b85132 100644
  <!-- "GEL" - "Lari"
  -->
  <currency
-@@ -1286,6 +1351,19 @@
+@@ -1287,6 +1352,19 @@
    smallest-fraction="100"
    local-symbol="₹"
  />
@@ -122,7 +122,7 @@ index 93c22311f..398b85132 100644
  <!-- "IQD" - "Iraqi Dinar"
  -->
  <currency
-@@ -1521,6 +1599,19 @@
+@@ -1522,6 +1600,19 @@
    smallest-fraction="100"
    local-symbol="ل.ل"
  />
@@ -142,7 +142,7 @@ index 93c22311f..398b85132 100644
  <!-- "LKR" - "Sri Lanka Rupee"
  -->
  <currency
-@@ -1560,6 +1651,19 @@
+@@ -1561,6 +1652,19 @@
    smallest-fraction="100"
    local-symbol="M"
  />
@@ -162,7 +162,7 @@ index 93c22311f..398b85132 100644
  <!-- "LTL" - "Lithuanian Litas"
  -->
  <currency
-@@ -1627,6 +1731,19 @@
+@@ -1628,6 +1732,19 @@
    smallest-fraction="100"
    local-symbol="د.م"
  />
@@ -182,7 +182,7 @@ index 93c22311f..398b85132 100644
  <!-- "MDL" - "Moldovan Leu"
  -->
  <currency
-@@ -1895,6 +2012,19 @@
+@@ -1896,6 +2013,19 @@
    smallest-fraction="100"
    local-symbol="N$"
  />
@@ -202,7 +202,7 @@ index 93c22311f..398b85132 100644
  <!-- "NGN" - "Naira"
  -->
  <currency
-@@ -2348,6 +2478,19 @@
+@@ -2349,6 +2479,19 @@
    smallest-fraction="100"
    local-symbol="Le"
  />
@@ -222,7 +222,7 @@ index 93c22311f..398b85132 100644
  <!-- "SOS" - "Somali Shilling"
  -->
  <currency
-@@ -2535,6 +2678,19 @@
+@@ -2536,6 +2679,19 @@
    smallest-fraction="100"
    local-symbol="T$"
  />
@@ -242,7 +242,7 @@ index 93c22311f..398b85132 100644
  <!-- "TRY" - "Turkish Lira"
  -->
  <currency
-@@ -2827,6 +2983,19 @@
+@@ -2828,6 +2984,19 @@
    smallest-fraction="100"
    local-symbol="R"
  />
@@ -262,7 +262,28 @@ index 93c22311f..398b85132 100644
  <!-- "ZMK" - "Kwacha (old)"
    replaced by ZMW from 2013-01-01 onwards
  -->
-@@ -2956,6 +3125,32 @@
+@@ -2929,6 +3098,20 @@
+   smallest-fraction="1"
+   local-symbol=""
+ />
++<!-- "XFE" - "Fixed Euro"
++  To be used with INSEE yearly transformation coefficient.
++-->
++<currency
++  isocode="XFE"
++  fullname="Fixed Euro"
++  unitname="euro"
++  partname="euro-cent"
++  namespace="ISO4217"
++  exchange-code="nil"
++  parts-per-unit="100"
++  smallest-fraction="100"
++  local-symbol="F€"
++/>
+ <!-- "XFO" - "Gold-Franc"
+   Bank for International Settlements
+ -->
+@@ -2957,6 +3140,32 @@
    smallest-fraction="100"
    local-symbol=""
  />
@@ -295,7 +316,7 @@ index 93c22311f..398b85132 100644
  <!-- "XOF" - "CFA Franc BCEAO"
    Banque Centrale des États de l'Afrique de l'Ouest
  -->
-@@ -2984,6 +3179,32 @@
+@@ -2985,6 +3194,32 @@
    smallest-fraction="100"
    local-symbol=""
  />

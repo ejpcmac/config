@@ -6,7 +6,7 @@
 
 {
   imports = [
-    # Common extentions
+    # Common extensions
     ../../common/nixos
 
     # confkit extensions

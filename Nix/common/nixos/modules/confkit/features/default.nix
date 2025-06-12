@@ -5,5 +5,6 @@
 
     # Custom features
     ./docker.nix
+    ./ollama.nix
   ];
 }

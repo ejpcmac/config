@@ -1,17 +1,7 @@
 self: super:
 
 let
-  inherit (super) callPackage;
-
-  ## Adds the latest Elixir version in a given beam.packages.
-  updateElixir = erlang-self: erlang-super: {
-    elixir_latest = self.beam.beamLib.callElixir ../pkgs/elixir-latest {
-      inherit (erlang-super) erlang;
-      debugInfo = true;
-    };
-
-    elixir = erlang-self.elixir_latest;
-  };
+  inherit (super) callPackage lib;
 in
 
 {
@@ -19,8 +9,8 @@ in
   ##                             Local packages                             ##
   ############################################################################
 
-  daedalus = callPackage ../pkgs/daedalus { };
   diceware = callPackage ../pkgs/diceware { };
+  exiv2-0-27 = callPackage ../pkgs/exiv2-0-27 { };
   xgen = callPackage ../pkgs/xgen { };
 
   ############################################################################
@@ -34,12 +24,13 @@ in
   # in more recent versions.
   fira-code = callPackage ../pkgs/fira-code { };
 
-  # There are breaking changes in mu 1.8, let’s update it later.
-  mu = callPackage ../pkgs/mu { };
-
   ############################################################################
   ##                                Patches                                 ##
   ############################################################################
+
+  # HACK: The GitLab service mistakenly hardcodes PostgreSQL 14, yet is only
+  # compatible with PostgreSQL 16+.
+  postgresql_14 = lib.warn "postgresql_14 is overlayed to postgresql_16" super.postgresql_16;
 
   # Add crypto-currencies.
   gnucash = super.gnucash.overrideAttrs (attrs: {
@@ -57,23 +48,4 @@ in
       cp "contrib/61-libsigrok-uaccess.rules" "$out/lib/udev/rules.d"
     '';
   });
-
-  ############################################################################
-  ##                     Latest Elixir on NixOS Stable                      ##
-  ############################################################################
-
-  beam = self.lib.recursiveUpdate super.beam {
-    packages = {
-      erlang = super.beam.packages.erlang.extend updateElixir;
-      erlangR21 = super.beam.packages.erlangR21.extend updateElixir;
-      erlangR22 = super.beam.packages.erlangR22.extend updateElixir;
-      erlangR23 = super.beam.packages.erlangR23.extend updateElixir;
-      erlangR24 = super.beam.packages.erlangR24.extend updateElixir;
-    };
-
-    interpreters.elixir_latest = self.beam.packages.erlang.elixir_latest;
-    interpreters.elixir = self.beam.interpreters.elixir_latest;
-  };
-
-  inherit (self.beam.interpreters) elixir_latest;
 }

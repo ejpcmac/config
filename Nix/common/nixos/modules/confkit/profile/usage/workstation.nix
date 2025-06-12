@@ -7,14 +7,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (lib) getName mkForce mkIf;
-
-  # Configure Firefox for Tridactyl.
-  firefox = pkgs.firefox.override {
-    cfg = {
-      enableTridactylNative = true;
-    };
-  };
+  inherit (lib) mkForce mkIf;
 in
 
 {
@@ -26,16 +19,6 @@ in
 
     confkit = {
       features.fonts.enable = true;
-    };
-
-    ########################################################################
-    ##                         nixpkgs configuration                      ##
-    ########################################################################
-
-    nixpkgs.config = {
-      allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
-        "veracrypt"
-      ];
     };
 
     ########################################################################
@@ -66,11 +49,6 @@ in
     services = {
       actkbd.enable = mkForce false;
       gnome.gnome-keyring.enable = true;
-
-      emacs = {
-        enable = true;
-        defaultEditor = true;
-      };
 
       redshift = {
         enable = true;
@@ -127,45 +105,22 @@ in
     ########################################################################
 
     programs = {
+      adb.enable = true;
       dconf.enable = true;
       gnupg.agent = { enable = true; enableSSHSupport = true; };
+      i3lock = { enable = true; package = pkgs.betterlockscreen; };
       ssh.startAgent = false;
     };
-
-    ########################################################################
-    ##                          System packages                           ##
-    ########################################################################
-
-    environment.systemPackages = with pkgs; [
-      # Utilities
-      betterlockscreen
-      pandoc
-      pdfpc
-      wakelan
-      xorg.xev
-
-      # TeXLive can be useful for tools like Pandoc or Org.
-      texlive.combined.scheme-full
-
-      # Applications
-      drawio
-      firefox
-      gnome.seahorse
-      keepassxc
-      libreoffice
-      mpv
-      pcmanfm
-      pqiv
-      veracrypt
-    ];
 
     ########################################################################
     ##                               Fonts                                ##
     ########################################################################
 
-    fonts.fonts = with pkgs; [
-      (nerdfonts.override { fonts = [ "DejaVuSansMono" "Noto" ]; })
+    fonts.packages = with pkgs; [
       fira-code-symbols # Needed to get the ligatures in Emacs.
+      nerd-fonts.dejavu-sans-mono
+      nerd-fonts.noto
+      roboto-mono
     ];
   };
 }

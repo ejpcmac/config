@@ -12,7 +12,7 @@
 , perl
 , llvm
 , desktop-file-utils
-, exiv2
+, exiv2-0-27
 , glib
 , ilmbase
 , gtk3
@@ -63,7 +63,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     cairo
     curl
-    exiv2
+    exiv2-0-27
     glib
     gtk3
     ilmbase

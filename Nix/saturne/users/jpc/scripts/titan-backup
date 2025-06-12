@@ -19,11 +19,11 @@ done
 
 printf "\n\e[32m=> Backing up the ZFS datasets...\e[0m\n\n"
 
-syncoid --no-sync-snap --sendoptions=wp -r saturne titan/saturne
+syncoid --no-sync-snap --force-delete --sendoptions=wp --recvoptions=u -r saturne titan/saturne
 
 printf "\n\e[32m=> Cleaning old snapshots...\e[0m\n\n"
 
-zfs-clean-snapshots saturne 4 48 7 4 24
+zfs-clean-snapshots saturne 4 24 7 4 12
 zfs-clean-snapshots titan/saturne 4 48 7 4 24
 
 printf "\n\e[32m=> Backing up the boot partition...\e[0m\n\n"

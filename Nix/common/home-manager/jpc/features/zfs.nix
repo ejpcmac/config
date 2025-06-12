@@ -17,7 +17,7 @@
       wzly = "watch -n 1 zfs list -o name,jpc:manager,readonly,compression,compressratio,used,usedbysnapshots,com.sun:auto-snapshot,encryptionroot";
     };
 
-    initExtra = ''
+    initContent = ''
       szihk() {
           if [ $# -ne 1 ]; then
               echo "usage: zihk <dataset>"

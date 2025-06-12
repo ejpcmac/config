@@ -1,0 +1,223 @@
+#!/bin/sh
+
+CONFIG_FILE="$HOME/.local/share/mode"
+
+usage() {
+    echo "usage: switch-mode <laptop|docked-company|docked-home|docked-lisieux|presentation|duplicated>"
+    exit 1
+}
+
+# Returns the sxhkdrc file for the given mode.
+sxhkdrc() {
+    local mode=$1
+
+    if [ "$mode" == "docked-company" ] || [ "$mode" == "docked-home" ] || [ "$mode" == "docked-lisieux" ]; then
+        echo sxhkdrc_docked
+    else
+        echo sxhkdrc_undocked
+    fi
+}
+
+# Sets the given mode.
+set_mode() {
+    local mode=$1
+
+    printf $mode > "$CONFIG_FILE"
+    ln -sf $(sxhkdrc $mode) "$HOME/.config/sxhkd/sxhkdrc"
+}
+
+# Gets the current mode.
+current_mode() {
+    if [ -f "$CONFIG_FILE" ]; then
+        cat "$CONFIG_FILE"
+    else
+        set_mode laptop
+        printf laptop
+    fi
+}
+
+# Switches on external monitors.
+switch_on_monitors() {
+    local mode=$1
+
+    case $mode in
+        docked-company)
+            xrandr --output eDP-1 --auto
+            xrandr --output DP-1-1 --auto --right-of eDP-1
+            xrandr --output DP-1-2 --auto --right-of DP-1-1
+            xrandr --dpi 120
+            ;;
+
+        docked-home)
+            xrandr --output eDP-1 --auto
+            xrandr --output DP-1 --auto --right-of eDP-1
+            xrandr --output HDMI-1 --auto --right-of DP-1
+            xrandr --dpi 212
+            ;;
+
+        docked-lisieux)
+            xrandr --output eDP-1 --auto
+            xrandr --output HDMI-1 --auto --right-of eDP-1
+            xrandr --output DP-1 --auto --right-of HDMI-1
+            xrandr --dpi 120
+            ;;
+
+        presentation)
+            xrandr --output eDP-1 --auto
+            xrandr --output HDMI-1 --auto --above eDP-1
+            xrandr --dpi 160
+            ;;
+
+        duplicated)
+            xrandr --output eDP-1 --auto
+            xrandr --output HDMI-1 --auto --same-as eDP-1
+            xrandr --dpi 160
+
+            # NOTE: bspwm automatically adds a new monitor when an output is
+            # activated, but we do not want this here since we are just
+            # duplicating the screen. Hence, let’s remove it.
+            bspc monitor HDMI-1 -r
+            ;;
+
+        *)
+            ;;
+    esac
+}
+
+# Switches off external monitors.
+switch_off_monitors() {
+    local mode=$1
+
+    case $mode in
+        docked-company)
+            xrandr --output DP-1-1 --off
+            xrandr --output DP-1-2 --off
+            ;;
+
+        docked-home)
+            xrandr --output DP-1 --off
+            xrandr --output HDMI-1 --off
+            ;;
+
+        docked-lisieux)
+            xrandr --output HDMI-1 --off
+            xrandr --output DP-1 --off
+            ;;
+
+        presentation)
+            xrandr --output HDMI-1 --off
+            ;;
+
+        duplicated)
+            xrandr --output HDMI-1 --off
+            ;;
+
+        *)
+            ;;
+    esac
+
+    xrandr --dpi 160
+}
+
+# Removes monitors from the bspwm configuration.
+remove_monitors() {
+    local mode=$1
+
+    case $mode in
+        docked-company)
+            bspc monitor DP-1-1 -r
+            bspc monitor DP-1-2 -r
+            ;;
+
+        docked-home)
+            bspc monitor DP-1 -r
+            bspc monitor HDMI-1 -r
+            ;;
+
+        docked-lisieux)
+            bspc monitor HDMI-1 -r
+            bspc monitor DP-1 -r
+            ;;
+
+        presentation)
+            bspc monitor HDMI-1 -r
+            ;;
+
+        *)
+            ;;
+    esac
+
+    bspc wm -o
+}
+
+# Reloads the desktop environment.
+reload_desktop() {
+    $HOME/.config/bspwm/bspwmrc
+
+    if [ "$1" == "wait_polybar" ]; then
+        sleep 2
+    fi
+
+    systemctl --user restart polybar
+}
+
+# Reloads applications that need to be made aware of resolution changes.
+reload_applications() {
+    pkill -USR1 termite
+}
+
+# Switches to the laptop mode from any mode.
+switch_to_laptop() {
+    local from_mode=$(current_mode)
+
+    if [ "$from_mode" == "laptop" ]; then
+        return
+    fi
+
+    # Reconfigure the desktop environment.
+    set_mode laptop
+    reload_desktop
+
+    # Remove the external monitors.
+    remove_monitors $from_mode
+    switch_off_monitors $from_mode
+
+    # Reload applications.
+    reload_applications
+}
+
+# Switches to the given mode from laptop mode.
+switch_to_mode() {
+    local mode=$1
+
+    # First switch to laptop to have a known base.
+    switch_to_laptop
+
+    # Add the external monitors.
+    switch_on_monitors $mode
+
+    # Reconfigure the desktop environment.
+    set_mode $mode
+    reload_desktop wait_polybar
+    reload_applications
+}
+
+if [ $# -ne 1 ]; then
+    usage
+fi
+
+mode=$1
+
+if [ "$mode" != "laptop" ] && \
+   [ "$mode" != "docked-company" ] && \
+   [ "$mode" != "docked-home" ] && \
+   [ "$mode" != "docked-lisieux" ] && \
+   [ "$mode" != "presentation" ] && \
+   [ "$mode" != "duplicated" ]
+then
+    usage
+fi
+
+set -e
+
+switch_to_mode $mode

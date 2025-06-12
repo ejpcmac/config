@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]; then
+    echo "usage: preview-update <host>"
+    exit 1
+fi
+
+if [ ! -d /config/Nix/$1 ]; then
+    echo "error: unknown host $1"
+    exit 1
+fi
+
+cd /config/Nix/$1
+
+sed -e "s/dir=Nix\/common\&ref=main/dir=Nix\/common/" flake.nix -i &&
+nix flake update &&
+
+nix store diff-closures \
+    --derivation \
+    "git+file:///config?dir=Nix/$1&ref=HEAD" \
+    "git+file:///config?dir=Nix/$1"
+
+sed -e "s/dir=Nix\/common/dir=Nix\/common\&ref=main/" flake.nix -i
+git restore flake.lock

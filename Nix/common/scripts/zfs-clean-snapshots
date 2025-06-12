@@ -12,6 +12,14 @@ fi
 for dataset in $(zfs list -Hro name $1); do
     printf "\e[32m=> Cleaning up snapshots for $dataset\e[0m\n"
 
+    sync=$(zfs get -Ho value syncoid:sync $dataset)
+    if [ "$sync" == "false" ]; then
+        echo "destroying backup snapshot (syncoid:sync=false)"
+        keep_one_backup=0
+    else
+        keep_one_backup=1
+    fi
+
     snapshots=$(zfs list -H -t snapshot -o name $dataset)
 
     # Remove manual syncoid snapshots.
@@ -30,8 +38,8 @@ for dataset in $(zfs list -Hro name $1); do
     legacy_backup=$legacy_helios$legacy_titan$legacy_tethys$legacy_neptune_helios$legacy_neptune_saturne
 
     # Keep only one backup snapshot per backup pool.
-    old_saturne=$(filter_snapshots "$snapshots" backup-saturne 1)
-    old_neptune=$(filter_snapshots "$snapshots" backup-neptune 1)
+    old_saturne=$(filter_snapshots "$snapshots" backup-saturne $keep_one_backup)
+    old_neptune=$(filter_snapshots "$snapshots" backup-neptune $keep_one_backup)
     old_backup=$old_saturne$old_neptune
 
     # Keep auto-snapshots as configured.

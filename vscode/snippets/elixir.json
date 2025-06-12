@@ -4,8 +4,39 @@
         "body": "# TODO: ",
         "description": "TODO"
     },
+    "FIXME": {
+        "prefix": "fixme",
+        "body": "# FIXME: ",
+        "description": "FIXME"
+    },
+    "BUG": {
+        "prefix": "bug",
+        "body": "# BUG: ",
+        "description": "BUG"
+    },
+    "HACK": {
+        "prefix": "hack",
+        "body": "# HACK: ",
+        "description": "HACK"
+    },
+    "REVIEW": {
+        "prefix": "review",
+        "body": "# REVIEW: ",
+        "description": "REVIEW"
+    },
+    "IDEA": {
+        "prefix": "idea",
+        "body": "# IDEA: ",
+        "description": "IDEA"
+    },
+    "NOTE": {
+        "prefix": "note",
+        "body": "# NOTE: ",
+        "description": "NOTE"
+    },
     "doc": {
         "prefix": "doc",
+        // prettier-ignore
         "body": [
             "@doc \"\"\"",
             "$0",
@@ -15,6 +46,7 @@
     },
     "moduledoc": {
         "prefix": "moduledoc",
+        // prettier-ignore
         "body": [
             "@moduledoc \"\"\"",
             "$0",
@@ -39,6 +71,7 @@
     },
     "typedstruct": {
         "prefix": "typedstruct",
+        // prettier-ignore
         "body": [
             "typedstruct do",
             "  $0",
@@ -53,6 +86,7 @@
     },
     "property": {
         "prefix": "property",
+        // prettier-ignore
         "body": [
             "property \"$1\" do",
             "  $0",
@@ -62,6 +96,7 @@
     },
     "check": {
         "prefix": "check",
+        // prettier-ignore
         "body": [
             "check all $1 do",
             "  $0",

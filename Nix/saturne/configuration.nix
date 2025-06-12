@@ -4,11 +4,10 @@
 ##                                                                            ##
 ################################################################################
 
-{ config, inputs, lib, pkgs, system, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 let
-  inherit (lib) getName mkDefault optional;
-  unstable = import inputs.nixpkgs-unstable { inherit system; };
+  inherit (lib) getName mkIf optional;
   mkFs = pkgs.lib.confkit.mkFs config;
 in
 
@@ -33,11 +32,13 @@ in
     info = {
       name = "saturne";
       machineId = "***[ REDACTED ]***";
+      location = "caen";
     };
 
     profile = {
-      type = [ "physical" "laptop" ];
-      usage = [ "workstation" "home" ]
+      type = [ "physical" "laptop" ]
+        ++ optional (config.specialisation != { }) "monitors-intel+gpu";
+      usage = [ "workstation" ]
         ++ optional (config.specialisation != { }) "docked";
     };
 
@@ -60,12 +61,17 @@ in
       custom.jpc = {
         docker.enable = true;
         serverMountpoints.enable = true;
+
+        ollama = {
+          enable = true;
+          acceleration = "cuda";
+        };
       };
 
       custom.saturne = {
-        tlp = {
+        nvidia-gpu = mkIf (config.specialisation != { }) {
           enable = true;
-          powersave = mkDefault "on-battery";
+          mode = "sync";
         };
 
         # mpd.enable = true;
@@ -81,53 +87,94 @@ in
   ############################################################################
 
   specialisation = {
-    nomade = {
+    docked-offload = {
       inheritParentConfig = true;
       configuration = {
-        system.nixos.tags = [ "nomade" ];
-        confkit.profile.usage = [ "nomade" ];
-      };
-    };
-
-    nomade-performance = {
-      inheritParentConfig = true;
-      configuration = {
-        system.nixos.tags = [ "nomade" "performance" ];
+        environment.etc."specialisation".text = "docked-offload";
+        system.nixos.label = "docked-offload-${config.system.nixos.version}";
         confkit = {
-          profile.usage = [ "nomade" ];
-          features.custom.saturne.tlp.powersave = "never";
+          profile = {
+            type = [ "monitors-intel" ];
+            usage = [ "docked" ];
+          };
+
+          features.custom.saturne.nvidia-gpu = {
+            enable = true;
+            mode = "offload";
+          };
         };
       };
     };
 
-    nomade-powersave = {
+    undocked = {
       inheritParentConfig = true;
       configuration = {
-        system.nixos.tags = [ "nomade" "powersave" ];
+        environment.etc."specialisation".text = "undocked";
+        system.nixos.label = "undocked-${config.system.nixos.version}";
         confkit = {
-          profile.usage = [ "nomade" ];
-          features.custom.saturne.tlp.powersave = "always";
+          profile = {
+            type = [ "monitors-intel" ];
+            usage = [ "undocked" ];
+          };
+
+          features.custom.saturne.nvidia-gpu = {
+            enable = true;
+            enableMonitors = false;
+            mode = "offload";
+          };
         };
       };
     };
-  };
 
-  ############################################################################
-  ##                           Nix configuration                            ##
-  ############################################################################
+    undocked-gpu = {
+      inheritParentConfig = true;
+      configuration = {
+        environment.etc."specialisation".text = "undocked-gpu";
+        system.nixos.label = "undocked-gpu-${config.system.nixos.version}";
+        confkit = {
+          profile = {
+            type = [ "monitors-intel+gpu" ];
+            usage = [ "undocked" ];
+          };
 
-  nix = {
-    # Only garbage-collect once a week to avoir rebuilding too often the
-    # Daedalus IFD, and do it before update day.
-    gc.dates = "Sat, 21:00";
-
-    settings = {
-      # Add the IOHK binary cache to build the Cardano platform more quickly.
-      substituters = [ "https://hydra.iohk.io" ];
-      trusted-public-keys = [
-        "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
-      ];
+          features.custom.saturne.nvidia-gpu = {
+            enable = true;
+            mode = "sync";
+          };
+        };
+      };
     };
+
+    # undocked-intel = {
+    #   inheritParentConfig = true;
+    #   configuration = {
+    #     environment.etc."specialisation".text = "undocked-intel";
+    #     system.nixos.label = "undocked-intel-${config.system.nixos.version}";
+    #     confkit.profile = {
+    #       type = [ "monitors-intel" ];
+    #       usage = [ "undocked" ];
+    #     };
+    #   };
+    # };
+
+    # docked-nvidia = {
+    #   inheritParentConfig = true;
+    #   configuration = {
+    #     environment.etc."specialisation".text = "docked-nvidia";
+    #     system.nixos.label = "docked-nvidia-${config.system.nixos.version}";
+    #     confkit = {
+    #       profile = {
+    #         type = [ "monitors-nvidia" ];
+    #         usage = [ "docked" ];
+    #       };
+
+    #       features.custom.saturne.nvidia-gpu = {
+    #         enable = true;
+    #         mode = "discrete";
+    #       };
+    #     };
+    #   };
+    # };
   };
 
   ############################################################################
@@ -136,11 +183,52 @@ in
 
   nixpkgs.config = {
     allowUnfreePredicate = pkg: builtins.elem (getName pkg) [
-      # TODO: Check why it is needed here despite also being in workstation*.
-      "veracrypt"
-      "nvidia-x11"
+      # epkowa
+      "iscan"
+      "iscan-data"
+      "iscan-gt"
+      "iscan-gt-f720-bundle"
+      "iscan-gt-s600-bundle"
+      "iscan-gt-s650-bundle"
+      "iscan-gt-s80-bundle"
+      "iscan-gt-x750-bundle"
+      "iscan-gt-x770-bundle"
+      "iscan-gt-x820-bundle"
+      "iscan-nt-bundle"
+      "iscan-perfection-v550-bundle"
+      "iscan-v330-bundle"
+      "iscan-v370-bundle"
+
+      # ollama
+      "cuda_cccl"
+      "cuda_cudart"
+      "cuda_cudart"
+      "cuda_nvcc"
+      "libcublas"
+
+      # Nvidia X11
       "nvidia-settings"
-      "Oracle_VM_VirtualBox_Extension_Pack"
+      "nvidia-x11"
+
+      # nvtop
+      "cuda-merged"
+      "cuda_cuobjdump"
+      "cuda_cupti"
+      "cuda_cuxxfilt"
+      "cuda_gdb"
+      "cuda_nvdisasm"
+      "cuda_nvml_dev"
+      "cuda_nvprune"
+      "cuda_nvrtc"
+      "cuda_nvtx"
+      "cuda_profiler_api"
+      "cuda_sanitizer_api"
+      "libcufft"
+      "libcurand"
+      "libcusolver"
+      "libcusparse"
+      "libnpp"
+      "libnvjitlink"
     ];
   };
 
@@ -183,9 +271,16 @@ in
   ############################################################################
 
   hardware = {
+    graphics.enable = true;
+
     bluetooth = {
       enable = true;
       powerOnBoot = false;
+    };
+
+    sane = {
+      enable = true;
+      extraBackends = [ pkgs.epkowa ];
     };
   };
 
@@ -200,19 +295,20 @@ in
   ############################################################################
 
   services = {
+    # avahi = { enable = true; nssmdns4 = true; };
     hardware.bolt.enable = true;
     throttled.enable = true;
 
     printing.drivers = [ pkgs.epson-escpr ];
-    udev.packages = [ unstable.mixxx ];
+    udev.packages = [ pkgs.mixxx ];
   };
 
   ############################################################################
-  ##                             Virtualisation                             ##
+  ##                                 Programs                               ##
   ############################################################################
 
-  virtualisation = {
-    virtualbox.host = { enable = true; enableExtensionPack = true; };
+  programs = {
+    wireshark = { enable = true; package = pkgs.wireshark-qt; };
   };
 
   ############################################################################
@@ -222,5 +318,6 @@ in
   environment.systemPackages = with pkgs; [
     # Utilities
     thunderbolt
+    nvtopPackages.full
   ];
 }

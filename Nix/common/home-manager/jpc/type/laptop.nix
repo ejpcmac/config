@@ -14,6 +14,14 @@
     won = "nmcli radio wifi on";
     woff = "nmcli radio wifi off";
 
+    # Power management.
+    tlp-default = "sudo ln -sf /etc/static/tlp.conf /etc/tlp.conf && sudo systemctl reload tlp";
+    tlp-power = "sudo ln -sf /config/Nix/common/res/tlp_power.conf /etc/tlp.conf && sudo systemctl reload tlp";
+    tlp-balance-power = "sudo ln -sf /config/Nix/common/res/tlp_balance_power.conf /etc/tlp.conf && sudo systemctl reload tlp";
+    tlp-balance-performance = "sudo ln -sf /config/Nix/common/res/tlp_balance_performance.conf /etc/tlp.conf && sudo systemctl reload tlp";
+    tlp-performance = "sudo ln -sf /config/Nix/common/res/tlp_performance.conf /etc/tlp.conf && sudo systemctl reload tlp";
+    tlp-ultra = "sudo ln -sf /config/Nix/common/res/tlp_ultra.conf /etc/tlp.conf && sudo systemctl reload tlp";
+
     # Performance
     cpg = "cpupower frequency-info";
     cpt = "sudo cpupower frequency-set --max 2900MHz";

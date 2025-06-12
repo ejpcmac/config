@@ -4,10 +4,11 @@
 ##                                                                            ##
 ################################################################################
 
-{ lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   inherit (lib) mkForce;
+  mkFs = pkgs.lib.confkit.mkFs config;
 in
 
 {
@@ -31,7 +32,7 @@ in
     info = {
       name = "pluton";
       machineId = "***[ REDACTED ]***";
-      location = "$company$";
+      location = "company";
     };
 
     profile = {
@@ -61,20 +62,50 @@ in
   };
 
   ############################################################################
+  ##                           Nix configuration                            ##
+  ############################################################################
+
+  nix = {
+    # Garbage-collect during work hours.
+    gc.dates = mkForce "*-*~01 11:00";
+  };
+
+  ############################################################################
   ##                              Boot process                              ##
   ############################################################################
 
   boot = {
+    zfs.requestEncryptionCredentials = false;
+
     initrd = {
       luks.devices = {
         hdd.device = "/dev/sda2";
       };
     };
+  };
 
-    zfs = {
-      enableUnstable = true;
-      requestEncryptionCredentials = false;
-    };
+  ############################################################################
+  ##                              File systems                              ##
+  ############################################################################
+
+  fileSystems = {
+    "/persist/netrc" = mkFs { volumePath = "/system/data/netrc"; };
+    "/persist/ssh" = mkFs { volumePath = "/system/data/ssh"; };
+
+    # "/media/host" = {
+    #   device = "Partage";
+    #   fsType = "vboxsf";
+    #   options = [ "uid=1000" "gid=100" ];
+    # };
+  };
+
+  ############################################################################
+  ##                              Persistence                               ##
+  ############################################################################
+
+  environment.etc = {
+    # Persisted non-static files in /etc
+    "nix/netrc".source = "/persist/netrc/netrc";
   };
 
   ############################################################################
@@ -82,12 +113,29 @@ in
   ############################################################################
 
   services = {
-    zfs.autoScrub.interval = mkForce "Mon, 14:05";
+    libinput.touchpad.naturalScrolling = false;
+
+    openssh = {
+      enable = true;
+
+      settings = {
+        PasswordAuthentication = false;
+      };
+
+      hostKeys = [
+        { path = "/persist/ssh/ssh_host_ed25519_key"; type = "ed25519"; }
+        { path = "/persist/ssh/ssh_host_rsa_key"; type = "rsa"; bits = 4096; }
+      ];
+    };
+
+    zfs = {
+      autoScrub.interval = mkForce "Mon 14:05";
+      autoSnapshot.monthly = 6;
+    };
 
     xserver = {
       dpi = 120;
       xautolock.enable = mkForce false;
-      libinput.touchpad.naturalScrolling = false;
     };
   };
 

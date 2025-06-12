@@ -28,6 +28,7 @@ various customisations I use for my everyday comfort. Enjoy! :)
     * `containers` – configuration for containers (mostly redacted, some left
         for reference).
     * `helios` – configuration for my home NAS.
+    * `mercure` – configuration for my work PC.
     * `neptune` – configuration for my server.
     * `philae` – configuration for my “lander”, used to transform any rescue
         system into NixOS.

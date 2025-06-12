@@ -19,7 +19,7 @@ in
   config = mkIf cfg.enable {
     networking = {
       interfaces = {
-        enp59s0u1u4 = {
+        enp58s0u1u4 = {
           ipv4.addresses = [{ address = "192.168.10.254"; prefixLength = 24; }];
         };
       };
@@ -27,7 +27,7 @@ in
       nat = {
         enable = true;
         externalInterface = "tap0";
-        internalInterfaces = [ "enp59s0u1u4" ];
+        internalInterfaces = [ "enp58s0u1u4" ];
         extraCommands = ''
           iptables -t nat -A POSTROUTING -o enp59s0u1u4 -j MASQUERADE
           iptables -A FORWARD -i enp59s0u1u4 -o tap0 -j ACCEPT
@@ -36,18 +36,30 @@ in
       };
     };
 
-    services.dhcpd4 = {
+    services.kea.dhcp4 = {
       enable = true;
-      interfaces = [ "enp59s0u1u4" ];
-      extraConfig = ''
-        option subnet-mask 255.255.255.0;
-        option broadcast-address 192.168.10.255;
-        option routers 192.168.10.254;
-        option domain-name-servers 1.1.1.1;
-        subnet 192.168.10.0 netmask 255.255.255.0 {
-          range 192.168.10.1 192.168.10.200;
-        }
-      '';
+      settings = {
+        interfaces-config = {
+          interfaces = [ "enp58s0u1u4" ];
+        };
+
+        subnet4 = [
+          {
+            subnet = "192.168.10.0/24";
+            pools = [{ pool = "192.168.10.1 - 192.168.10.100"; }];
+          }
+        ];
+
+        lease-database = {
+          name = "/var/lib/kea/dhcp4.leases";
+          persist = true;
+          type = "memfile";
+        };
+
+        rebind-timer = 2000;
+        renew-timer = 1000;
+        valid-lifetime = 4000;
+      };
     };
   };
 }

@@ -2,13 +2,13 @@
   description = "The configuration for neptune.";
 
   inputs = {
-    common.url = "git+file:///config?ref=main&dir=Nix/common";
+    common.url = "path:../common";
 
     nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-22.11";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
       inputs = {
         nixpkgs.follows = "common/nixpkgs";
-        nixpkgs-22_11.follows = "common/nixpkgs";
+        nixpkgs-25_05.follows = "common/nixpkgs";
       };
     };
   };

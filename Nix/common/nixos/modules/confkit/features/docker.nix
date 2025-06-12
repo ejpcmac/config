@@ -7,7 +7,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkIf mkForce;
   mkFs = pkgs.lib.confkit.mkFs config;
   cfg = config.confkit.features.custom.jpc.docker;
 in
@@ -57,7 +57,15 @@ in
     ########################################################################
 
     virtualisation = {
-      docker.enable = true;
+      docker = {
+        enable = true;
+        storageDriver = "zfs";
+      };
+    };
+
+    systemd.services = {
+      # Do not automatically start docker on boot.
+      docker.wantedBy = mkForce [ ];
     };
   };
 }

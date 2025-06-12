@@ -19,6 +19,10 @@
         "when": "editorTextFocus && !editorReadonly"
     },
     {
+        "key": "ctrl+shift+7",
+        "command": "workbench.action.toggleMaximizedPanel"
+    },
+    {
         "key": "alt+e",
         "command": "workbench.action.tasks.runTask"
     },
@@ -31,13 +35,11 @@
         "command": "-workbench.action.showAllSymbols"
     },
     {
-        "key": "ctrl+t",
-        "command": "test-explorer.run-file",
-        "when": "editorLangId == 'c'"
+        "key": "ctrl+alt+t",
+        "command": "rust-analyzer.moveItemDown"
     },
     {
-        "key": "ctrl+alt+t",
-        "command": "test-explorer.run-all",
-        "when": "editorLangId == 'c'"
+        "key": "ctrl+alt+s",
+        "command": "rust-analyzer.moveItemUp"
     }
 ]

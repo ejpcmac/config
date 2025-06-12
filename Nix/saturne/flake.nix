@@ -2,12 +2,14 @@
   description = "The configuration for saturne.";
 
   inputs = {
-    common.url = "git+file:///config?ref=main&dir=Nix/common";
+    common.url = "path:../common";
+    nixpkgs-20_03.url = "github:NixOS/nixpkgs/nixos-20.03";
+    track.url = "github:ejpcmac/track";
   };
 
-  outputs = { self, common, ... }:
+  outputs = { self, common, ... }@local:
     let
-      inputs = common;
+      inputs = common // { inherit (local) nixpkgs-20_03 daedalus track; };
     in
     {
       nixosConfigurations.saturne = inputs.nixpkgs.lib.nixosSystem rec {
